@@ -26,4 +26,7 @@ PARA MIGRAR LA BASE DE DATOS:
 
 FINALMENTE EJECUTAR
 python manage.py runserver
-
+ PARA ADMINISTRAR DESDE localhost:8000/admin
+ ejecutar:
+ python manage.py createsuperuser 
+ seguir los pasos--> iniciar sesion
