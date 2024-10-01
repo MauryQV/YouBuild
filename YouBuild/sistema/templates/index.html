@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>YOUBUILD</h1>
+
+    <div class="product-list">
+        {% for i in objeto %}
+        <a href="/producto/{{i.id}}" class="product-card">
+            <h2 class="product-name">{{ i.nombre }}</h2>
+            <p class="product-price">Precio: Bs{{ i.precio }}</p>
+            <p class="product-details">{{ i.detalle }}</p>
+        </a>
+        {% endfor %}
+    </div>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>
