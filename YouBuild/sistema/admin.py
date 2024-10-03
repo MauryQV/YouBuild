@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 
 class ProductoAdmin(admin.ModelAdmin):
-    fields = ["nombre", "detalle", "precio", "categoria_fk","usuario_fk"]
+    fields = ["nombre", "detalle", "precio", "imagen", "categoria_fk","usuario_fk"]
     list_display = ["nombre"]
 
 admin.site.register(ProductoDb, ProductoAdmin)
