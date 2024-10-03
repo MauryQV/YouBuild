@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404
-from .models import ProductoDb, CategoriaDb
+from .models import ProductoDb, CategoriaDb, CarruselDB
 
 # Vista principal
+
+
 def IndexView(request):
     productos = ProductoDb.objects.all().order_by("id")  
-    return render(request, "index.html", {"productos": productos}) 
+    return render(request, "index.html", {"producto": productos}) 
 
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)

@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 
 class ProductoAdmin(admin.ModelAdmin):
-    fields = ["nombre", "detalle", "precio", "categoria_fk","usuario_fk"]
+    fields = ["nombre", "detalle", "precio", "categoria_fk","usuario_fk","imagen"]
     list_display = ["nombre"]
 
 admin.site.register(ProductoDb, ProductoAdmin)
@@ -38,7 +38,9 @@ admin.site.register(TipoPagoDB)
 
 admin.site.register(PagoDB)
 
-admin.site.register(CarritoProductoDB)    
+admin.site.register(CarritoProductoDB)   
+
+admin.site.register(CarruselDB) 
     
 
 

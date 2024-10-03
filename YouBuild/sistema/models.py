@@ -79,6 +79,7 @@ class ProductoDb(models.Model):
     precio = models.FloatField(verbose_name="Precio", validators=[MinValueValidator(0.0), MaxValueValidator(99999.9)])
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
+    imagen = models.ImageField(upload_to="productos", null=True)
 
     class Meta:
         db_table = "productos"  # Convención de nombres en minúsculas para tablas
@@ -116,5 +117,13 @@ class CarritoProductoDB(models.Model):
     class Meta:
         verbose_name = "Carrito Producto"
         verbose_name_plural = "Carrito Productos"
-
+        
+        
+class CarruselDB(models.Model):
+    imagen = models.ImageField(upload_to="carrusel",null=True)
+    
+    class Meta:
+         verbose_name = "Carrusel"
+         verbose_name_plural = "Carruseles"
+        
     
