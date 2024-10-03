@@ -26,18 +26,6 @@ main {
     padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
 }
 
-header {
-    height: 100px; /* Ajusta según sea necesario */
-    background-color: var(--primary-color); /* Color del header */
-    position: fixed; /* Fija el header en la parte superior */
-    top: 0; /* Coloca el header en la parte superior */
-    left: 0; /* Alinea el header a la izquierda */
-    right: 0; /* Alinea el header a la derecha */
-    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
-    padding: 0;
-    margin: 0;
-}
-
 footer {
     background-color: #FFCC80; /* Color de fondo */
     padding: 20px 0; /* Espaciado */
@@ -109,12 +97,14 @@ footer {
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
     text-align: center; /* Centra el texto horizontalmente */
-    margin-top: 10px; /* Espacio pequeño entre el header y el título */
-    margin-bottom: 10px; /* Reduce el margen inferior entre el título y el carrusel */
+    margin-top: -100px; /* Ajusta para subir el título más cerca del top bar */
+    margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-weight: bold; /* Puedes agregarle negritas si quieres */
     color: #333; /* Ajusta el color si es necesario */
+    position: relative; /* Permite ajustar la posición sin afectar el flujo del documento */
 }
+
 
 .title span {
     display: inline-block; /* Hace que cada letra sea un bloque */
@@ -144,6 +134,7 @@ footer {
 }
 
 .carousel-item {
+    margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     flex: 0 0 100%; /* Cada ítem ocupa el 100% del contenedor */
     display: flex;
     justify-content: center; /* Centra el contenido horizontalmente */
@@ -157,9 +148,9 @@ footer {
 }
 
 .carousel-item img {
-    max-width: 100%; /* Limita el ancho máximo de la imagen */
-    max-height: 100%; /* Limita la altura máxima de la imagen */
-    object-fit: cover; /* Ajusta la imagen para que cubra el área sin distorsión */
+    width: 250px; /* Ancho fijo para todas las imágenes */
+    height: 200px; /* Altura fija para todas las imágenes */
+    object-fit: cover; /* Ajusta la imagen para cubrir completamente el área */
     display: block; /* Asegura que la imagen sea un bloque */
 }
 
