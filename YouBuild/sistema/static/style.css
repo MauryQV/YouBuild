@@ -93,13 +93,19 @@ footer {
     display: flex;
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
-    font-size: 3rem; /* Reduce el tamaño de la fuente de los íconos */
-    color: var(--text-color); /* Color del texto (o ícono) */
-    background-color: #fff; /* Color de fondo de cada ítem */
-    border: 1px solid #ddd; /* Borde en todos los lados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el ítem */
-    height: 150px; /* Altura más reducida para cada ítem */
-    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto total */
+    font-size: 3rem; /* Tamaño de la fuente de los íconos */
+    background-color: #fff; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    cursor: pointer; /* Cambia el cursor */
+    height: 200px; /* Ajusta la altura */
+    box-sizing: border-box; /* Incluye padding y borde en el tamaño */
+}
+
+.carousel-item img {
+    max-width: 100%; /* Limita el ancho máximo de la imagen */
+    max-height: 100%; /* Limita la altura máxima de la imagen */
+    object-fit: cover; /* Ajusta la imagen para que cubra el área sin distorsión */
+    display: block; /* Asegura que la imagen sea un bloque */
 }
 
 .carousel-button {

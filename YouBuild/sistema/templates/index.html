@@ -1,61 +1,68 @@
 {% load static %}
 
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Carousel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="stylesheet" href="{% static 'listaProduct.css' %}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
+  </head>
+  <body>
     <header></header>
     <main>
-        <h1 class="title">Novedades</h1>
-        
-      
-        <div class="carousel-container">
-            <div class="carousel" style="transform: translateX(-300%);">
-                <div class="carousel-item"><i class="fas fa-hammer"></i></div>
-                <div class="carousel-item"><i class="fas fa-wrench"></i></div>
-                <div class="carousel-item"><i class="fas fa-screwdriver"></i></div>
-                <div class="carousel-item"><i class="fas fa-paint-roller"></i></div>
-                <div class="carousel-item"><i class="fas fa-brush"></i></div>
-            </div>
-            <button class="carousel-button prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
-               </div>
-              <div class="carousel-dots">
-            
-               </div> 
+      <h1 class="title">Novedades</h1>
 
-         <!-- Lista de productos disponibles -->
-<h2 class="products-title">Productos Disponibles</h2>
-<div class="products-container">
-    {% for producto in producto %}
-    <div class="product">
-        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-        <h3>{{ producto.nombre }}</h3>
-        <p>Precio: Bs{{ producto.precio }}</p>
-        <div class="buttons-container"> <!-- Contenedor para botones -->
-            <div class="button-row">
-                <button class="btn buy-now">Comprar Ahora</button>
-                <button class="btn add-to-cart">Agregar a Carrito</button>
-            </div>
-            <div class="button-row">
-                <button class="btn add-to-view">Ver Detalles</button>
-                <button class="btn add-to-list">Agregar a Lista</button>
-            </div>
+      <!-- Carrusel de imágenes -->
+      <div class="carousel-container">
+        <div class="carousel">
+          {% for carrusel_item in carrusel %}
+          <div class="carousel-item">
+            <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
+          </div>
+          {% endfor %}
         </div>
-    </div>
-    {% empty %}
-    <p>No hay productos disponibles.</p>
-    {% endfor %}
-    </div>
+        <button class="carousel-button prev">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-button next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="carousel-dots"></div>
 
-    </main>    
+      <!-- Lista de productos disponibles -->
+      <h2 class="products-title">Productos Disponibles</h2>
+      <div class="products-container">
+        {% for producto in producto %}
+        <div class="product">
+          <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
+          <h3>{{ producto.nombre }}</h3>
+          <p>Precio: Bs{{ producto.precio }}</p>
+          <div class="buttons-container">
+            <!-- Contenedor para botones -->
+            <div class="button-row">
+              <button class="btn buy-now">Comprar Ahora</button>
+              <button class="btn add-to-cart">Agregar a Carrito</button>
+            </div>
+            <div class="button-row">
+              <button class="btn add-to-view">Ver Detalles</button>
+              <button class="btn add-to-list">Agregar a Lista</button>
+            </div>
+          </div>
+        </div>
+
+        {% empty %}
+        <p>No hay productos disponibles.</p>
+        {% endfor %}
+      </div>
+    </main>
+
     <footer></footer>
     <script src="{% static 'script.js' %}"></script>
-</body>
+  </body>
 </html>
