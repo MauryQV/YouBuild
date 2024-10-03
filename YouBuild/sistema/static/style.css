@@ -39,16 +39,72 @@ header {
 }
 
 footer {
-    height: 100px; /* Ajusta según sea necesario */
-    background-color: var(--primary-color); /* Color del footer */
-    width: 100%; /* Ocupa todo el ancho disponible */
-    position: relative; /* Cambia a relative para que no se superponga */
-    z-index: 1; /* Asegúrate de que esté debajo de otros elementos si es necesario */
-    text-align: center; /* Centrar el texto */
-    line-height: 100px; /* Centrar el texto verticalmente */
-    color: var(--text-color); /* Color del texto del footer */
-    margin-top: auto; /* Asegura que se mantenga al final del contenido */
+    background-color: #FFCC80; /* Color de fondo */
+    padding: 20px 0; /* Espaciado */
+    width: 100%; /* Ancho completo */
+    position: relative; /* Para asegurar que se mantenga al final */
 }
+
+.footer-container {
+    display: flex; /* Flexbox para disposición horizontal */
+    justify-content: space-around; /* Espacio entre elementos */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+    max-width: 960px; /* Ancho máximo */
+    margin: 0 auto; /* Centrar el footer */
+    padding: 0 10px; /* Espaciado lateral */
+}
+
+.footer-description,
+.footer-links,
+.footer-contact,
+.footer-legal {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+}
+
+.footer-links ul,
+.footer-legal ul {
+    list-style: none; /* Sin viñetas */
+    padding: 0; /* Sin espaciado interno */
+}
+
+.footer-links a,
+.footer-legal a {
+    text-decoration: none; /* Sin subrayado */
+    color: #007bff; /* Color de los enlaces */
+}
+
+.footer-links a:hover,
+.footer-legal a:hover {
+    text-decoration: underline; /* Subrayar al pasar el ratón */
+}
+.social-buttons {
+    display: flex; /* Disposición en fila */
+    justify-content: center; /* Centrar los botones */
+    margin-top: 10px; /* Espacio superior */
+}
+
+.social-button {
+    display: inline-block; /* Mostrar como un bloque en línea */
+    width: 40px; /* Ancho del botón */
+    height: 40px; /* Alto del botón */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 50%; /* Bordes redondeados */
+    color: #007bff; /* Color del ícono */
+    display: flex; /* Flexbox para centrar el ícono */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    margin: 0 10px; /* Espaciado entre botones */
+    transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+.social-button:hover {
+    background-color: #007bff; /* Cambiar fondo al pasar el ratón */
+    color: #fff; /* Cambiar color del ícono */
+    transform: scale(1.1); /* Aumentar el tamaño al pasar el ratón */
+}
+
 
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
