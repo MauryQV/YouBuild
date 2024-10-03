@@ -12,4 +12,4 @@ def IndexView(request):
 
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
-    return render(request, "productos.html", {"producto": producto})
+    return render(request, "detalle_producto.html", {"producto": producto})
