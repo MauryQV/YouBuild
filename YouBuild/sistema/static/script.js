@@ -6,6 +6,8 @@ title.textContent = '';
 for (let i = 0; i < text.length; i++) {
     const span = document.createElement('span');
     span.textContent = text[i];
+    span.style.opacity = '1'; // Opacidad inicial completamente visible
+    span.style.transform = 'scale(1)'; // Tamaño inicial normal
     title.appendChild(span);
 }
 
@@ -16,14 +18,12 @@ function waveEffect() {
     spans.forEach((span, index) => {
         const delay = index * 100; // Tiempo de retardo por letra
         setTimeout(() => {
-            span.style.transform = 'scale(1.2)'; // Aumenta el tamaño de la letra
-            span.style.opacity = '0.5'; // Aumenta la opacidad
+            span.style.transform = 'scale(0.75)'; // Aumenta el tamaño de la letra
         }, delay);
         
         // Decrecer después de un tiempo
         setTimeout(() => {
             span.style.transform = 'scale(1)'; // Restaura el tamaño original
-            span.style.opacity = '0.8'; // Restaura la opacidad
         }, delay + 800); // Tiempo después de crecer
     });
 }
@@ -40,6 +40,7 @@ function startWaveEffect() {
 // Comienza el efecto de onda
 startWaveEffect();
 
+
 const carousel = document.querySelector('.carousel');
 const items = document.querySelectorAll('.carousel-item');
 const prevBtn = document.querySelector('.prev');
@@ -47,7 +48,7 @@ const nextBtn = document.querySelector('.next');
 
 let currentIndex = 0;
 const totalItems = items.length;
-const transitionTime = 4000; // 4 segundos
+const transitionTime = 5000; // 4 segundos
 
 // Función para actualizar la posición del carrusel
 function updateCarousel() {
