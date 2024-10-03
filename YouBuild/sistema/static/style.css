@@ -15,6 +15,24 @@ body {
     grid-template-rows: auto 1fr auto; /* Define filas: header, main y footer */
     min-height: 100vh; /* Ocupa al menos toda la altura de la ventana */
     background-color: var(--background-color);
+    overflow-x: hidden; /* Evita el desplazamiento horizontal */
+}
+
+.container {
+    max-width: 100%; /* Asegúrate de que no haya desplazamiento */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+}
+
+/* Ajustar el tamaño del texto para pantallas pequeñas */
+@media (max-width: 600px) {
+    body {
+        font-size: 0.8em; /* Reduce el tamaño de la fuente para pantallas pequeñas */
+    }
+
+    .container {
+        transform: scale(0.9); /* Escala el contenedor un 90% */
+        transform-origin: top left; /* Asegura que el contenedor se escale desde la esquina superior izquierda */
+    }
 }
 
 main {
@@ -26,6 +44,7 @@ main {
     padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
 }
 
+<<<<<<< HEAD
 footer {
     background-color: #FFCC80; /* Color de fondo */
     padding: 20px 0; /* Espaciado */
@@ -40,6 +59,38 @@ footer {
     max-width: 960px; /* Ancho máximo */
     margin: 0 auto; /* Centrar el footer */
     padding: 0 10px; /* Espaciado lateral */
+=======
+<<<<<<< HEAD
+.title {
+    font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
+    text-align: center; /* Centra el texto horizontalmente */
+    margin-top: -100; /* Elimina el espacio entre el header y el título */
+    margin-bottom: 1px; /* Reduce el margen inferior entre el título y el carrusel */
+=======
+header {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del header */
+    position: fixed; /* Fija el header en la parte superior */
+    top: 0; /* Coloca el header en la parte superior */
+    left: 0; /* Alinea el header a la izquierda */
+    right: 0; /* Alinea el header a la derecha */
+    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+    padding: 0;
+    margin: 0;
+}
+
+footer {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del footer */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    position: fixed; /* Fija el footer en la parte inferior */
+    bottom: 0; /* Posición en la parte inferior */
+    left: 0; /* Posición en el borde izquierdo */
+    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+    text-align: center; /* Centrar el texto */
+    line-height: 100px; /* Centrar el texto verticalmente */
+    color: var(--text-color); /* Color del texto del footer */
+>>>>>>> 480936251199680807ecd2c0c3e9e00a17b622ee
 }
 
 .footer-description,
@@ -97,8 +148,14 @@ footer {
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
     text-align: center; /* Centra el texto horizontalmente */
+<<<<<<< HEAD
     margin-top: -100px; /* Ajusta para subir el título más cerca del top bar */
     margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
+=======
+    margin-top: 10px; /* Espacio pequeño entre el header y el título */
+    margin-bottom: 10px; /* Reduce el margen inferior entre el título y el carrusel */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
+>>>>>>> 480936251199680807ecd2c0c3e9e00a17b622ee
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-weight: bold; /* Puedes agregarle negritas si quieres */
     color: #333; /* Ajusta el color si es necesario */
@@ -120,9 +177,13 @@ footer {
     display: flex; /* Utiliza flexbox para organizar los elementos en fila */
     align-items: center; /* Centra los ítems verticalmente */
     position: relative;
-    width: 90%; /* Aumenta el ancho según sea necesario */
+    width: 100%; /* Aumenta el ancho según sea necesario */
     max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+<<<<<<< HEAD
+    margin: 0px auto; /* Reduce aún más el margen superior e inferior */
+=======
     margin: -25px auto; /* Reduce aún más el margen superior e inferior */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
     overflow: hidden; /* Oculta cualquier contenido que sobresalga */
     height: 200px; /* Mantiene la altura reducida del contenedor */
 }
@@ -136,23 +197,38 @@ footer {
 .carousel-item {
     margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     flex: 0 0 100%; /* Cada ítem ocupa el 100% del contenedor */
-    display: flex;
+    display: flex; /* Utiliza flexbox para centrar la imagen */
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
-    font-size: 3rem; /* Tamaño de la fuente de los íconos */
-    background-color: #fff; /* Color de fondo */
-    border: 1px solid #ddd; /* Borde */
-    cursor: pointer; /* Cambia el cursor */
-    height: 200px; /* Ajusta la altura */
-    box-sizing: border-box; /* Incluye padding y borde en el tamaño */
+<<<<<<< HEAD
+    height: 200px; /* Altura fija del ítem */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+=======
+    font-size: 3rem; /* Reduce el tamaño de la fuente de los íconos */
+    color: var(--text-color); /* Color del texto (o ícono) */
+    background-color: #fff; /* Color de fondo de cada ítem */
+    border: 1px solid #ddd; /* Borde en todos los lados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el ítem */
+    height: 150px; /* Altura más reducida para cada ítem */
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto total */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
 }
 
 .carousel-item img {
+<<<<<<< HEAD
     width: 250px; /* Ancho fijo para todas las imágenes */
     height: 200px; /* Altura fija para todas las imágenes */
     object-fit: cover; /* Ajusta la imagen para cubrir completamente el área */
+=======
+    width: 300px;  /* Ajusta el ancho de la imagen */
+    height: 200px; /* Ajusta la altura de la imagen */
+    object-fit: cover; /* Mantiene la proporción y recorta si es necesario */
+>>>>>>> 480936251199680807ecd2c0c3e9e00a17b622ee
     display: block; /* Asegura que la imagen sea un bloque */
+    margin: 0 auto; /* Centra la imagen dentro del ítem */
 }
+
+
 
 .carousel-button {
     flex: 0 0 40px; /* Cambia el ancho del botón para que sea más delgado */
