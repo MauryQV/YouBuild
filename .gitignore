@@ -3,3 +3,5 @@ venv/
 .gitignore/
 __pycache__/
 *.pyc
+venv/Scripts/
+venv/Lib\site-packages/

@@ -117,5 +117,13 @@ class CarritoProductoDB(models.Model):
     class Meta:
         verbose_name = "Carrito Producto"
         verbose_name_plural = "Carrito Productos"
-
+        
+        
+class CarruselDB(models.Model):
+    imagen = models.ImageField(upload_to="carrusel",null=True)
+    
+    class Meta:
+         verbose_name = "Carrusel"
+         verbose_name_plural = "Carruseles"
+        
     

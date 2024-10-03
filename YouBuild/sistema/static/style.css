@@ -42,13 +42,13 @@ footer {
     height: 100px; /* Ajusta según sea necesario */
     background-color: var(--primary-color); /* Color del footer */
     width: 100%; /* Ocupa todo el ancho disponible */
-    position: fixed; /* Fija el footer en la parte inferior */
-    bottom: 0; /* Posición en la parte inferior */
-    left: 0; /* Posición en el borde izquierdo */
-    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+    position: relative; /* Cambia a relative para que no se superponga */
+    /* no se necesita 'bottom' y 'left' */
+    z-index: 1; /* Asegúrate de que esté debajo de otros elementos si es necesario */
     text-align: center; /* Centrar el texto */
     line-height: 100px; /* Centrar el texto verticalmente */
     color: var(--text-color); /* Color del texto del footer */
+    margin-top: auto; /* Asegura que se mantenga al final del contenido */
 }
 
 .title {
