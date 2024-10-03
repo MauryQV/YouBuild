@@ -1,0 +1,74 @@
+/* Estilo general del topbar */
+.topbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FAF7F0;
+}
+
+/* Sección izquierda (Logo) */
+.topbar-left .logo img {
+    vertical-align: middle;
+}
+
+/* Sección centro (Búsqueda) */
+.topbar-center {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.search-box {
+    display: inline-flex;
+    background-color: #F2EBD3;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.search-box input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.search-box button {
+    background-color: transparent;
+    border: none;
+    color: #ED8C2B;
+    cursor: pointer;
+}
+
+.search-box button i {
+    font-size: 18px;
+}
+
+/* Sección derecha (Botones) */
+.topbar-right {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-link {
+    padding: 10px 15px;
+    background-color: #F2EBD3;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+}
+
+.icon-btn {
+    padding: 10px;
+    background-color: #F2EBD3;
+    border-radius: 8px;
+    color: #333;
+}
+
+.icon-btn i {
+    font-size: 18px;
+}
+
+/* Ajuste del botón "Iniciar Sesión" */
+.btn-link:first-of-type {
+    background-color: #ED8C2B;
+    color: white;
+}

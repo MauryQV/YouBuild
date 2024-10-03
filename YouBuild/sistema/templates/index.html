@@ -1,61 +1,126 @@
 {% load static %}
 
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Carousel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="stylesheet" href="{% static 'listaProduct.css' %}">
-</head>
-<body>
-    <header></header>
-    <main>
-        <h1 class="title">Novedades</h1>
-        
-      
-        <div class="carousel-container">
-            <div class="carousel" style="transform: translateX(-300%);">
-                <div class="carousel-item"><i class="fas fa-hammer"></i></div>
-                <div class="carousel-item"><i class="fas fa-wrench"></i></div>
-                <div class="carousel-item"><i class="fas fa-screwdriver"></i></div>
-                <div class="carousel-item"><i class="fas fa-paint-roller"></i></div>
-                <div class="carousel-item"><i class="fas fa-brush"></i></div>
-            </div>
-            <button class="carousel-button prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
-               </div>
-              <div class="carousel-dots">
-            
-               </div> 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 
-         <!-- Lista de productos disponibles -->
-<h2 class="products-title">Productos Disponibles</h2>
-<div class="products-container">
-    {% for producto in producto %}
-    <div class="product">
-        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-        <h3>{{ producto.nombre }}</h3>
-        <p>Precio: Bs{{ producto.precio }}</p>
-        <div class="buttons-container"> <!-- Contenedor para botones -->
-            <div class="button-row">
-                <button class="btn buy-now">Comprar Ahora</button>
-                <button class="btn add-to-cart">Agregar a Carrito</button>
+    />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
+  </head>
+  <body>
+    <header>
+        <div class="topbar-container">
+            <!-- Sección izquierda (Logo) -->
+            <div class="topbar-left">
+                <a href="#home" class="logo">
+                    <img src="your-logo.png" alt="Logo" width="50"> <!-- Imagen del logo -->
+                </a>
             </div>
-            <div class="button-row">
-                <button class="btn add-to-view">Ver Detalles</button>
-                <button class="btn add-to-list">Agregar a Lista</button>
+            <!-- Sección centro (Búsqueda) -->
+            <div class="topbar-center">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar">
+                    <button><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <!-- Sección derecha (Botones) -->
+            <div class="topbar-right">
+                <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
+                <a href="#registrarse" class="btn-link">Registrarse</a>
+                <a href="#carrito" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
-    </div>
-    {% empty %}
-    <p>No hay productos disponibles.</p>
-    {% endfor %}
-    </div>
+    </header>
 
-    </main>    
-    <footer></footer>
+    <main>
+      <h1 class="title">Novedades</h1>
+
+      <!-- Carrusel de imágenes -->
+      <div class="carousel-container">
+        <div class="carousel">
+          {% for carrusel_item in carrusel %}
+          <div class="carousel-item">
+            <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
+          </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-button prev">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-button next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="carousel-dots"></div>
+
+      <!-- Lista de productos disponibles -->
+      <h2 class="products-title">Productos Disponibles</h2>
+      <div class="products-container">
+        {% for producto in producto %}
+        <div class="product">
+          <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
+          <h3>{{ producto.nombre }}</h3>
+          <p>Precio: Bs{{ producto.precio }}</p>
+          <div class="buttons-container">
+            <!-- Contenedor para botones -->
+            <div class="button-row">
+              <button class="btn buy-now">Comprar Ahora</button>
+              <button class="btn add-to-cart">Agregar a Carrito</button>
+            </div>
+            <div class="button-row">
+              <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
+              <button class="btn add-to-list">Agregar a Lista</button>
+            </div>
+          </div>
+        </div>
+
+        {% empty %}
+        <p>No hay productos disponibles.</p>
+        {% endfor %}
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-description">
+            <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Redes Sociales</h4>
+          <div class="social-buttons">
+              <a href="https://facebook.com" target="_blank" class="social-button facebook">
+                  <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://instagram.com" target="_blank" class="social-button instagram">
+                  <i class="fab fa-instagram"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" class="social-button twitter">
+                  <i class="fab fa-twitter"></i>
+              </a>
+          </div>
+      </div>
+        <div class="footer-contact">
+            <h4>Contacto</h4>
+            <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+591XXXXXXXX">+591 XXXXXXXX</a></p>
+        </div>
+        <div class="footer-legal">
+            <h4>Legal</h4>
+            <ul>
+                <li><a href="#terminos-condiciones">Términos y Condiciones</a></li>
+                <li><a href="#politica-privacidad">Política de Privacidad</a></li>
+            </ul>
+        </div>
+    </div>
+    </footer>
     <script src="{% static 'script.js' %}"></script>
-</body>
+  </body>
 </html>

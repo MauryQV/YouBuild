@@ -26,40 +26,85 @@ main {
     padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
 }
 
-header {
-    height: 100px; /* Ajusta según sea necesario */
-    background-color: var(--primary-color); /* Color del header */
-    position: fixed; /* Fija el header en la parte superior */
-    top: 0; /* Coloca el header en la parte superior */
-    left: 0; /* Alinea el header a la izquierda */
-    right: 0; /* Alinea el header a la derecha */
-    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
-    padding: 0;
-    margin: 0;
+footer {
+    background-color: #FFCC80; /* Color de fondo */
+    padding: 20px 0; /* Espaciado */
+    width: 100%; /* Ancho completo */
+    position: relative; /* Para asegurar que se mantenga al final */
 }
 
-footer {
-    height: 100px; /* Ajusta según sea necesario */
-    background-color: var(--primary-color); /* Color del footer */
-    width: 100%; /* Ocupa todo el ancho disponible */
-    position: relative; /* Cambia a relative para que no se superponga */
-    /* no se necesita 'bottom' y 'left' */
-    z-index: 1; /* Asegúrate de que esté debajo de otros elementos si es necesario */
-    text-align: center; /* Centrar el texto */
-    line-height: 100px; /* Centrar el texto verticalmente */
-    color: var(--text-color); /* Color del texto del footer */
-    margin-top: auto; /* Asegura que se mantenga al final del contenido */
+.footer-container {
+    display: flex; /* Flexbox para disposición horizontal */
+    justify-content: space-around; /* Espacio entre elementos */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+    max-width: 960px; /* Ancho máximo */
+    margin: 0 auto; /* Centrar el footer */
+    padding: 0 10px; /* Espaciado lateral */
 }
+
+.footer-description,
+.footer-links,
+.footer-contact,
+.footer-legal {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+}
+
+.footer-links ul,
+.footer-legal ul {
+    list-style: none; /* Sin viñetas */
+    padding: 0; /* Sin espaciado interno */
+}
+
+.footer-links a,
+.footer-legal a {
+    text-decoration: none; /* Sin subrayado */
+    color: #007bff; /* Color de los enlaces */
+}
+
+.footer-links a:hover,
+.footer-legal a:hover {
+    text-decoration: underline; /* Subrayar al pasar el ratón */
+}
+.social-buttons {
+    display: flex; /* Disposición en fila */
+    justify-content: center; /* Centrar los botones */
+    margin-top: 10px; /* Espacio superior */
+}
+
+.social-button {
+    display: inline-block; /* Mostrar como un bloque en línea */
+    width: 40px; /* Ancho del botón */
+    height: 40px; /* Alto del botón */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 50%; /* Bordes redondeados */
+    color: #007bff; /* Color del ícono */
+    display: flex; /* Flexbox para centrar el ícono */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    margin: 0 10px; /* Espaciado entre botones */
+    transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+.social-button:hover {
+    background-color: #007bff; /* Cambiar fondo al pasar el ratón */
+    color: #fff; /* Cambiar color del ícono */
+    transform: scale(1.1); /* Aumentar el tamaño al pasar el ratón */
+}
+
 
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
     text-align: center; /* Centra el texto horizontalmente */
-    margin-top: 10px; /* Espacio pequeño entre el header y el título */
-    margin-bottom: 10px; /* Reduce el margen inferior entre el título y el carrusel */
+    margin-top: -100px; /* Ajusta para subir el título más cerca del top bar */
+    margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-weight: bold; /* Puedes agregarle negritas si quieres */
     color: #333; /* Ajusta el color si es necesario */
+    position: relative; /* Permite ajustar la posición sin afectar el flujo del documento */
 }
+
 
 .title span {
     display: inline-block; /* Hace que cada letra sea un bloque */
@@ -89,17 +134,24 @@ footer {
 }
 
 .carousel-item {
+    margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     flex: 0 0 100%; /* Cada ítem ocupa el 100% del contenedor */
     display: flex;
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
-    font-size: 3rem; /* Reduce el tamaño de la fuente de los íconos */
-    color: var(--text-color); /* Color del texto (o ícono) */
-    background-color: #fff; /* Color de fondo de cada ítem */
-    border: 1px solid #ddd; /* Borde en todos los lados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el ítem */
-    height: 150px; /* Altura más reducida para cada ítem */
-    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto total */
+    font-size: 3rem; /* Tamaño de la fuente de los íconos */
+    background-color: #fff; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    cursor: pointer; /* Cambia el cursor */
+    height: 200px; /* Ajusta la altura */
+    box-sizing: border-box; /* Incluye padding y borde en el tamaño */
+}
+
+.carousel-item img {
+    width: 250px; /* Ancho fijo para todas las imágenes */
+    height: 200px; /* Altura fija para todas las imágenes */
+    object-fit: cover; /* Ajusta la imagen para cubrir completamente el área */
+    display: block; /* Asegura que la imagen sea un bloque */
 }
 
 .carousel-button {
@@ -145,4 +197,84 @@ footer {
 
 .dot.active {
     transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
+}
+
+/* Estilos base para contenedores flex */
+.flex-container {
+    display: flex; 
+    text-align: left;
+    background-color: white;
+    margin: 3em;
+    padding: 2em;
+    margin-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flex-column {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+.sub-container {
+    display: flex; 
+    text-align: left;
+    width: 100%;
+}
+
+.subcolumn1 {
+    flex: 3; 
+}
+
+.subcolumn2 {
+    flex: 4; 
+}
+
+.column {
+    flex: 1; 
+}
+
+.producto-imagen {
+    max-width: 20rem; 
+}
+
+.aux {
+    font-size: 3em;
+    color: #d58729;
+}
+
+.product-name {
+    font-size: 2em;
+    color: #d58729;
+}
+
+/* Media Queries para hacer el diseño responsive */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+        margin: 1em;
+        padding: 1em;
+    }
+
+    .sub-container {
+        flex-direction: column;
+    }
+
+    .subcolumn1, .subcolumn2 {
+        width: 100%;
+    }
+
+    .column {
+        width: 100%;
+    }
+
+    .producto-imagen {
+        max-width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
 }
