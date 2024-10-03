@@ -1,25 +1,31 @@
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Productos</title>
+    <title>Product Carousel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <h1>YOUBUILD</h1>
-
-    <div class="product-list">
-        {% for i in objeto %}
-        <a href="/producto/{{i.id}}" class="product-card">
-            <h2 class="product-name">{{ i.nombre }}</h2>
-            <p class="product-price">Precio: Bs{{ i.precio }}</p>
-            <p class="product-details">{{ i.detalle }}</p>
-        </a>
-        {% endfor %}
-    </div>
-
+    <header></header>
+    <main>
+        <h1 class="title">Novedades</h1>
+        <div class="carousel-container">
+            <div class="carousel" style="transform: translateX(-300%);">
+                <div class="carousel-item"><i class="fas fa-hammer"></i></div>
+                <div class="carousel-item"><i class="fas fa-wrench"></i></div>
+                <div class="carousel-item"><i class="fas fa-screwdriver"></i></div>
+                <div class="carousel-item"><i class="fas fa-paint-roller"></i></div>
+                <div class="carousel-item"><i class="fas fa-brush"></i></div>
+            </div>
+            <button class="carousel-button prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel-dots"></div> 
+    </main>    
+    <footer></footer>
     <script src="{% static 'script.js' %}"></script>
 </body>
 </html>

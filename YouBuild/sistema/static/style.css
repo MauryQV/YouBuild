@@ -1,56 +1,148 @@
+:root {
+    --primary-color: #ED8C2B;
+    --secondary-color: #E5E8EB; /* Color del fondo del carrusel */
+    --accent-color: #F2690D;
+    --text-color: #1C1C0D;
+    --link-color: #9E9647;
+    --background-color: #FFFFFB;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    display: grid; /* Cambiamos a grid */
+    grid-template-rows: auto 1fr auto; /* Define filas: header, main y footer */
+    min-height: 100vh; /* Ocupa al menos toda la altura de la ventana */
+    background-color: var(--background-color);
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+main {
+    display: flex; /* Cambiamos a flex para el main */
+    flex-direction: column; /* Dirección de los elementos en columna */
+    flex: 1; /* Permite que el main ocupe el espacio disponible */
+    justify-content: flex-start; /* Alínea los elementos al inicio */
+    margin: 0; /* Elimina márgenes */
+    padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
 }
 
+header {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del header */
+    position: fixed; /* Fija el header en la parte superior */
+    top: 0; /* Coloca el header en la parte superior */
+    left: 0; /* Alinea el header a la izquierda */
+    right: 0; /* Alinea el header a la derecha */
+    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+    padding: 0;
+    margin: 0;
+}
 
-.product-list {
+footer {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del footer */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    position: fixed; /* Fija el footer en la parte inferior */
+    bottom: 0; /* Posición en la parte inferior */
+    left: 0; /* Posición en el borde izquierdo */
+    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+    text-align: center; /* Centrar el texto */
+    line-height: 100px; /* Centrar el texto verticalmente */
+    color: var(--text-color); /* Color del texto del footer */
+}
+
+.title {
+    font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
+    text-align: center; /* Centra el texto horizontalmente */
+    margin-top: 10px; /* Espacio pequeño entre el header y el título */
+    margin-bottom: 10px; /* Reduce el margen inferior entre el título y el carrusel */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    font-weight: bold; /* Puedes agregarle negritas si quieres */
+    color: #333; /* Ajusta el color si es necesario */
+}
+
+.title span {
+    display: inline-block; /* Hace que cada letra sea un bloque */
+    transition: transform 0.5s ease; /* Transición suave para el efecto de ola */
+    opacity: 0.8; /* Opacidad inicial */
+}
+
+.footer-visible {
+    display: block; /* Mostrar cuando la clase esté activa */
+}
+
+.carousel-container {
+    display: flex; /* Utiliza flexbox para organizar los elementos en fila */
+    align-items: center; /* Centra los ítems verticalmente */
+    position: relative;
+    width: 90%; /* Aumenta el ancho según sea necesario */
+    max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+    margin: -25px auto; /* Reduce aún más el margen superior e inferior */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+    height: 200px; /* Mantiene la altura reducida del contenedor */
+}
+
+.carousel {
+    display: flex; /* Utiliza flexbox para organizar los elementos en fila */
+    transition: transform 0.5s ease; /* Transición suave al cambiar de slide */
+    flex: 1; /* Ocupa todo el espacio disponible */
+}
+
+.carousel-item {
+    flex: 0 0 100%; /* Cada ítem ocupa el 100% del contenedor */
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 80px;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    font-size: 3rem; /* Reduce el tamaño de la fuente de los íconos */
+    color: var(--text-color); /* Color del texto (o ícono) */
+    background-color: #fff; /* Color de fondo de cada ítem */
+    border: 1px solid #ddd; /* Borde en todos los lados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el ítem */
+    height: 150px; /* Altura más reducida para cada ítem */
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto total */
 }
 
-
-.product-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    width: 250px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-    cursor: pointer; /* Cambia el cursor al de "mano" para indicar clic */
-    text-decoration: none; /* Quita el subrayado de los enlaces */
+.carousel-button {
+    flex: 0 0 40px; /* Cambia el ancho del botón para que sea más delgado */
+    position: absolute; /* Posiciona los botones en el contenedor */
+    top: 50%; /* Centra los botones verticalmente */
+    transform: translateY(-50%); /* Ajusta la posición verticalmente */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi-transparente */
+    color: white; /* Color blanco para el texto de los botones */
+    border: none; /* Sin borde */
+    padding: 10px; /* Espaciado interno */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 2rem; /* Tamaño de la fuente */
+    z-index: 2; /* Asegura que los botones estén por encima del carrusel */
+    width: 50px; /* Ancho del botón */
+    height: 50px; /* Alto del botón */
+    border-radius: 50%; /* Hace que los botones sean circulares */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra de los botones */
 }
 
-.product-card:hover {
-    transform: translateY(-10px);
+.carousel-button.prev {
+    left: 10px; /* Posición a la izquierda */
 }
 
-/* Estilo del nombre del producto */
-.product-name {
-    font-size: 1.5em;
-    color: #6926a0;
-    margin: 0 0 10px;
+.carousel-button.next {
+    right: 10px; /* Posición a la derecha */
 }
 
-/* Estilo del precio */
-.product-price {
-    font-size: 1.2em;
-    color: #d58729;
-    margin: 0 0 10px;
+.carousel-dots {
+    display: flex; /* Alinea los puntos en una fila */
+    justify-content: center; /* Centra los puntos */
+    margin-top: 20px; /* Espacio entre el carrusel y los puntos */
 }
 
-/* Estilo de los detalles */
-.product-details {
-    font-size: 1em;
-    color: #666;
+.dot {
+    width: 5px; /* Tamaño inicial */
+    height: 5px; /* Tamaño inicial */
+    border-radius: 50%; /* Forma circular */
+    background-color: black; /* Color de los puntos */
+    margin: 0 5px; /* Espacio entre los puntos */
+    transition: transform 0.3s ease; /* Transición suave para el crecimiento */
+}
+
+.dot.active {
+    transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
