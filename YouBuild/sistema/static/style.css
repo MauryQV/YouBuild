@@ -152,3 +152,53 @@ footer {
 .dot.active {
     transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
+/* Estilos base para contenedores flex */
+.flex-container {
+    display: flex; 
+    text-align: left; 
+}
+
+.flex-column {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    padding: 10px; 
+}
+
+
+.container {
+    @extend .flex-container;
+    width: 100%;
+}
+
+.subcolumn1 {
+    @extend .flex-column;
+    flex: 3; 
+}
+
+.subcolumn2 {
+    @extend .flex-column;
+    flex: 4; 
+}
+
+.column {
+    @extend .flex-column;
+    flex: 1; 
+}
+
+.column-left {
+    background-color: #f9f9f9; /* Color de fondo de la columna izquierda */
+}
+
+.column-right {
+    background-color: #f9f9f9; /* Color de fondo de la columna derecha */
+}
+
+.producto-imagen {
+    max-width: 20rem; 
+}
+
+.aux {
+    font-size: 3em;
+    color: #d58729;
+}

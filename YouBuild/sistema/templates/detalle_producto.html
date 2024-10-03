@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Producto</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="flex-container">
+        <div class="column column-left flex-column">
+            <h3>Vendedor</h3>
+            <p>{{ producto.usuario_fk.nombre }}</p>
+            <h3 class="product-name">{{ producto.nombre }}</h3>
+            <img src="{{ producto.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
+            <div class="botones">
+                <button id="btn-comprar" onclick="comprar()">Comprar</button>
+                <button id="btn-agregar-carrito" onclick="agregarCarrito()">Agregar al Carrito</button>
+                <button id="btn-deseos" onclick="agregarDeseos()">Agregar a Deseos</button>
+            </div>
+        </div>
+        <div class="column column-right flex-column">
+            <h3>Descripción</h3>
+            <p>{{ producto.detalle }}</p>
+            <div class="container flex-container">
+                <div class="subcolumn1 flex-column column-left">
+                    <h3 >Precio c/u</h3>
+                    <p class="aux ">{{ producto.precio }}Bs.</p>
+                </div>
+                <div class="subcolumn2 flex-column column-right">
+                    <h3>Cantidad Disponible</h3>
+                    <p class = "aux">{{ producto.cantidad_disponible }} 1 Unidad</p>
+                </div>
+            </div>
+            <h3>Ubicación</h3>
+            <p>{{ producto.usuario_fk.direccion }}</p>
+        </div>
+    </div>
+    <a href="/">Volver a la lista de productos</a>
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>
