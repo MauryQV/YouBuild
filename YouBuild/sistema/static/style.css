@@ -44,11 +44,44 @@ main {
     padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
 }
 
+<<<<<<< HEAD
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
     text-align: center; /* Centra el texto horizontalmente */
     margin-top: -100; /* Elimina el espacio entre el header y el título */
     margin-bottom: 1px; /* Reduce el margen inferior entre el título y el carrusel */
+=======
+header {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del header */
+    position: fixed; /* Fija el header en la parte superior */
+    top: 0; /* Coloca el header en la parte superior */
+    left: 0; /* Alinea el header a la izquierda */
+    right: 0; /* Alinea el header a la derecha */
+    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+    padding: 0;
+    margin: 0;
+}
+
+footer {
+    height: 100px; /* Ajusta según sea necesario */
+    background-color: var(--primary-color); /* Color del footer */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    position: fixed; /* Fija el footer en la parte inferior */
+    bottom: 0; /* Posición en la parte inferior */
+    left: 0; /* Posición en el borde izquierdo */
+    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+    text-align: center; /* Centrar el texto */
+    line-height: 100px; /* Centrar el texto verticalmente */
+    color: var(--text-color); /* Color del texto del footer */
+}
+
+.title {
+    font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
+    text-align: center; /* Centra el texto horizontalmente */
+    margin-top: 10px; /* Espacio pequeño entre el header y el título */
+    margin-bottom: 10px; /* Reduce el margen inferior entre el título y el carrusel */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-weight: bold; /* Puedes agregarle negritas si quieres */
     color: #333; /* Ajusta el color si es necesario */
@@ -70,7 +103,11 @@ main {
     position: relative;
     width: 100%; /* Aumenta el ancho según sea necesario */
     max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+<<<<<<< HEAD
     margin: 0px auto; /* Reduce aún más el margen superior e inferior */
+=======
+    margin: -25px auto; /* Reduce aún más el margen superior e inferior */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
     overflow: hidden; /* Oculta cualquier contenido que sobresalga */
     height: 200px; /* Mantiene la altura reducida del contenedor */
 }
@@ -86,8 +123,18 @@ main {
     display: flex; /* Utiliza flexbox para centrar la imagen */
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
+<<<<<<< HEAD
     height: 200px; /* Altura fija del ítem */
     overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+=======
+    font-size: 3rem; /* Reduce el tamaño de la fuente de los íconos */
+    color: var(--text-color); /* Color del texto (o ícono) */
+    background-color: #fff; /* Color de fondo de cada ítem */
+    border: 1px solid #ddd; /* Borde en todos los lados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el ítem */
+    height: 150px; /* Altura más reducida para cada ítem */
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto total */
+>>>>>>> db473773930759d39e7f6a139a7e7753d1f2b592
 }
 
 .carousel-item img {
