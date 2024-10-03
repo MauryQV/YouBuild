@@ -1,25 +1,61 @@
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Productos</title>
+    <title>Product Carousel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'listaProduct.css' %}">
 </head>
 <body>
-    <h1>YOUBUILD</h1>
+    <header></header>
+    <main>
+        <h1 class="title">Novedades</h1>
+        
+        <!-- Carrusel -->
+        <div class="carousel-container">
+            <div class="carousel" style="transform: translateX(-300%);">
+                <div class="carousel-item"><i class="fas fa-hammer"></i></div>
+                <div class="carousel-item"><i class="fas fa-wrench"></i></div>
+                <div class="carousel-item"><i class="fas fa-screwdriver"></i></div>
+                <div class="carousel-item"><i class="fas fa-paint-roller"></i></div>
+                <div class="carousel-item"><i class="fas fa-brush"></i></div>
+            </div>
+            <button class="carousel-button prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel-dots">
+            
+        </div> 
 
-    <div class="product-list">
-        {% for i in objeto %}
-        <a href="/producto/{{i.id}}" class="product-card">
-            <h2 class="product-name">{{ i.nombre }}</h2>
-            <p class="product-price">Precio: Bs{{ i.precio }}</p>
-            <p class="product-details">{{ i.detalle }}</p>
-        </a>
-        {% endfor %}
+       <!-- Lista de productos disponibles -->
+<h2 class="products-title">Productos Disponibles</h2>
+<div class="products-container">
+    {% for producto in productos %}
+    <div class="product">
+        <img src="{% static producto.imagen_url %}" alt="{{ producto.nombre }}">
+        <h3>{{ producto.nombre }}</h3>
+        <p>Precio: Bs{{ producto.precio }}</p>
+        <div class="buttons-container"> <!-- Contenedor para botones -->
+            <div class="button-row">
+                <button class="btn buy-now">Comprar Ahora</button>
+                <button class="btn add-to-cart">Agregar a Carrito</button>
+            </div>
+            <div class="button-row">
+                <button class="btn add-to-view">Ver Detalles</button>
+                <button class="btn add-to-list">Agregar a Lista</button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay productos disponibles.</p>
+    {% endfor %}
     </div>
 
+    </main>    
+    <footer></footer>
     <script src="{% static 'script.js' %}"></script>
 </body>
 </html>
