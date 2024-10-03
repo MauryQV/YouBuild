@@ -86,9 +86,9 @@ WSGI_APPLICATION = 'YouBuild.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'youbuild_system',
-        'USER': 'postgres',
-        'PASSWORD': '0000',
+        'NAME': 'YouBuild_System',
+        'USER': 'soft-corp',
+        'PASSWORD': 'youbuild123',
         'HOST': 'localhost',
         'PORT': '5432',
     }

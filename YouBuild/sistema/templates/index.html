@@ -7,11 +7,14 @@
     <title>Product Carousel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'listaproduct.css' %}">
 </head>
 <body>
     <header></header>
     <main>
         <h1 class="title">Novedades</h1>
+        
+        <!-- Carrusel -->
         <div class="carousel-container">
             <div class="carousel" style="transform: translateX(-300%);">
                 <div class="carousel-item"><i class="fas fa-hammer"></i></div>
@@ -24,6 +27,31 @@
             <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
         </div>
         <div class="carousel-dots"></div> 
+
+       <!-- Lista de productos disponibles -->
+<h2 class="products-title">Productos Disponibles</h2>
+<div class="products-container">
+    {% for producto in productos %}
+    <div class="product">
+        <img src="{% static producto.imagen_url %}" alt="{{ producto.nombre }}">
+        <h3>{{ producto.nombre }}</h3>
+        <p>Precio: Bs{{ producto.precio }}</p>
+        <div class="buttons-container"> <!-- Contenedor para botones -->
+            <div class="button-row">
+                <button class="btn buy-now">Comprar Ahora</button>
+                <button class="btn add-to-cart">Agregar a Carrito</button>
+            </div>
+            <div class="button-row">
+                <button class="btn add-to-view">Ver Detalles</button>
+                <button class="btn add-to-list">Agregar a Lista</button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay productos disponibles.</p>
+    {% endfor %}
+    </div>
+
     </main>    
     <footer></footer>
     <script src="{% static 'script.js' %}"></script>
