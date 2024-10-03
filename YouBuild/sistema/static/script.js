@@ -122,3 +122,11 @@ function updateCarousel() {
     carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
     updateDots(); // Asegúrate de actualizar los puntos cada vez que cambie el carrusel
 }
+
+function verDetalles(productId) {
+    window.location.href = `/producto/${productId}/`;
+}
+
+function volverALista() {
+    window.location.href = "/";
+}
