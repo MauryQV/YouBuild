@@ -207,3 +207,83 @@ footer {
 .dot.active {
     transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
+
+/* Estilos base para contenedores flex */
+.flex-container {
+    display: flex; 
+    text-align: left;
+    background-color: white;
+    margin: 3em;
+    padding: 2em;
+    margin-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flex-column {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+.sub-container {
+    display: flex; 
+    text-align: left;
+    width: 100%;
+}
+
+.subcolumn1 {
+    flex: 3; 
+}
+
+.subcolumn2 {
+    flex: 4; 
+}
+
+.column {
+    flex: 1; 
+}
+
+.producto-imagen {
+    max-width: 20rem; 
+}
+
+.aux {
+    font-size: 3em;
+    color: #d58729;
+}
+
+.product-name {
+    font-size: 2em;
+    color: #d58729;
+}
+
+/* Media Queries para hacer el diseño responsive */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+        margin: 1em;
+        padding: 1em;
+    }
+
+    .sub-container {
+        flex-direction: column;
+    }
+
+    .subcolumn1, .subcolumn2 {
+        width: 100%;
+    }
+
+    .column {
+        width: 100%;
+    }
+
+    .producto-imagen {
+        max-width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
