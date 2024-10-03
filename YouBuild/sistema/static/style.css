@@ -43,7 +43,6 @@ footer {
     background-color: var(--primary-color); /* Color del footer */
     width: 100%; /* Ocupa todo el ancho disponible */
     position: relative; /* Cambia a relative para que no se superponga */
-    /* no se necesita 'bottom' y 'left' */
     z-index: 1; /* Asegúrate de que esté debajo de otros elementos si es necesario */
     text-align: center; /* Centrar el texto */
     line-height: 100px; /* Centrar el texto verticalmente */
@@ -152,46 +151,41 @@ footer {
 .dot.active {
     transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
+
 /* Estilos base para contenedores flex */
 .flex-container {
     display: flex; 
-    text-align: left; 
+    text-align: left;
+    background-color: white;
+    margin: 3em;
+    padding: 2em;
+    margin-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .flex-column {
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
-    padding: 10px; 
 }
 
-
-.container {
-    @extend .flex-container;
+.sub-container {
+    display: flex; 
+    text-align: left;
     width: 100%;
 }
 
 .subcolumn1 {
-    @extend .flex-column;
     flex: 3; 
 }
 
 .subcolumn2 {
-    @extend .flex-column;
     flex: 4; 
 }
 
 .column {
-    @extend .flex-column;
     flex: 1; 
-}
-
-.column-left {
-    background-color: #f9f9f9; /* Color de fondo de la columna izquierda */
-}
-
-.column-right {
-    background-color: #f9f9f9; /* Color de fondo de la columna derecha */
 }
 
 .producto-imagen {
@@ -201,4 +195,39 @@ footer {
 .aux {
     font-size: 3em;
     color: #d58729;
+}
+
+.product-name {
+    font-size: 2em;
+    color: #d58729;
+}
+
+/* Media Queries para hacer el diseño responsive */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+        margin: 1em;
+        padding: 1em;
+    }
+
+    .sub-container {
+        flex-direction: column;
+    }
+
+    .subcolumn1, .subcolumn2 {
+        width: 100%;
+    }
+
+    .column {
+        width: 100%;
+    }
+
+    .producto-imagen {
+        max-width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
 }

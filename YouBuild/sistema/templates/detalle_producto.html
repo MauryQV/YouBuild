@@ -5,25 +5,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Producto</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
 </head>
 <body>
-    <div class="flex-container">
+    <header>
+        <div class="topbar-container">
+            <!-- Sección izquierda (Logo) -->
+            <div class="topbar-left">
+                <a href="#home" class="logo">
+                    <img src="your-logo.png" alt="Logo" width="50"> <!-- Imagen del logo -->
+                </a>
+            </div>
+            <!-- Sección centro (Búsqueda) -->
+            <div class="topbar-center">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar">
+                    <button><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <!-- Sección derecha (Botones) -->
+            <div class="topbar-right">
+                <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
+                <a href="#registrarse" class="btn-link">Registrarse</a>
+                <a href="#carrito" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <h1 class="title">{{ producto.nombre }}</h1>
+        <div class="flex-container ">
         <div class="column column-left flex-column">
             <h3>Vendedor</h3>
             <p>{{ producto.usuario_fk.nombre }}</p>
             <h3 class="product-name">{{ producto.nombre }}</h3>
             <img src="{{ producto.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
-            <div class="botones">
-                <button id="btn-comprar" onclick="comprar()">Comprar</button>
-                <button id="btn-agregar-carrito" onclick="agregarCarrito()">Agregar al Carrito</button>
-                <button id="btn-deseos" onclick="agregarDeseos()">Agregar a Deseos</button>
+            <div class="botones button-row">
+                <button class= "btn" id ="btn-comprar" onclick="comprar()">Comprar</button>
+                <button class= "btn"    id="btn-agregar-carrito" onclick="agregarCarrito()">Agregar al Carrito</button>
+                <button class= "btn" id="btn-deseos" onclick="agregarDeseos()">Agregar a Deseos</button>
             </div>
         </div>
         <div class="column column-right flex-column">
             <h3>Descripción</h3>
             <p>{{ producto.detalle }}</p>
-            <div class="container flex-container">
+            <div class="sub-container">
                 <div class="subcolumn1 flex-column column-left">
                     <h3 >Precio c/u</h3>
                     <p class="aux ">{{ producto.precio }}Bs.</p>
@@ -36,7 +68,10 @@
             <p>{{ producto.usuario_fk.direccion }}</p>
         </div>
     </div>
-    <a href="/">Volver a la lista de productos</a>
+    <a class= "btn" style= "max-width: fit-content;" href=" /">Volver a la lista de productos</a>
     <script src="{% static 'script.js' %}"></script>
+    </main>
+    <footer></footer>
+
 </body>
 </html>
