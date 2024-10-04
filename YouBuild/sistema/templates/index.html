@@ -24,10 +24,12 @@
             </div>
             <!-- Sección centro (Búsqueda) -->
             <div class="topbar-center">
+              <form action="{% url 'buscar' %}" method="GET">
                 <div class="search-box">
-                    <input type="text" placeholder="Buscar">
+                    <input type="text" placeholder="Buscar" name="q">
                     <button><i class="fa fa-search"></i></button>
                 </div>
+              </form>
             </div>
             <!-- Sección derecha (Botones) -->
             <div class="topbar-right">

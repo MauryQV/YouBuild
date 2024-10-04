@@ -1,6 +1,7 @@
+# Entorno virtual
 env/
 venv/
-__pycache__/
 *.pyc
-venv/Scripts/
-venv/Lib\site-packages/
+*.pyo
+*.pyd
+__pycache__/
