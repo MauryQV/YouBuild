@@ -6,6 +6,7 @@ from sistema.views import IndexView, ProductoView
 urlpatterns = [
     path('', IndexView, name='index'),
     path('producto/<int:id>/', ProductoView, name='detalle_producto'),
+    path('buscar/', BuscarView, name='buscar'),
 ]
 
 if settings.DEBUG:
