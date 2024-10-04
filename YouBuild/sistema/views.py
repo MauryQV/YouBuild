@@ -13,3 +13,11 @@ def IndexView(request):
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     return render(request, "detalle_producto.html", {"producto": producto})
+
+def BuscarView(request):
+    q = request.GET.get('q', '')
+    productos = ProductoDb.objects.filter(nombre__icontains=q)
+    print('Estos son los productos:')
+    for producto in productos:
+        print(producto)
+    return render(request, 'index.html', {'producto': productos})
