@@ -4,7 +4,7 @@ from .models import *
 # Define la clase ImagenProductoInline primero
 class ImagenProductoInline(admin.TabularInline):
     model = ImagenProductoDb
-    extra = 3  # Número de imágenes adicionales que se pueden agregar en el admin
+    extra = 2  # Número de imágenes adicionales que se pueden agregar en el admin
 
 # Ahora registra el modelo ProductoDb con la inline
 @admin.register(ProductoDb)
