@@ -3,10 +3,8 @@ from .models import ProductoDb, CategoriaDb, CarruselDB
 
 # Vista principal
 
-
-
 def IndexView(request): 
-    productos = ProductoDb.objects.all().order_by("id")  
+    productos = ProductoDb.objects.all().order_by('-visitas')  # Ordena por visitas de mayor a menor
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
@@ -21,3 +19,9 @@ def BuscarView(request):
     for producto in productos:
         print(producto)
     return render(request, 'index.html', {'producto': productos})
+
+def ProductoView(request, id):
+    producto = get_object_or_404(ProductoDb, id=id)
+    producto.visitas += 1  
+    producto.save()  
+    return render(request, "detalle_producto.html", {"producto": producto})

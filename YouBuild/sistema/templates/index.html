@@ -7,8 +7,7 @@
     <title>Product Carousel</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
@@ -63,32 +62,30 @@
       </div>
       <div class="carousel-dots"></div>
 
-      <!-- Lista de productos disponibles -->
-      <h2 class="products-title">Productos Disponibles</h2>
-      <div class="products-container">
-        {% for producto in producto %}
-        <div class="product">
-          <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
-          <h3>{{ producto.nombre }}</h3>
-          <p>Precio: Bs{{ producto.precio }}</p>
-          <div class="buttons-container">
-            <!-- Contenedor para botones -->
-            <div class="button-row">
-              <button class="btn buy-now">Comprar Ahora</button>
-              <button class="btn add-to-cart">Agregar a Carrito</button>
-            </div>
-            <div class="button-row">
-              <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
-              <button class="btn add-to-list">Agregar a Lista</button>
-            </div>
-          </div>
-        </div>
-
-        {% empty %}
-        <p>No hay productos disponibles.</p>
-        {% endfor %}
+<!-- Lista de productos disponibles -->
+<h2 class="products-title">Productos Disponibles</h2>
+<div class="products-container">
+  {% for producto in producto %}
+  <div class="product">
+    <img src="{{ producto.imagenes.first.imagenProduc.url }}" alt="{{ producto.nombre }}" />
+    <h3>{{ producto.nombre }}</h3>
+    <p>Precio: Bs{{ producto.precio }}</p>
+    <div class="buttons-container">
+      <div class="button-row">
+        <button class="btn buy-now">Comprar Ahora</button>
+        <button class="btn add-to-cart">Agregar a Carrito</button>
       </div>
-    </main>
+      <div class="button-row">
+        <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
+        <button class="btn add-to-list">Agregar a Lista</button>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No hay productos disponibles.</p>
+  {% endfor %}
+</div>
+
 
     <footer>
       <div class="footer-container">
