@@ -46,11 +46,13 @@
             <p>{{ producto.usuario_fk.nombre }}</p>
             <h3 class="product-name">{{ producto.nombre }}</h3>
             <div class="imagenes-producto">
-                {% for imagen in producto.imagenes.all %}
-                    <img src="{{ imagen.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
-                {% empty %}
+                {% if producto.imagenes.all %}
+                    {% for imagen in producto.imagenes.all %}
+                        <img src="{{ imagen.imagenProduc.url }}" alt="Imagen del producto" class="producto-imagen">
+                    {% endfor %}
+                {% else %}
                     <p>No hay imágenes disponibles para este producto.</p>
-                {% endfor %}
+                {% endif %}
             </div>
             <div class="botones button-row">
                 <button class= "btn" id ="btn-comprar" onclick="comprar()">Comprar</button>
