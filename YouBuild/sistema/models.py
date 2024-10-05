@@ -82,7 +82,7 @@ class ProductoDb(models.Model):
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        db_table = "productos"  # Convención de nombres en minúsculas para tablas
+        db_table = "productos"
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
 
@@ -99,7 +99,7 @@ class ImagenProductoDB(models.Model):
         
     def __str__(self):
         return self.producto_fk.nombre
-
+    
 class TipoPagoDB(models.Model):  
     nombre = models.CharField(max_length=30,verbose_name="Nombre_tipo_de_pago")
     class Meta:
@@ -137,4 +137,6 @@ class CarruselDB(models.Model):
          verbose_name = "Carrusel"
          verbose_name_plural = "Carruseles"
         
+
+
     

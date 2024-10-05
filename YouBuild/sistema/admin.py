@@ -9,12 +9,12 @@ class ImagenInline(admin.TabularInline):
 class ProductoAdmin(admin.ModelAdmin):
     inlines = [ImagenInline]
 
+# El resto de los modelos registrados
 @admin.register(CategoriaDb)
 class CategoriaAdmin(admin.ModelAdmin):
     fields = ["nombre"]
     list_display = ["nombre"]
-    
-    
+
 @admin.register(DepartamentoDB)
 class DepartamentoAdmin(admin.ModelAdmin):
     fields = ["nombre"]
@@ -25,28 +25,17 @@ class ProvinciaAdmin(admin.ModelAdmin):
      fields = ["nombre","departamento_fk"]
      list_display = ["nombre"]
 
-
 @admin.register(MunicipioDB)
 class MunicipioAdmin(admin.ModelAdmin):
      fields = ["nombre","provincia_fk"]
      list_display = ["nombre"]
-     
+
 admin.site.register(UsuarioDB)
-
 admin.site.register(CarritoDB)
-    
 admin.site.register(TipoPagoDB)    
-
 admin.site.register(PagoDB)
+admin.site.register(CarritoProductoDB)
+admin.site.register(CarruselDB)
 
-admin.site.register(CarritoProductoDB)   
-
-admin.site.register(CarruselDB) 
-    
-
-
-    
-
-    
-    
+# Finalmente, registra el modelo de imagen también
 
