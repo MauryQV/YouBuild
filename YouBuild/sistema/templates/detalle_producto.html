@@ -43,7 +43,7 @@
         <div class="flex-container">
             <div class="column column-left flex-column">
                 <h3>Vendedor</h3>
-                <p>{{ producto.usuario_fk.nombre }}</p>
+                <p>{{ producto.usuario_fk.nombre }} {{ producto.usuario_fk.apellido }}</p>
                 <h3 class="product-name">{{ producto.nombre }}</h3>
                 <!-- Mostrar todas las imágenes del producto en un carrusel -->
                 <div class="carousel-productos-container">
@@ -64,8 +64,10 @@
                 </div>
                 <div class="botones button-row">
                     <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
-                    <button class="btn" id="btn-agregar-carrito" onclick="agregarCarrito()">Agregar al Carrito</button>
-                    <button class="btn" id="btn-deseos" onclick="agregarDeseos()">Agregar a Deseos</button>
+                    <button class="btn add-to-view"" id=" btn-agregar-carrito" onclick="agregarCarrito()">Agregar al
+                        Carrito</button>
+                    <button class="btn add-to-view"" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
+                        Deseos</button>
                 </div>
             </div>
             <div class="column column-right flex-column">
@@ -74,23 +76,30 @@
                 <div class="sub-container">
                     <div class="subcolumn1 flex-column column-left">
                         <h3>Precio c/u</h3>
-                        <p class="aux">{{ producto.precio }}Bs.</p>
+                        <p class="aux">{{ producto.precio }} Bs.</p>
                     </div>
                     <div class="subcolumn2 flex-column column-right">
                         <h3>Cantidad Disponible</h3>
+                        <p class="aux">1 Unidad</p>
                     </div>
                 </div>
                 <h3>Ubicación</h3>
-                <p>{{ producto.usuario_fk.direccion }}</p>
+                <p>
+                    {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
+                    {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
+                    {{ producto.usuario_fk.municipio_fk }}
+                </p>
             </div>
         </div>
-        <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de productos</button>
+        <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
+            productos</button>
         <script src="{% static 'carrouselproductos.js' %}"></script>
     </main>
     <footer>
         <div class="footer-container">
             <div class="footer-description">
-                <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+                <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte
+                    calidad y un excelente servicio.</p>
             </div>
             <div class="footer-links">
                 <h4>Redes Sociales</h4>

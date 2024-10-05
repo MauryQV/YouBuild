@@ -205,7 +205,8 @@ footer {
     text-align: left;
     background-color: white;
     margin: 3em;
-    padding: 2em;
+    padding: 4em;
+    gap: 4em;
     margin-top: 30px;
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
