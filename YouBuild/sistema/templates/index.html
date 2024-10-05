@@ -68,8 +68,7 @@
       <div class="products-container">
         {% for producto in producto %}
         <div class="product">
-          <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
-          <h3>{{ producto.nombre }}</h3>
+          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
           <p>Precio: Bs{{ producto.precio }}</p>
           <div class="buttons-container">
             <!-- Contenedor para botones -->

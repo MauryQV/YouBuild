@@ -1,12 +1,13 @@
 from django.contrib import admin
 from .models import *
 # Register your models here.
+class ImagenInline(admin.TabularInline):
+    model = ImagenProductoDB
+    extra = 1
 
+@admin.register(ProductoDb)
 class ProductoAdmin(admin.ModelAdmin):
-    fields = ["nombre", "detalle", "precio", "categoria_fk","usuario_fk","imagen"]
-    list_display = ["nombre"]
-
-admin.site.register(ProductoDb, ProductoAdmin)
+    inlines = [ImagenInline]
 
 @admin.register(CategoriaDb)
 class CategoriaAdmin(admin.ModelAdmin):
