@@ -80,8 +80,6 @@ class ProductoDb(models.Model):
     precio = models.FloatField(verbose_name="Precio", validators=[MinValueValidator(0.0), MaxValueValidator(99999.9)])
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
-    visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")  # Nuevo campo para visitas
-
 
     class Meta:
         db_table = "productos"
@@ -90,20 +88,18 @@ class ProductoDb(models.Model):
 
     def __str__(self):
         return self.nombre
-
-# Modelo para las imágenes del producto
-class ImagenProductoDb(models.Model):
-    producto_fk = models.ForeignKey(ProductoDb, related_name='imagenes', on_delete=models.CASCADE)
-    imagenProduc = models.ImageField(upload_to="productos", null=True, blank=True)
-
+      
+class ImagenProductoDB(models.Model):
+    producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="imagenes")
+    imagen = models.ImageField(upload_to="productos", null=True)
+    
     class Meta:
-        db_table = "imagenes_productos"
-        verbose_name = "Imagen del Producto"
-        verbose_name_plural = "Imágenes del Producto"
-
+        verbose_name = "Imagen"
+        verbose_name_plural = "Imágenes"
+        
     def __str__(self):
-        return f"Imagen de {self.producto_fk.nombre}"
-
+        return self.producto_fk.nombre
+    
 class TipoPagoDB(models.Model):  
     nombre = models.CharField(max_length=30,verbose_name="Nombre_tipo_de_pago")
     class Meta:

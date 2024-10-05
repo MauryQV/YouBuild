@@ -1,15 +1,13 @@
 from django.contrib import admin
 from .models import *
+# Register your models here.
+class ImagenInline(admin.TabularInline):
+    model = ImagenProductoDB
+    extra = 1
 
-# Define la clase ImagenProductoInline primero
-class ImagenProductoInline(admin.TabularInline):
-    model = ImagenProductoDb
-    extra = 2  # Número de imágenes adicionales que se pueden agregar en el admin
-
-# Ahora registra el modelo ProductoDb con la inline
 @admin.register(ProductoDb)
 class ProductoAdmin(admin.ModelAdmin):
-    inlines = [ImagenProductoInline]
+    inlines = [ImagenInline]
 
 # El resto de los modelos registrados
 @admin.register(CategoriaDb)
@@ -40,4 +38,4 @@ admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
 
 # Finalmente, registra el modelo de imagen también
-admin.site.register(ImagenProductoDb)
+
