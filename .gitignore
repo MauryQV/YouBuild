@@ -1,0 +1,51 @@
+<<<<<<< HEAD
+=======
+myenv/
+venv/
+env/
+__pycache__/
+**/__pycache__/
+*.pyc
+# Entorno virtual
+env/
+venv/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Archivos de configuración de VSCode
+.vscode/
+
+# Archivos de bases de datos locales
+*.sqlite3
+
+# Archivos de logs
+*.log
+
+# Configuración de la base de datos local
+db.sqlite3
+
+# Archivos de migraciones de Django
+*/migrations/*
+
+# Archivos de entorno
+.env
+
+# Archivos de caché
+*.log
+*.pot
+*.pyc
+*.swp
+*.swo
+*.sqlite3
+*.egg-info/
+
+# Archivos de instalación y dependencias
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+>>>>>>> develop
