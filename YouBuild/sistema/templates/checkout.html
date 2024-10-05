@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dirección de Envío</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
     <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Dirección de Envío</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Dirección de Envío y Pago</h2>
         
         <form id="shippingForm" class="space-y-4">
             <div>
@@ -35,27 +36,124 @@
                 </button>
             </div>
         </form>
+
+        <div id="paymentSection" class="hidden space-y-4 mt-8">
+            <h3 class="text-xl font-bold mb-4 text-center text-gray-800">Pago con Código QR</h3>
+            <div id="paymentInfo" class="space-y-4">
+                <p class="text-center text-gray-600">Monto a pagar: <span id="amount" class="font-bold">Bs50.00</span></p>
+                <div id="qrcode" class="flex justify-center"></div>
+                <p class="text-center text-sm text-gray-500">Escanea este código QR con tu aplicación de pagos</p>
+                <button id="checkPayment" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Verificar Pago
+                </button>
+            </div>
+            <div id="paymentStatus" class="hidden mt-4">
+                <p id="statusMessage" class="text-center text-lg font-medium"></p>
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const shippingForm = document.getElementById('shippingForm');
+            const paymentSection = document.getElementById('paymentSection');
             const autocompleteBtn = document.getElementById('autocompleteBtn');
+            const checkPaymentButton = document.getElementById('checkPayment');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const statusMessage = document.getElementById('statusMessage');
+            const amount = document.getElementById('amount').textContent;
 
-            // Función para autocompletar los campos de dirección
             autocompleteBtn.addEventListener('click', function() {
-                // Llenar los campos de dirección con valores de ejemplo
                 document.getElementById('street').value = 'Calle Principal 123';
                 document.getElementById('city').value = 'Ciudad Ejemplo';
                 document.getElementById('state').value = 'Estado Ejemplo';
             });
 
-            // Validar y manejar el envío del formulario
             shippingForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevenir el comportamiento predeterminado
-
-                alert('Formulario enviado correctamente'); // Aquí puedes manejar el envío
+                e.preventDefault();
+                if (validateForm()) {
+                    showPaymentSection();
+                }
             });
+
+            function validateForm() {
+                let isValid = true;
+                shippingForm.querySelectorAll('input[required]').forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        showError(input, 'Este campo es requerido');
+                    } else {
+                        hideError(input);
+                    }
+                });
+                return isValid;
+            }
+
+            function showError(input, message) {
+                const errorElement = input.nextElementSibling;
+                if (!errorElement || !errorElement.classList.contains('error-message')) {
+                    const error = document.createElement('p');
+                    error.classList.add('error-message', 'text-red-500', 'text-sm', 'mt-1');
+                    error.textContent = message;
+                    input.parentNode.insertBefore(error, input.nextSibling);
+                }
+                input.classList.add('border-red-500');
+            }
+
+            function hideError(input) {
+                const errorElement = input.nextElementSibling;
+                if (errorElement && errorElement.classList.contains('error-message')) {
+                    errorElement.remove();
+                }
+                input.classList.remove('border-red-500');
+            }
+
+            function showPaymentSection() {
+                paymentSection.classList.remove('hidden');
+                generateQRCode();
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+
+            function generateQRCode() {
+                const transactionId = 'TRANS-' + Math.random().toString(36).substr(2, 9);
+                const paymentInfo = {
+                    amount: amount,
+                    transactionId: transactionId,
+                    merchantName: 'Tienda Ejemplo'
+                };
+
+                const qr = qrcode(0, 'M');
+                qr.addData(JSON.stringify(paymentInfo));
+                qr.make();
+                document.getElementById('qrcode').innerHTML = qr.createImgTag(5, 10, "Código QR de pago");
+            }
+
+            checkPaymentButton.addEventListener('click', checkPaymentStatus);
+
+            function checkPaymentStatus() {
+                checkPaymentButton.disabled = true;
+                checkPaymentButton.textContent = 'Verificando...';
+
+                setTimeout(() => {
+                    const isPaid = Math.random() < 0.5; // 50% de probabilidad de éxito
+                    displayPaymentStatus(isPaid);
+                    checkPaymentButton.disabled = false;
+                    checkPaymentButton.textContent = 'Verificar Pago';
+                }, 2000);
+            }
+
+            function displayPaymentStatus(isPaid) {
+                paymentStatus.classList.remove('hidden');
+                if (isPaid) {
+                    statusMessage.textContent = '¡Pago exitoso!';
+                    statusMessage.classList.add('text-green-600');
+                    statusMessage.classList.remove('text-red-600');
+                } else {
+                    statusMessage.textContent = 'Pago no recibido. Por favor, intenta de nuevo.';
+                    statusMessage.classList.add('text-red-600');
+                    statusMessage.classList.remove('text-green-600');
+                }
+            }
         });
     </script>
 </body>
