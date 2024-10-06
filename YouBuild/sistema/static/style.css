@@ -11,35 +11,37 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: grid; /* Cambiamos a grid */
-    grid-template-rows: auto 1fr auto; /* Define filas: header, main y footer */
-    min-height: 100vh; /* Ocupa al menos toda la altura de la ventana */
+    display: grid; 
+    grid-template-rows: auto 1fr auto; 
+    min-height: 100vh;
     background-color: var(--background-color);
 }
 
 main {
-    display: flex; /* Cambiamos a flex para el main */
-    flex-direction: column; /* Dirección de los elementos en columna */
-    flex: 1; /* Permite que el main ocupe el espacio disponible */
-    justify-content: flex-start; /* Alínea los elementos al inicio */
-    margin: 0; /* Elimina márgenes */
-    padding-top: 100px; /* Espacio para evitar que el contenido quede oculto detrás del header */
+    display: flex; 
+    flex-direction: column; 
+    flex: 1; 
+    justify-content: flex-start; 
+    margin: 0;
+    padding-top: 100px; 
 }
 
 footer {
-    background-color: #FFCC80; /* Color de fondo */
-    padding: 20px 0; /* Espaciado */
-    width: 100%; /* Ancho completo */
-    position: relative; /* Para asegurar que se mantenga al final */
+    background-color: #1c1c0d;
+    padding: 20px 0;
+    width: 100%; 
+    position: relative; 
+    color:#fff
 }
 
 .footer-container {
-    display: flex; /* Flexbox para disposición horizontal */
-    justify-content: space-around; /* Espacio entre elementos */
-    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
-    max-width: 960px; /* Ancho máximo */
-    margin: 0 auto; /* Centrar el footer */
-    padding: 0 10px; /* Espaciado lateral */
+    display: flex; 
+    justify-content: space-around; 
+    flex-wrap: wrap;
+    max-width: 960px;
+    margin: 0 auto; 
+    padding: 0 10px; 
+    
 }
 
 .footer-description,
@@ -101,7 +103,7 @@ footer {
     margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-weight: bold; /* Puedes agregarle negritas si quieres */
-    color: #333; /* Ajusta el color si es necesario */
+    color: #ffffff; /* Ajusta el color si es necesario */
     position: relative; /* Permite ajustar la posición sin afectar el flujo del documento */
 }
 
@@ -121,10 +123,12 @@ footer {
     align-items: center; /* Centra los ítems verticalmente */
     position: relative;
     width: 90%; /* Aumenta el ancho según sea necesario */
-    max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+   /* max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
     margin: -25px auto; /* Reduce aún más el margen superior e inferior */
     overflow: hidden; /* Oculta cualquier contenido que sobresalga */
-    height: 200px; /* Mantiene la altura reducida del contenedor */
+    /*height: 200px;  Mantiene la altura reducida del contenedor */
+    height: auto; /* Permitir que la altura se ajuste automáticamente */
+    max-width: 1200px; /* Puedes aumentar el ancho máximo del carrusel si es necesario */
 }
 
 .carousel {
@@ -148,9 +152,9 @@ footer {
 }
 
 .carousel-item img {
-    width: 250px; /* Ancho fijo para todas las imágenes */
-    height: 200px; /* Altura fija para todas las imágenes */
-    object-fit: cover; /* Ajusta la imagen para cubrir completamente el área */
+    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    height: auto; /* Deja que la altura se ajuste automáticamente */
+    object-fit: cover; /* Sigue cubriendo el área de manera proporcional */
     display: block; /* Asegura que la imagen sea un bloque */
 }
 
