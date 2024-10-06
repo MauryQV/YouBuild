@@ -40,7 +40,6 @@ function startWaveEffect() {
 // Comienza el efecto de onda
 startWaveEffect();
 
-
 const carousel = document.querySelector('.carousel');
 const items = document.querySelectorAll('.carousel-item');
 const prevBtn = document.querySelector('.prev');
@@ -48,11 +47,12 @@ const nextBtn = document.querySelector('.next');
 
 let currentIndex = 0;
 const totalItems = items.length;
-const transitionTime = 5000; // 4 segundos
+const transitionTime = 5000; // 5 segundos
 
 // Función para actualizar la posición del carrusel
 function updateCarousel() {
     carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+    updateDots(); // Asegúrate de actualizar los puntos cada vez que cambie el carrusel
 }
 
 // Función para pasar al siguiente slide
@@ -84,7 +84,7 @@ prevBtn.addEventListener('click', () => {
     resetAutoSlide(); // Reinicia el temporizador
 });
 
-// Automático: Cambia de imagen cada 4 segundos
+// Automático: Cambia de imagen cada 5 segundos
 let autoSlideInterval = setInterval(nextSlide, transitionTime);
 
 const dotsContainer = document.querySelector('.carousel-dots'); // Selecciona el contenedor de puntos
@@ -97,7 +97,6 @@ function createDots() {
         dot.addEventListener('click', () => {
             currentIndex = i; // Actualiza el índice actual al hacer clic en el punto
             updateCarousel(); // Actualiza el carrusel
-            updateDots(); // Actualiza los puntos
             resetAutoSlide(); // Reinicia el temporizador
         });
         dotsContainer.appendChild(dot);
@@ -108,7 +107,6 @@ function createDots() {
 function updateDots() {
     const dots = document.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
-        // Agrega o quita la clase 'active' para cada punto según el índice actual
         dot.classList.toggle('active', index === currentIndex); // Activa el punto correspondiente
     });
 }
@@ -116,12 +114,6 @@ function updateDots() {
 // Inicializa los puntos de navegación
 createDots();
 updateDots(); // Asegúrate de que el punto correcto esté activo al inicio
-
-// Función para actualizar la posición del carrusel
-function updateCarousel() {
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-    updateDots(); // Asegúrate de actualizar los puntos cada vez que cambie el carrusel
-}
 
 function verDetalles(productId) {
     window.location.href = `/producto/${productId}/`;
