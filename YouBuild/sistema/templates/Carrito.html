@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block extra_styles %}
+<!-- Dependencias personalizadas -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'Carrito.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Carrito de Compras</h1>
+    <div class="cart-container">
+        <!-- Tabla con productos seleccionados -->
+        <div class="cart-products">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ELIMINAR</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO</th>
+                        <th>SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Mostrar productos en el carrito -->
+                    {% for item in productos %}
+                    <tr>
+                        <td>
+                            <form action="{% url 'eliminar_producto' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="product-info">
+                                <img src="{{ item.producto_fk.imagenes.first.imagen.url }}" alt="{{ item.producto_fk.nombre }}" class="product-image">
+                                <span>{{ item.producto_fk.nombre }}</span>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.producto_fk.precio }}</td>
+                        <td>Bs 0.00</td>  <!-- Placeholder para el subtotal -->
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No hay productos en el carrito.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'index' %}" class="btn-seguir-comprando">Seguir comprando</a>
+        </div>
+
+        <!-- Resumen del carrito -->
+        <div class="cart-summary">
+            <h2>TOTALES DEL CARRITO</h2>
+            <div class="summary-item">
+                <span>Subtotal</span>
+                <span>Bs 0.00</span>  <!-- Placeholder para el subtotal -->
+            </div>
+            <div class="summary-item">
+                <span>Envío</span>
+                <span>Gratis</span>
+            </div>
+            <div class="summary-item">
+                <span>Total</span>
+                <span>Bs 0.00</span>  <!-- Placeholder para el total -->
+            </div>
+            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'carrouselproductos.js' %}"></script>
+{% endblock %}
+
+
