@@ -4,7 +4,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #FAF7F0;
+    background-color: #f5ca9f;
+    margin-top: auto;
 }
 
 /* Sección izquierda (Logo) */
@@ -16,19 +17,24 @@
 .topbar-center {
     flex-grow: 1;
     text-align: center;
+    
 }
 
 .search-box {
     display: inline-flex;
-    background-color: #F2EBD3;
+    background-color: #f8f7f5;
+    border: 2px solid #ED8C2B; /* Añadido borde */
     border-radius: 10px;
-    padding: 5px 10px;
+    padding: 5px; /* Ajustado el padding para tener espacio interior */
+    width: 400px; /* Aumentar el ancho según lo necesites */
 }
 
 .search-box input {
     border: none;
     background-color: transparent;
     outline: none;
+    flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
+    padding: 5px; /* Espacio interior del input */
 }
 
 .search-box button {
@@ -48,23 +54,27 @@
     gap: 10px;
 }
 
-.btn-link {
+/* Estilo de los botones de enlace e icono */
+.btn-link, .icon-btn {
     padding: 10px 15px;
-    background-color: #F2EBD3;
+    background-color: white;
+    border: 2px solid #ED8C2B;
     border-radius: 8px;
-    color: #333;
+    color: #ED8C2B;
     text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.icon-btn {
-    padding: 10px;
-    background-color: #F2EBD3;
-    border-radius: 8px;
-    color: #333;
-}
-
+/* Estilo del ícono en el botón icon-btn */
 .icon-btn i {
     font-size: 18px;
+}
+
+/* Hover (Cambios al acercar el cursor) */
+.btn-link:hover, .icon-btn:hover {
+    background-color: #ED8C2B;
+    color: white;
 }
 
 /* Ajuste del botón "Iniciar Sesión" */

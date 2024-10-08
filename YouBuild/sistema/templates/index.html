@@ -20,7 +20,7 @@
             
             <div class="topbar-left">
                 <a href="#home" class="logo">
-                  <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
+                  <img src="{% static 'logo.png' %}" alt="Logo" width="125">
                 </a>
             </div>
             
@@ -69,7 +69,7 @@
         {% for producto in producto %}
         <div class="product">
           <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
-          <p>Precio: Bs{{ producto.precio }}</p>
+          <p>Bs {{ producto.precio }}</p>
           <div class="buttons-container">
             <!-- Contenedor para botones -->
             <div class="button-row">
