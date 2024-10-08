@@ -74,7 +74,7 @@
             <!-- Contenedor para botones -->
             <div class="button-row">
               <button class="btn buy-now">Comprar Ahora</button>
-              <button class="btn add-to-cart">Agregar a Carrito</button>
+              <a href="{% url 'añadir_al_carrito' producto.id %}" class="btn add-to-cart">Añadir al Carrito</a>
             </div>
             <div class="button-row">
               <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
