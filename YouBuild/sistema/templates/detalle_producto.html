@@ -1,18 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Producto</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
-    <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'carrouselproductos.css' %}">
 </head>
+
 <body>
     <header>
         <div class="topbar-container">
@@ -40,76 +40,95 @@
     </header>
     <main>
         <h1 class="title">{{ producto.nombre }}</h1>
-        <div class="flex-container ">
-        <div class="column column-left flex-column">
-            <h3>Vendedor</h3>
-            <p>{{ producto.usuario_fk.nombre }}</p>
-            <h3 class="product-name">{{ producto.nombre }}</h3>
-            <div class="imagenes-producto">
-                {% if producto.imagenes.all %}
+        <div class="flex-container">
+            <div class="column column-left flex-column">
+                <h3>Vendedor</h3>
+                <p>{{ producto.usuario_fk.nombre }} {{ producto.usuario_fk.apellido }}</p>
+                <h3 class="product-name">{{ producto.nombre }}</h3>
+                <!-- Mostrar todas las imágenes del producto en un carrusel -->
+                <div class="carousel-productos-container">
+                    <button class="carousel-productos-button prev" onclick="changeSlide(-1)">&#10094;</button>
+                    <div class="carousel-productos">
+                        {% for imagen in producto.imagenes.all %}
+                        <div class="carousel-productos-item">
+                            <img src="{{ imagen.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-productos-button next" onclick="changeSlide(1)">&#10095;</button>
+                </div>
+                <div class="carousel-productos-dots">
                     {% for imagen in producto.imagenes.all %}
-                        <img src="{{ imagen.imagenProduc.url }}" alt="Imagen del producto" class="producto-imagen">
+                    <span class="dot" onclick="currentSlide({{ forloop.counter0 }})"></span>
                     {% endfor %}
-                {% else %}
-                    <p>No hay imágenes disponibles para este producto.</p>
-                {% endif %}
-            </div>
-            <div class="botones button-row">
-                <button class= "btn" id ="btn-comprar" onclick="comprar()">Comprar</button>
-                <button class= "btn"    id="btn-agregar-carrito" onclick="agregarCarrito()">Agregar al Carrito</button>
-                <button class= "btn" id="btn-deseos" onclick="agregarDeseos()">Agregar a Deseos</button>
-            </div>
-        </div>
-        <div class="column column-right flex-column">
-            <h3>Descripción</h3>
-            <p>{{ producto.detalle }}</p>
-            <div class="sub-container">
-                <div class="subcolumn1 flex-column column-left">
-                    <h3 >Precio c/u</h3>
-                    <p class="aux ">{{ producto.precio }}Bs.</p>
                 </div>
-                <div class="subcolumn2 flex-column column-right">
-                    <h3>Cantidad Disponible</h3>
+                <div class="botones button-row">
+                    <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
+                    <button class="btn add-to-view"" id=" btn-agregar-carrito" onclick="agregarCarrito()">Agregar al
+                        Carrito</button>
+                    <button class="btn add-to-view"" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
+                        Deseos</button>
                 </div>
             </div>
-            <h3>Ubicación</h3>
-            <p>{{ producto.usuario_fk.direccion }}</p>
+            <div class="column column-right flex-column">
+                <h3>Descripción</h3>
+                <p>{{ producto.detalle }}</p>
+                <div class="sub-container">
+                    <div class="subcolumn1 flex-column column-left">
+                        <h3>Precio c/u</h3>
+                        <p class="aux">{{ producto.precio }} Bs.</p>
+                    </div>
+                    <div class="subcolumn2 flex-column column-right">
+                        <h3>Cantidad Disponible</h3>
+                        <p class="aux">1 Unidad</p>
+                    </div>
+                </div>
+                <h3>Ubicación</h3>
+                <p>
+                    {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
+                    {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
+                    {{ producto.usuario_fk.municipio_fk }}
+                </p>
+            </div>
         </div>
-    </div>
-    <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de productos</button>    <script src="{% static 'script.js' %}"></script>
+        <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
+            productos</button>
+        <script src="{% static 'carrouselproductos.js' %}"></script>
     </main>
     <footer>
         <div class="footer-container">
-          <div class="footer-description">
-              <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
-          </div>
-          <div class="footer-links">
-            <h4>Redes Sociales</h4>
-            <div class="social-buttons">
-                <a href="https://facebook.com" target="_blank" class="social-button facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://instagram.com" target="_blank" class="social-button instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://twitter.com" target="_blank" class="social-button twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
+            <div class="footer-description">
+                <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte
+                    calidad y un excelente servicio.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Redes Sociales</h4>
+                <div class="social-buttons">
+                    <a href="https://facebook.com" target="_blank" class="social-button facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-button instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-button twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+                <p>Teléfono: <a href="tel:+591XXXXXXXX">+591 XXXXXXXX</a></p>
+            </div>
+            <div class="footer-legal">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#terminos-condiciones">Términos y Condiciones</a></li>
+                    <li><a href="#politica-privacidad">Política de Privacidad</a></li>
+                </ul>
             </div>
         </div>
-          <div class="footer-contact">
-              <h4>Contacto</h4>
-              <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
-              <p>Teléfono: <a href="tel:+591XXXXXXXX">+591 XXXXXXXX</a></p>
-          </div>
-          <div class="footer-legal">
-              <h4>Legal</h4>
-              <ul>
-                  <li><a href="#terminos-condiciones">Términos y Condiciones</a></li>
-                  <li><a href="#politica-privacidad">Política de Privacidad</a></li>
-              </ul>
-          </div>
-      </div>
-      </footer>
+    </footer>
 </body>
+
 </html>
