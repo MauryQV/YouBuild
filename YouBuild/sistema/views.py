@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import ProductoDb, CategoriaDb, CarruselDB
+from .models import ProductoDb, CategoriaDb, CarruselDB,UsuarioDB
 
 # Vista principal
 
@@ -26,3 +26,8 @@ def ProductoView(request, id):
     #producto.visitas += 1  
     producto.save()  
     return render(request, "detalle_producto.html", {"producto": producto})
+
+def CheckoutView(request):
+    return render(request, "layout.html")
+    
+    

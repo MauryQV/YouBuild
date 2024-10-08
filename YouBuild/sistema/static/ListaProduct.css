@@ -56,9 +56,9 @@ body {
 }
 
 .product p {
-    font-size: 0.8em; /* Aumentar el tamaño de fuente del precio */
+    font-size:1em; /* Aumentar el tamaño de fuente del precio */
     margin: 5px 0; /* Reducir el margen entre precio y botones */
-    color: rgb(243, 174, 37);
+    color: rgb(78, 78, 76);
 }
 
 /* Estilos de botones */
