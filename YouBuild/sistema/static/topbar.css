@@ -23,7 +23,7 @@
 .search-box {
     display: inline-flex;
     background-color: #f8f7f5;
-    border: 2px solid #ED8C2B; /* Añadido borde */
+    border: 2px solid #ef6605; /* Añadido borde */
     border-radius: 10px;
     padding: 5px; /* Ajustado el padding para tener espacio interior */
     width: 400px; /* Aumentar el ancho según lo necesites */
@@ -58,9 +58,9 @@
 .btn-link, .icon-btn {
     padding: 10px 15px;
     background-color: white;
-    border: 2px solid #ED8C2B;
+    border: 2px solid #ef6605;
     border-radius: 8px;
-    color: #ED8C2B;
+    color: #ef6605;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -73,12 +73,12 @@
 
 /* Hover (Cambios al acercar el cursor) */
 .btn-link:hover, .icon-btn:hover {
-    background-color: #ED8C2B;
+    background-color: #ef6605;
     color: white;
 }
 
 /* Ajuste del botón "Iniciar Sesión" */
 .btn-link:first-of-type {
-    background-color: #ED8C2B;
+    background-color: #ef6605;
     color: white;
 }

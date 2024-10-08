@@ -104,6 +104,6 @@ body {
 .btn.add-to-list:hover,
 .btn.add-to-view:hover,
 .btn.add-to-cart:hover {
-    background-color: #4e504e; /* Color al pasar el ratón por encima de los botones gris */
+    background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
     color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
 }
