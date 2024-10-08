@@ -28,6 +28,6 @@ def ProductoView(request, id):
     return render(request, "detalle_producto.html", {"producto": producto})
 
 def CheckoutView(request):
-    return render(request, "layout.html")
+    return render(request, "checkout.html")
     
     

@@ -9,7 +9,7 @@ urlpatterns = [
     path('producto/<int:id>/', ProductoView, name='detalle_producto'),
     path('buscar/', BuscarView, name='buscar'),
     
-    path('layout/',CheckoutView,name='layout'),
+    path('check/',CheckoutView,name='layout'),
 ]
 
 if settings.DEBUG:

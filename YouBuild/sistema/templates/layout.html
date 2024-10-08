@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{% static 'topbar.css' %}">
     
     {% block extra_styles %}
-    <!--colocar sus dependencias personalizadas-->
+    <!--colocar sus dependencias personalizadas/STATIC-->
     {% endblock %}
   </head>
 
@@ -22,7 +22,7 @@
     <header>
       <div class="topbar-container">
         <div class="topbar-left">
-          <a href="#home" class="logo">
+          <a href="/home" class="logo">
             <img src="{% static 'logo.png' %}" alt="Logo" width="125">
           </a>
         </div>
@@ -42,17 +42,15 @@
         </div>
       </div>
     </header>
-
-    <main>
+      <div>
       {% block content %}
-    
-    <!--colocar su contenido personalizado-->
+    <!--COLOCAR SU CONTENIDO-->
 
       {% endblock %}
-    </main>
+      </div>
 
-    <!-- Footer -->
-    <footer>
+      <!-- Footer -->
+      <footer>
       <div class="footer-container">
         <div class="footer-description">
           <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
@@ -87,5 +85,8 @@
     </footer>
 
     <script src="{% static 'script.js' %}"></script>
+    {% block extra_scripts %}
+    <!--COLOCAR SUS SCRIPTS AQUI-->
+    {% endblock %}
   </body>
 </html>
