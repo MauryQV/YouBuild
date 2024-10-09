@@ -1,5 +1,4 @@
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
 
 # Vista principal
@@ -24,9 +23,7 @@ def BuscarView(request):
     return render(request, 'index.html', {'producto': productos})
 
 def CheckoutView(request):
-
-    return render(request, "checkout.html")
-
+    return render(request, "checkout.html")  # Asegúrate de que checkout.html esté en la carpeta de plantillas
 
 def carrito_view(request):
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)

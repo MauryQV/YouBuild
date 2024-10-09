@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 class ImagenInline(admin.TabularInline):
     model = ImagenProductoDB
-    extra = 3
+    extra = 1
 
 @admin.register(ProductoDb)
 class ProductoAdmin(admin.ModelAdmin):
