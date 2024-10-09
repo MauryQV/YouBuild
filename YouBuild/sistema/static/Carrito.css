@@ -1,0 +1,187 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Títulos de productos */
+.products-title {
+    text-align: left;
+    margin: 10px;
+    font-size: 1em;
+    color: #333;
+    margin-left: 20px;
+}
+
+/* Contenedor del carrito */
+.container {
+    max-width: 90%; /* Ancho máximo del contenedor ajustado */
+    margin: 20px auto; /* Centramos el contenedor */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor del carrito y totales */
+.cart-container {
+    display: flex;
+    justify-content: space-between; /* Alineación distribuida */
+    flex-wrap: wrap; /* Permitir que se ajuste si es necesario */
+}
+
+/* Tabla del carrito */
+.cart-products {
+    flex: 60%;
+    margin-right: 20px;
+    overflow-x: auto;
+}
+
+.cart-products table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-products th {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Estilo para celdas de la tabla */
+.cart-products td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle; /* Centrar verticalmente el contenido */
+}
+
+/* Estilo de la información del producto */
+.product-info {
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+}
+
+.product-info img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 10px; /* Espacio entre imagen y nombre del producto */
+}
+
+.product-info span {
+    vertical-align: middle; /* Asegura que el nombre del producto esté centrado */
+}
+
+/* Botón de eliminar */
+.btn-eliminar {
+    width: 24px; /* Ajusta el tamaño del botón */
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.05); /* Fondo claro */
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Borde suave */
+    border-radius: 50%; /* Forma circular */
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Estilo del ícono dentro del botón */
+.btn-eliminar i {
+    font-size: 14px; /* Tamaño del ícono */
+    color: rgba(0, 0, 0, 0.6); /* Color del ícono */
+}
+
+/* Efecto hover */
+.btn-eliminar:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Fondo más oscuro al hacer hover */
+    border-color: rgba(0, 0, 0, 0.4); /* Borde más oscuro */
+}
+
+
+/* Resumen del carrito */
+.cart-summary {
+    flex: 35%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    font-size: 1em;
+}
+
+.cart-summary h2 {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Estilos para cada ítem del resumen */
+.cart-summary .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+/* Estilo del total */
+.cart-summary .summary-item.total {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.cart-summary .summary-item .label {
+    color: #555;
+}
+
+.cart-summary .summary-item .value {
+    color: #333;
+}
+
+/* Envío gratis */
+.cart-summary .free-shipping {
+    font-size: 0.8em;
+    color: green;
+    margin-left: 5px;
+}
+
+
+/* Botón de seguir comprando alineado a la izquierda */
+.btn-seguir-comprando {
+    display: inline-block; /* Botón en línea */
+    width: auto; /* Ocupa el tamaño del contenido */
+    text-align: center;
+    padding: 10px 20px; /* Ajuste del espaciado interno */
+    margin-top: 20px;
+    color: #fff;
+    background-color: #ef6605;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* Botón de Proceder al Pago permanece igual */
+.btn-Proceder-pago {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    color: #fff;
+    background-color: #ef6605;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* Hover para botones */
+.btn-seguir-comprando:hover,
+.btn-Proceder-pago:hover {
+    background-color: #595450;
+}
+

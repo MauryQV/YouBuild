@@ -36,3 +36,6 @@ admin.site.register(TipoPagoDB)
 admin.site.register(PagoDB)
 admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
+
+# Finalmente, registra el modelo de imagen también
+
