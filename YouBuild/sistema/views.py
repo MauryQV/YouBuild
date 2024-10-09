@@ -22,25 +22,27 @@ def BuscarView(request):
     return render(request, 'index.html', {'producto': productos})
 
 def CheckoutView(request):
-<<<<<<< HEAD
+
     return render(request, "checkout.html")
-=======
-    return render(request, "layout.html")
+
 
 def carrito_view(request):
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-    carrito = get_object_or_404(CarritoDB, usuario_fk=usuario_prueba)
-    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
->>>>>>> Valeria
     
-    # Calcular subtotal
+    # Intentar obtener el carrito; si no existe, crear uno nuevo
+    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+    
+    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    # Calcular el subtotal
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
 
     return render(request, 'Carrito.html', {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
-        'carrito_total': carrito_subtotal  # Cambia esto si agregas costos de envío
+        'carrito_total': carrito_subtotal
     })
+
 
 
 

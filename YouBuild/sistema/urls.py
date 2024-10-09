@@ -9,13 +9,9 @@ urlpatterns = [
     path('producto/<int:id>/', ProductoView, name='detalle_producto'),
     path('buscar/', BuscarView, name='buscar'),
     
-<<<<<<< HEAD
     path('check/',CheckoutView,name='layout'),
-=======
-    path('layout/',CheckoutView,name='layout'),
     path('carrito/', carrito_view, name='Carrito'),
     path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
->>>>>>> Valeria
 ]
 
 if settings.DEBUG:
