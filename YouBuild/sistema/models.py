@@ -81,7 +81,7 @@ class ProductoDb(models.Model):
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")  # Nuevo campo para visitas
-
+    cantidad = models.IntegerField(default=1)
 
     class Meta:
         db_table = "productos"
