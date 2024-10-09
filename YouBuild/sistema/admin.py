@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 class ImagenInline(admin.TabularInline):
     model = ImagenProductoDB
-    extra = 1
+    extra = 3
 
 @admin.register(ProductoDb)
 class ProductoAdmin(admin.ModelAdmin):
@@ -36,6 +36,3 @@ admin.site.register(TipoPagoDB)
 admin.site.register(PagoDB)
 admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
-
-# Finalmente, registra el modelo de imagen también
-

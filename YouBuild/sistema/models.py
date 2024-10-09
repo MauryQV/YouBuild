@@ -80,6 +80,8 @@ class ProductoDb(models.Model):
     precio = models.FloatField(verbose_name="Precio", validators=[MinValueValidator(0.0), MaxValueValidator(99999.9)])
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
+    visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")  # Nuevo campo para visitas
+
 
     class Meta:
         db_table = "productos"
