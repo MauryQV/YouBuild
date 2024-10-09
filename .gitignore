@@ -46,3 +46,6 @@ dist/
 build/
 .eggs/
 .Python
+YouBuild/db.sqlite3
+db.sqlite3
+
