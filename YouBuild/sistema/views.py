@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
 
@@ -27,24 +30,22 @@ def CheckoutView(request):
 
 def carrito_view(request):
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-    
-    # Intentar obtener el carrito; si no existe, crear uno nuevo
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
-    
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
 
     for item in productos_en_carrito:
         item.subtotalp = item.producto_fk.precio * item.cantidad  # Calcular subtotal por producto
 
-    # Calcular el subtotal
-    carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
-
-
+    # Calcular el subtotal y total del carrito
+    carrito_subtotal = sum(item.subtotalp for item in productos_en_carrito)
+    
+    # Renderiza el template con los productos en el carrito
     return render(request, 'Carrito.html', {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': carrito_subtotal
     })
+
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
@@ -56,3 +57,36 @@ def eliminar_producto(request, item_id):
         
         # Redirigir de vuelta al carrito
         return redirect('Carrito')
+
+@csrf_exempt
+def update_cart_quantity(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        new_quantity = data.get('quantity')
+
+        # Obtener el producto del carrito
+        carrito_producto = CarritoProductoDB.objects.filter(id=item_id).first()
+
+        if carrito_producto:
+            # Verificar que la nueva cantidad no exceda el stock del producto
+            if new_quantity <= carrito_producto.producto_fk.cantidad:
+                if new_quantity > 0:
+                    carrito_producto.cantidad = new_quantity
+                    carrito_producto.save()
+                else:
+                    carrito_producto.delete()  # Elimina el producto si la cantidad es 0
+
+                # Calcular subtotal actualizado para el producto
+                new_subtotal = carrito_producto.cantidad * carrito_producto.producto_fk.precio
+
+                # Calcular el total actualizado para el carrito
+                carrito_total = sum(
+                    item.cantidad * item.producto_fk.precio for item in CarritoProductoDB.objects.filter(carrito_fk=carrito_producto.carrito_fk)
+                )
+
+                return JsonResponse({"success": True, "new_subtotal": new_subtotal, "new_total": carrito_total})
+            else:
+                return JsonResponse({"success": False, "message": "No hay suficiente stock disponible."})
+
+    return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
