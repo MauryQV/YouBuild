@@ -1,4 +1,14 @@
 myenv/
 venv/
 __pycache__/
+**/__pycache__/
 *.pyc
+# Entorno virtual
+env/
+venv/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+**__pycache__/
+*__pycache__/*

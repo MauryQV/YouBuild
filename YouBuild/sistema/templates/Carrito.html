@@ -1,0 +1,148 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block extra_styles %}
+<!-- Dependencias personalizadas -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'Carrito.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Carrito de Compras</h1>
+    <div class="cart-container">
+        <!-- Tabla con productos seleccionados -->
+        <div class="cart-products">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ELIMINAR</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO</th>
+                        <th>CANTIDAD</th>
+                        <th>SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Mostrar productos en el carrito -->
+                    {% for item in productos %}
+                    <tr>
+                        <td>
+                            <form action="{% url 'eliminar_producto' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="product-info">
+                                <img src="{{ item.producto_fk.imagenes.first.imagen.url }}" alt="{{ item.producto_fk.nombre }}" class="product-image">
+                                <span>{{ item.producto_fk.nombre }}</span>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.producto_fk.precio }}</td>
+                        <td>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn decrement">-</button>
+                                <input type="text" 
+                                       value="{{ item.cantidad }}" 
+                                       maxlength="2" 
+                                       data-item-id="{{ item.id }}" 
+                                       data-stock="{{ item.producto_fk.cantidad }}" />
+                                <button class="quantity-btn increment">+</button>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.subtotalp }}</td>  <!-- Placeholder para el subtotal -->
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No hay productos en el carrito.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'index' %}" class="btn-seguir-comprando">Seguir comprando</a>
+        </div>
+
+        <!-- Resumen del carrito -->
+        <div class="cart-summary">
+            <h2>TOTALES DEL CARRITO</h2>
+            <div class="summary-item">
+                <span>Subtotal</span>
+                <span>Bs {{carrito_subtotal}}</span>  <!-- Placeholder para el subtotal -->
+            </div>
+            <div class="summary-item">
+                <span>Envío</span>
+                <span>Gratis</span>
+            </div>
+            <div class="summary-item">
+                <span>Total</span>
+                <span>Bs {{carrito_total}}</span>  <!-- Placeholder para el total -->
+            </div>
+            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'carrouselproductos.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const updateCart = (itemId, quantity) => {
+            fetch(`/update_cart_quantity/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ item_id: itemId, quantity: quantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recarga la página automáticamente al completar la actualización en el servidor
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+        };
+    
+        document.querySelectorAll('.quantity-btn.increment').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const itemId = input.dataset.itemId;
+                let quantity = parseInt(input.value);
+    
+                if (quantity < parseInt(input.dataset.stock)) {
+                    input.value = quantity + 1;
+                    updateCart(itemId, quantity + 1);
+                } else {
+                    alert("No hay más unidades disponibles de este producto.");
+                }
+            });
+        });
+    
+        document.querySelectorAll('.quantity-btn.decrement').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.nextElementSibling;
+                const itemId = input.dataset.itemId;
+                let quantity = parseInt(input.value);
+    
+                if (quantity > 1) {
+                    input.value = quantity - 1;
+                    updateCart(itemId, quantity - 1);
+                } else {
+                    if (confirm("¿Deseas eliminar este producto del carrito?")) {
+                        updateCart(itemId, 0);
+                    }
+                }
+            });
+        });
+    });    
+</script>
+
+{% endblock %}

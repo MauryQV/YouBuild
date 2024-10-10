@@ -7,20 +7,20 @@
     <title>Product Carousel</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
-    <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
+    <link rel="stylesheet" href="{% static 'topbar.css' %}"/> 
+    <link rel="stylesheet" href="{% static 'resultadosVacios.css' %}"/> 
   </head>
   <body>
     <header>
         <div class="topbar-container">
             
             <div class="topbar-left">
-                <a href="#home" class="logo">
-                  <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
+                <a href="/ " class="logo">
+                  <img src="{% static 'logo.png' %}" alt="Logo" width="125">
                 </a>
             </div>
             
@@ -36,16 +36,13 @@
             <div class="topbar-right">
                 <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
                 <a href="#registrarse" class="btn-link">Registrarse</a>
-                <a href="#carrito" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
                 <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
     </header>
 
     <main>
-    
-
-  
       <div class="carousel-container">
         <div class="carousel">
           {% for carrusel_item in carrusel %}
@@ -60,31 +57,39 @@
         <button class="carousel-button next">
           <i class="fas fa-chevron-right"></i>
         </button>
-         </div>
-         <div class="carousel-dots"></div>
+               </div>
+              <div class="carousel-dots"></div>
 
-       <!-- Lista de productos disponibles -->
-       <h2 class="products-title">Productos Disponibles</h2>
-       <div class="products-container">
-        {% for producto in producto %}
-        <div class="product">
-          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
-          <p>Precio: Bs{{ producto.precio }}</p>
-          <div class="buttons-container">
+           <!-- Lista de productos disponibles -->
+               <h2 class="products-title">Productos Disponibles</h2>
+                 <div class="products-container">
+                 {% for producto in producto %}
+                  <div class="product">
+                       <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
+           <p>Bs {{ producto.precio }}</p>
+           <div class="buttons-container">
             <!-- Contenedor para botones -->
             <div class="button-row">
               <button class="btn buy-now">Comprar Ahora</button>
-              <a href="{% url 'añadir_al_carrito' producto.id %}" class="btn add-to-cart">Añadir al Carrito</a>
+              <button class="btn add-to-cart"><i class="fas fa-shopping-cart"></i> Agregar a Carrito</button>
             </div>
             <div class="button-row">
-              <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
-              <button class="btn add-to-list">Agregar a Lista</button>
+              <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})"><i class="fas fa-eye"></i> Ver Detalles</button>
+              <button class="btn add-to-list"><i class="fas fa-heart"></i> Agregar a Lista</button>
             </div>
           </div>
+          
         </div>
 
         {% empty %}
-        <p>No hay productos disponibles.</p>
+        <div class="mi-no-results">
+          <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+          <p>No se encontraron productos relacionados con tu búsqueda.</p>
+          <div class="mi-button-row">
+              <a href="{% url 'index' %}" class="mi-btn">Volver a la Página de Inicio</a>
+          </div>
+      </div>
+      
         {% endfor %}
       </div>
     </main>
