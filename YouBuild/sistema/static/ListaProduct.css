@@ -1,7 +1,8 @@
 /* Estilos generales */
 .titulo {
     text-align: center;
-  }
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -59,36 +60,38 @@ body {
 }
 
 .product p {
-    font-size:1em; /* Aumentar el tamaño de fuente del precio */
+    font-size: 1em; /* Aumentar el tamaño de fuente del precio */
     margin: 5px 0; /* Reducir el margen entre precio y botones */
     color: rgb(78, 78, 76);
 }
 
 /* Estilos de botones */
 .buttons-container {
-    display: flex; /* Usar Flexbox para las filas de botones */
+    display: flex; /* Usar Flexbox para la disposición de los botones */
     flex-direction: column; /* Organiza los botones en columnas */
-    margin-top: auto; /* Asegura que los botones se alineen al final del contenedor del producto */
+    gap: 10px; /* Espacio entre filas de botones */
+    margin-top: auto; /* Alinea los botones al final del contenedor del producto */
 }
 
 .button-row {
     display: flex; /* Usar Flexbox para cada fila de botones */
     justify-content: space-between; /* Espacio entre los botones */
-    margin: 5px 0; /* Espacio entre filas de botones */
+    gap: 10px; /* Espacio entre los botones */
 }
 
-/* Asegurarse de que los botones ocupen el espacio adecuado */
+/* Asegurarse de que los botones ocupen el mismo espacio */
 .btn {
     background-color: #ef6605; /* Color de fondo para el botón Comprar */
     color: white; /* Color de texto para el botón Comprar */
     border: none;
-    padding: 8px 10px;
-    margin: 5px; /* Margen entre botones */
+    padding: 10px 0; /* Ajustar el padding para el botón */
+    margin: 0; /* Sin margen entre botones */
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
     flex: 1; /* Hace que los botones ocupen el mismo espacio */
     min-width: 0; /* Permite que el botón se ajuste a su contenedor */
+    text-align: center; /* Centrar el texto en el botón */
 }
 
 .btn:hover {
@@ -109,4 +112,9 @@ body {
 .btn.add-to-cart:hover {
     background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
     color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
+}
+
+/* Ajustes de íconos en botones */
+.btn i {
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
 }
