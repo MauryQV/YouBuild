@@ -5,6 +5,7 @@ from sistema.views import IndexView, ProductoView, BuscarView, CheckoutView, car
 
 urlpatterns = [
     path('', IndexView, name='index'),
+    
     path('producto/<int:id>/', ProductoView, name='detalle_producto'),
     path('buscar/', BuscarView, name='buscar'),
     path('check/', CheckoutView, name='checkout'),  # Cambié 'layout' por 'checkout'

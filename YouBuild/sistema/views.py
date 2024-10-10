@@ -3,13 +3,15 @@ from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProdu
 
 # Vista principal
 def IndexView(request): 
-    productos = ProductoDb.objects.all().order_by("id")  
+    productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
-    imagenes = producto.imagenes.all()
+    producto.visitas += 1  
+    producto.save()  
+    imagenes = producto.imagenes.all()  # Línea adicional si necesitas imágenes relacionadas
     return render(request, "detalle_producto.html", {"producto": producto})
 
 def BuscarView(request):
@@ -31,8 +33,12 @@ def carrito_view(request):
     
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
 
+    for item in productos_en_carrito:
+        item.subtotalp = item.producto_fk.precio * item.cantidad  # Calcular subtotal por producto
+
     # Calcular el subtotal
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
+
 
     return render(request, 'Carrito.html', {
         'productos': productos_en_carrito,
