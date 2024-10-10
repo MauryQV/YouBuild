@@ -7,12 +7,12 @@
     <title>Product Carousel</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
-    <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
+    <link rel="stylesheet" href="{% static 'topbar.css' %}"/> 
+    <link rel="stylesheet" href="{% static 'resultadosVacios.css' %}"/> 
   </head>
   <body>
     <header>
@@ -43,9 +43,6 @@
     </header>
 
     <main>
-    
-
-  
       <div class="carousel-container">
         <div class="carousel">
           {% for carrusel_item in carrusel %}
@@ -60,17 +57,17 @@
         <button class="carousel-button next">
           <i class="fas fa-chevron-right"></i>
         </button>
-         </div>
-         <div class="carousel-dots"></div>
+               </div>
+              <div class="carousel-dots"></div>
 
-       <!-- Lista de productos disponibles -->
-       <h2 class="products-title">Productos Disponibles</h2>
-       <div class="products-container">
-        {% for producto in producto %}
-        <div class="product">
-          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
-          <p>Bs {{ producto.precio }}</p>
-          <div class="buttons-container">
+           <!-- Lista de productos disponibles -->
+               <h2 class="products-title">Productos Disponibles</h2>
+                 <div class="products-container">
+                 {% for producto in producto %}
+                  <div class="product">
+                       <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
+           <p>Bs {{ producto.precio }}</p>
+           <div class="buttons-container">
             <!-- Contenedor para botones -->
             <div class="button-row">
               <button class="btn buy-now">Comprar Ahora</button>
@@ -85,7 +82,14 @@
         </div>
 
         {% empty %}
-        <p>No hay productos disponibles.</p>
+        <div class="mi-no-results">
+          <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+          <p>No se encontraron productos relacionados con tu búsqueda.</p>
+          <div class="mi-button-row">
+              <a href="{% url 'index' %}" class="mi-btn">Volver a la Página de Inicio</a>
+          </div>
+      </div>
+      
         {% endfor %}
       </div>
     </main>
