@@ -50,3 +50,7 @@ def eliminar_producto(request, item_id):
         
         # Redirigir de vuelta al carrito
         return redirect('Carrito')
+    
+
+def NotFoundedView(request):
+    return render(request, "resultadosVacios.html") 

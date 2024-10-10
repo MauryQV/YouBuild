@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'listaProduct.css' %}" />
     <link rel="stylesheet" href="{% static 'topbar.css' %}"> 
+    <link rel="stylesheet" href="{% static 'resultadosVacios.css' %}"> 
   </head>
   <body>
     <header>
@@ -84,7 +85,14 @@
         </div>
 
         {% empty %}
-        <p>No hay productos disponibles.</p>
+        <!-- Redirigir a página de resultados vacíos -->
+        <div class="no-results">
+          <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+          <p>No se encontraron productos relacionados con tu búsqueda.</p>
+          <div class="button-row">
+            <a href="{% url 'index' %}" class="btn">Volver a la Página de Inicio</a>
+          </div>
+        </div>
         {% endfor %}
       </div>
     </main>

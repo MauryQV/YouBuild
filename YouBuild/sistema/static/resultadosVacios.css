@@ -1,0 +1,51 @@
+/* Estilos para cuando no hay resultados */
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar horizontalmente */
+    margin-top: 50px; /* Añade un margen superior para que no quede muy pegado a la parte superior */
+    text-align: center;
+}
+
+/* Ajustar el tamaño y centrado de la imagen */
+.no-results img {
+    width: 125px;
+    margin-bottom: 20px; /* Espacio debajo de la imagen */
+}
+
+/* Estilos para el mensaje de "No se encontraron productos" */
+.no-results p {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 20px; /* Espacio entre el mensaje y los botones */
+}
+
+/* Estilos de la fila de botones */
+.button-row {
+    display: flex;
+    justify-content: center; /* Centra el botón */
+}
+
+/* Botón "Volver a la Página de Inicio" */
+.button-row .btn {
+    background-color: #ef6605; /* Color de fondo */
+    color: white; /* Color de texto */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none; /* Elimina el subrayado */
+    font-size: 1em;
+}
+
+/* Hover del botón */
+.button-row .btn:hover {
+    background-color: #ba7730;
+}
+
+/* Eliminar el subrayado del botón */
+.button-row .btn:link, 
+.button-row .btn:visited {
+    text-decoration: none; /* Asegura que no haya subrayado */
+}
