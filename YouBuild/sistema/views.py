@@ -1,16 +1,17 @@
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
 
 # Vista principal
 def IndexView(request): 
-    productos = ProductoDb.objects.all().order_by("id")  
+    productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
-    imagenes = producto.imagenes.all()
+    producto.visitas += 1  
+    producto.save()  
+    imagenes = producto.imagenes.all()  # Línea adicional si necesitas imágenes relacionadas
     return render(request, "detalle_producto.html", {"producto": producto})
 
 def BuscarView(request):
@@ -22,9 +23,7 @@ def BuscarView(request):
     return render(request, 'index.html', {'producto': productos})
 
 def CheckoutView(request):
-
-    return render(request, "checkout.html")
-
+    return render(request, "checkout.html")  # Asegúrate de que checkout.html esté en la carpeta de plantillas
 
 def carrito_view(request):
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
@@ -34,17 +33,18 @@ def carrito_view(request):
     
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
 
+    for item in productos_en_carrito:
+        item.subtotalp = item.producto_fk.precio * item.cantidad  # Calcular subtotal por producto
+
     # Calcular el subtotal
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
+
 
     return render(request, 'Carrito.html', {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': carrito_subtotal
     })
-
-
-
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
@@ -56,4 +56,3 @@ def eliminar_producto(request, item_id):
         
         # Redirigir de vuelta al carrito
         return redirect('Carrito')
-

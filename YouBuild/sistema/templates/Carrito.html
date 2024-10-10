@@ -21,6 +21,7 @@
                         <th>ELIMINAR</th>
                         <th>PRODUCTO</th>
                         <th>PRECIO</th>
+                        <th>CANTIDAD</th>
                         <th>SUBTOTAL</th>
                     </tr>
                 </thead>
@@ -41,7 +42,14 @@
                             </div>
                         </td>
                         <td>Bs {{ item.producto_fk.precio }}</td>
-                        <td>Bs 0.00</td>  <!-- Placeholder para el subtotal -->
+                        <td>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn decrement">-</button>
+                                <input type="text" value={{item.cantidad}} maxlength="2">
+                                <button class="quantity-btn increment">+</button>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.subtotalp }}</td>  <!-- Placeholder para el subtotal -->
                     </tr>
                     {% empty %}
                     <tr>
@@ -58,7 +66,7 @@
             <h2>TOTALES DEL CARRITO</h2>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span>Bs 0.00</span>  <!-- Placeholder para el subtotal -->
+                <span>Bs {{carrito_subtotal}}</span>  <!-- Placeholder para el subtotal -->
             </div>
             <div class="summary-item">
                 <span>Envío</span>
@@ -66,7 +74,7 @@
             </div>
             <div class="summary-item">
                 <span>Total</span>
-                <span>Bs 0.00</span>  <!-- Placeholder para el total -->
+                <span>Bs {{carrito_total}}</span>  <!-- Placeholder para el total -->
             </div>
             <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
         </div>
@@ -76,6 +84,18 @@
 
 {% block extra_scripts %}
 <script src="{% static 'carrouselproductos.js' %}"></script>
+
+<script>
+    function increaseQuantity(button) {
+        const input = button.previousElementSibling;
+        input.value = parseInt(input.value) + 1;
+    }
+
+    function decreaseQuantity(button) {
+        const input = button.nextElementSibling;
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+</script>
 {% endblock %}
-
-
