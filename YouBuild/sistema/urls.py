@@ -1,12 +1,16 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from sistema.views import IndexView, ProductoView, BuscarView
+from sistema.views import IndexView, ProductoView, BuscarView, CheckoutView, carrito_view, eliminar_producto, confirmacion_view
 
 urlpatterns = [
     path('', IndexView, name='index'),
     path('producto/<int:id>/', ProductoView, name='detalle_producto'),
     path('buscar/', BuscarView, name='buscar'),
+    path('check/', CheckoutView, name='checkout'),  # Cambié 'layout' por 'checkout'
+    path('carrito/', carrito_view, name='Carrito'),
+    path('confirmacion/', confirmacion_view, name='confirmacion'),
+    path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
 ]
 
 if settings.DEBUG:

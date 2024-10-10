@@ -1,0 +1,92 @@
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Mi Tienda{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
+    
+    {% block extra_styles %}
+    <!--colocar sus dependencias personalizadas/STATIC-->
+    {% endblock %}
+  </head>
+
+  <body>
+    
+    <header>
+      <div class="topbar-container">
+        <div class="topbar-left">
+          <a href="/home" class="logo">
+            <img src="{% static 'logo.png' %}" alt="Logo" width="125">
+          </a>
+        </div>
+        <div class="topbar-center">
+          <form action="{% url 'buscar' %}" method="GET">
+            <div class="search-box">
+              <input type="text" placeholder="Buscar" name="q">
+              <button><i class="fa fa-search"></i></button>
+            </div>
+          </form>
+        </div>
+        <div class="topbar-right">
+          <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
+          <a href="#registrarse" class="btn-link">Registrarse</a>
+          <a href="#carrito" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+          <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
+        </div>
+      </div>
+    </header>
+      <div>
+      {% block content %}
+    <!--COLOCAR SU CONTENIDO-->
+
+      {% endblock %}
+      </div>
+
+      <!-- Footer -->
+      <footer>
+      <div class="footer-container">
+        <div class="footer-description">
+          <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Redes Sociales</h4>
+          <div class="social-buttons">
+            <a href="https://facebook.com" target="_blank" class="social-button facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-button instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="social-button twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-contact">
+          <h4>Contacto</h4>
+          <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+          <p>Teléfono: <a href="tel:+591XXXXXXXX">+591 XXXXXXXX</a></p>
+        </div>
+        <div class="footer-legal">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#terminos-condiciones">Términos y Condiciones</a></li>
+            <li><a href="#politica-privacidad">Política de Privacidad</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+    {% block extra_scripts %}
+    <!--COLOCAR SUS SCRIPTS AQUI-->
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Confirmación de Compra{% endblock %}
+
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'confirmacion.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Confirmación de Compra</h1>
+
+    <!-- Sección de Dirección de Envío -->
+    <section class="shipping-info">
+      <h2>Dirección de Envío</h2>
+      <form>
+        <label for="name">Nombre Completo:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="address">Dirección:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="city">Ciudad:</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="postal-code">Código Postal:</label>
+        <input type="text" id="postal-code" name="postal-code" required>
+
+        <label for="country">País:</label>
+        <input type="text" id="country" name="country" required>
+      </form>
+    </section>
+
+    <!-- Sección de Método de Pago -->
+    <section class="payment-method">
+      <h2>Método de Pago</h2>
+      <form>
+        <label for="payment-option">Selecciona tu método de pago:</label>
+        <select id="payment-option" name="payment-option" required>
+          <option value="cash">Efectivo</option>
+          <option value="paypal">PayPal</option>
+          <option value="bank-transfer">QR</option>
+        </select>
+      </form>
+    </section>
+
+    <!-- Botón para Confirmar Compra -->
+    <button type="submit" class="confirm-btn">Confirmar Compra</button>
+  </div>
+{% endblock %}
