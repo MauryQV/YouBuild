@@ -39,6 +39,8 @@ def carrito_view(request):
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': carrito_subtotal
     })
+def confirmacion_view(request):
+    return render(request, "confirmacion.html")
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
