@@ -64,10 +64,7 @@ def update_cart_quantity(request):
         data = json.loads(request.body)
         item_id = data.get('item_id')
         new_quantity = data.get('quantity')
-
-        # Obtener el producto del carrito
         carrito_producto = CarritoProductoDB.objects.filter(id=item_id).first()
-
         if carrito_producto:
             # Verificar que la nueva cantidad no exceda el stock del producto
             if new_quantity <= carrito_producto.producto_fk.cantidad:
@@ -90,3 +87,24 @@ def update_cart_quantity(request):
                 return JsonResponse({"success": False, "message": "No hay suficiente stock disponible."})
 
     return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
+
+
+def agregar_al_carrito(request, producto_id):
+    if request.method == 'POST':
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        carrito_producto, created = CarritoProductoDB.objects.get_or_create(carrito_fk=carrito, producto_fk=producto)
+
+        #ver el flujo
+        # print("carrito_producto.cantidad:", carrito_producto.cantidad)
+        #print("producto.cantidad (stock):", producto.cantidad)
+
+        if carrito_producto.cantidad <= producto.cantidad:
+            carrito_producto.save()
+            return redirect('Carrito')  
+        else:
+            return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible. mejorar la logica'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
