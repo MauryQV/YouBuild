@@ -37,11 +37,16 @@
             <div class="topbar-right">
                 <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
                 <a href="#registrarse" class="btn-link">Registrarse</a>
-                <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="{% url 'Carrito' %}" class="icon-btn">
+                  <i class="fa fa-shopping-cart cart-icon"></i>
+                  <span class="cart-count">0</span>  <!-- Ensure this span exists -->
+                </a>           
                 <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
     </header>
+
+    <h1 class="title"> </h1>
 
     <main>
       <div class="carousel-container">
@@ -69,22 +74,12 @@
                        <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />          <h3>{{ producto.nombre }}</h3>
            <p>Bs {{ producto.precio }}</p>
            <div class="buttons-container">
-               <!-- Contenedor para botones -->
-              
-               
-               <div class="button-row">
-                
-                <button class="btn buy-now">Comprar Ahora</button>
-                <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
-                  {% csrf_token %}
-                  
-                  <button type="submit" class="btn add-to-cart">
-                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                  </button>
-                  
-                </form>
-              </div>
-               <div class="button-row">
+            <!-- Contenedor para botones -->
+            <div class="button-row">
+              <button class="btn buy-now">Comprar Ahora</button>
+              <button class="btn add-to-cart" data-product-id="{{ producto.id }}">Agregar a Carrito</button>
+            </div>
+            <div class="button-row">
               <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})"><i class="fas fa-eye"></i> Ver Detalles</button>
               <button class="btn add-to-list"><i class="fas fa-heart"></i> Agregar a Lista</button>
             </div>

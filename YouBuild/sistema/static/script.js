@@ -122,3 +122,58 @@ function verDetalles(productId) {
 function volverALista() {
     window.location.href = "/";
 }
+
+// CSRF token retrieval function
+document.addEventListener('DOMContentLoaded', function() {
+    const cartCountElement = document.querySelector('.cart-count');
+
+    if (cartCountElement) {
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.dataset.productId;  // Get the product ID from the button
+
+                // Send an AJAX request to add the product to the cart
+                fetch('/agregar_a_carrito/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        'product_id': productId  // Send the product ID in the body
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the cart count in the top bar
+                        updateCartCount(data.total_items);
+                    }
+                });
+            });
+        });
+
+        // Function to update the cart count
+        function updateCartCount(totalItems) {
+            cartCountElement.textContent = totalItems;  // Update the cart count display
+        }
+    } else {
+        console.error('Cart count element not found.');
+    }
+
+    // CSRF token retrieval function
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; cookies.length > i; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
