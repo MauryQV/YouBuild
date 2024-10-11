@@ -90,3 +90,41 @@ def update_cart_quantity(request):
                 return JsonResponse({"success": False, "message": "No hay suficiente stock disponible."})
 
     return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
+
+@csrf_exempt  # Disable CSRF for this view
+def agregar_a_carrito(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))  # Get the data from the POST request
+            product_id = data.get('product_id')  # Get the product ID
+
+            if not product_id:
+                return JsonResponse({'success': False, 'message': 'Missing product ID'}, status=400)
+
+            # Get the product from the database
+            producto = get_object_or_404(ProductoDb, id=product_id)
+
+            # Get the session cart, or create an empty one if it doesn't exist
+            cart = request.session.get('cart', {})
+
+            # If the product is already in the cart, increase the quantity
+            if str(product_id) in cart:
+                cart[str(product_id)]['quantity'] += 1
+            else:
+                # If the product is not in the cart, add it with a quantity of 1
+                cart[str(product_id)] = {
+                    'quantity': 1,
+                    'price': str(producto.precio)  # Store price as string to avoid JSON serialization issues
+                }
+
+            # Save the updated cart back to the session
+            request.session['cart'] = cart
+
+            # Calculate the total number of items in the cart
+            total_items = sum(item['quantity'] for item in cart.values())
+
+            return JsonResponse({'success': True, 'total_items': total_items})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)

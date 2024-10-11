@@ -36,11 +36,16 @@
             <div class="topbar-right">
                 <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
                 <a href="#registrarse" class="btn-link">Registrarse</a>
-                <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="{% url 'Carrito' %}" class="icon-btn">
+                  <i class="fa fa-shopping-cart cart-icon"></i>
+                  <span class="cart-count">0</span>  <!-- Ensure this span exists -->
+                </a>           
                 <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
     </header>
+
+    <h1 class="title"> </h1>
 
     <main>
       <div class="carousel-container">
@@ -71,7 +76,7 @@
             <!-- Contenedor para botones -->
             <div class="button-row">
               <button class="btn buy-now">Comprar Ahora</button>
-              <button class="btn add-to-cart"><i class="fas fa-shopping-cart"></i> Agregar a Carrito</button>
+              <button class="btn add-to-cart" data-product-id="{{ producto.id }}">Agregar a Carrito</button>
             </div>
             <div class="button-row">
               <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})"><i class="fas fa-eye"></i> Ver Detalles</button>
