@@ -38,15 +38,3 @@ Esto iniciará el servidor de desarrollo de Django.
 
 3. Acceder al proyecto en el navegador
 Abre tu navegador web y dirígete a http://localhost:8000 para ver el proyecto en funcionamiento.
-
-
-
-
-
-
----
-
-Este README proporciona una guía clara y estructurada para cualquier persona que desee clonar, configurar y ejecutar tu proyecto. Asegúrate de reemplazar los marcadores de posición (como https://github.com/usuario/nombre-del-repo.git y Nombre del Proyecto) con la información específica de tu proyecto.
-
-¿Hay algún otro detalle que te gustaría añadir o alguna otra sección que necesites incluir?
-
