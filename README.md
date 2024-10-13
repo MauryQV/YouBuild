@@ -1,32 +1,52 @@
-PARA INSTALAR DEPENDENCIAS: 
+------------------------YOUBUILD-------------------------------
+Requisitos Previos
+Antes de comenzar, asegúrense de tener instalados los siguientes componentes en su sistema:
+Python: Asegúrense de tener la última versión de Python instalada. Se descarga en python.org.
+Git: Necesario para clonar el repositorio. se descarga desde git-scm.com.
+GitHub: Una cuenta en GitHub para acceder al repositorio.
+Visual Studio Code (opcional pero recomendado): Un editor de código eficiente. Disponible en code.visualstudio.com.
+----------------------Instalación--------------------------------
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+Sigue estos pasos para configurar el proyecto en sus maquinas locales:
+
+1. Clonar el repositorio
+Abre una terminal y ejecuta el siguiente comando para clonar el repositorio en tu sistema:
+git clone
+
+2. Navegar al directorio del proyecto
+Cambia al directorio del proyecto recién clonado:
+
+3. Instalar las dependencias
+Instalar los paquetes necesarios utilizando pip.
 pip install -r requirements.txt
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+Ejecución del Proyecto
+Para ejecutar el proyecto localmente, sigue estos pasos:
 
+1. Acceder al directorio específico
+Navega al directorio Youbuild dentro del proyecto:
+cd Youbuild
 
-<<ES NECESARIO TENER POSTGRES (arriba de postgres 12.0 >>
-
-EN EL DOCUMENTO setting.py 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'youbuild_system',
-        'USER': 'postgres',
-        'PASSWORD': '0000',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-REQUISITOS:
-crear una base de datos llamada "youbuild_system"
-Cambiar segun como esta configurado su postgres
-
-PARA MIGRAR LA BASE DE DATOS:
--ir al proyecto
--ejecutar python manage.py makemigrations
--ejecutar python manage.py migrate
-
-FINALMENTE EJECUTAR
+2. Ejecutar el servidor de desarrollo
+Asegúrense de estar en la carpeta donde se encuentre manage.py, luego ejecutar
 python manage.py runserver
- PARA ADMINISTRAR DESDE localhost:8000/admin
- ejecutar:
- python manage.py createsuperuser 
- seguir los pasos--> iniciar sesion
+Esto iniciará el servidor de desarrollo de Django.
+
+3. Acceder al proyecto en el navegador
+Abre tu navegador web y dirígete a http://localhost:8000 para ver el proyecto en funcionamiento.
+
+
+
+
+
+
+---
+
+Este README proporciona una guía clara y estructurada para cualquier persona que desee clonar, configurar y ejecutar tu proyecto. Asegúrate de reemplazar los marcadores de posición (como https://github.com/usuario/nombre-del-repo.git y Nombre del Proyecto) con la información específica de tu proyecto.
+
+¿Hay algún otro detalle que te gustaría añadir o alguna otra sección que necesites incluir?
+
