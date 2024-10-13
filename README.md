@@ -14,7 +14,7 @@ Sigue estos pasos para configurar el proyecto en sus maquinas locales:
 
 1. Clonar el repositorio
 Abre una terminal y ejecuta el siguiente comando para clonar el repositorio en tu sistema:
-git clone
+git clone https://github.com/MauryQV/YouBuild.git
 
 2. Navegar al directorio del proyecto
 Cambia al directorio del proyecto recién clonado:
