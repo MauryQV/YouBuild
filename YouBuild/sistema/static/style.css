@@ -208,11 +208,10 @@ footer {
     display: flex; 
     text-align: left;
     background-color: white;
-    margin: 3em;
-    padding: 4em;
-    gap: 4em;
-    margin-top: 30px;
-    border-radius: 5px;
+    margin: 0em 0em 1em 1em ;
+    padding: 1em 0em 1em 2em;
+    gap: 2em;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -240,12 +239,12 @@ footer {
     flex: 1; 
 }
 
-.producto-imagen {
-    max-width: 20rem; 
+.detalles {
+    font-size: 1.25em;
+    
 }
-
 .aux {
-    font-size: 3em;
+    font-size: 2.5em;
     color: #d58729;
 }
 
@@ -272,10 +271,6 @@ footer {
 
     .column {
         width: 100%;
-    }
-
-    .producto-imagen {
-        max-width: 100%;
     }
 
     .btn {
@@ -305,8 +300,10 @@ footer {
     display: flex;
 }
 .producto-imagen {
-    max-width: 100%;
-    max-height: 500px;
+    max-width: 350x;
+    max-height: 350px;
+    width:500px;
+    height: 500px;
     object-fit: contain;
 }
 .carousel-productos-button {
@@ -340,4 +337,9 @@ footer {
 }
 .carousel-productos-dots .dot.active {
     background-color: orange;
+}
+
+.data{
+    font-size: 1.4em;
+    
 }

@@ -12,7 +12,7 @@
     <div class="flex-container">
         <div class="column column-left flex-column">
             <h3>Vendedor</h3>
-            <p>{{ producto.usuario_fk.nombre }} {{ producto.usuario_fk.apellido }}</p>
+            <p class="data">{{ producto.usuario_fk.nombre }} {{ producto.usuario_fk.apellido }}</p>
             <h3 class="product-name">{{ producto.nombre }}</h3>
             <!-- Mostrar todas las imágenes del producto en un carrusel -->
             <div class="carousel-productos-container">
@@ -33,15 +33,20 @@
             </div>
             <div class="botones button-row">
                 <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
-                <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarCarrito()">Agregar al
-                    Carrito</button>
-                <button class="btn add-to-view" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
-                    Deseos</button>
+                <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn add-to-cart">
+                      <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                    </button>
+                </form>
+                <button class="btn add-to-list">
+                        <i class="fas fa-heart"></i> Agregar a Lista
+                </button>
             </div>
         </div>
         <div class="column column-right flex-column">
             <h3>Descripción</h3>
-            <p>{{ producto.detalle }}</p>
+            <p class="data">{{ producto.detalle }}</p>
             <div class="sub-container">
                 <div class="subcolumn1 flex-column column-left">
                     <h3>Precio c/u</h3>
@@ -49,18 +54,18 @@
                 </div>
                 <div class="subcolumn2 flex-column column-right">
                     <h3>Cantidad Disponible</h3>
-                    <p class="aux">1 Unidad</p>
+                    <p class="aux">{{producto.cantidad}} Unidad(es).</p>
                 </div>
             </div>
             <h3>Ubicación</h3>
-            <p>
-                {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
+            <p class="data">
+                {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk.nombre }}, 
                 {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
                 {{ producto.usuario_fk.municipio_fk }}
             </p>
         </div>
     </div>
-      <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
+      <button class="btn" style="max-width: fit-content; margin: 0em 1em 1em ; padding: 1em;" onclick="volverALista()">Volver a la lista de
         productos</button>
     <!--COLOCAR SU CONTENIDO-->
       {% endblock %}
