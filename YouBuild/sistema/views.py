@@ -96,15 +96,12 @@ def agregar_al_carrito(request, producto_id):
         producto = get_object_or_404(ProductoDb, id=producto_id)
         carrito_producto, created = CarritoProductoDB.objects.get_or_create(carrito_fk=carrito, producto_fk=producto)
 
-        #ver el flujo
-        # print("carrito_producto.cantidad:", carrito_producto.cantidad)
-        #print("producto.cantidad (stock):", producto.cantidad)
-
         if carrito_producto.cantidad <= producto.cantidad:
             carrito_producto.save()
-            return redirect('Carrito')  
+            # En lugar de redirigir directamente, se envía una respuesta JSON
+            return JsonResponse({'success': True, 'message': 'Producto agregado correctamente.'})
         else:
-            return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible. mejorar la logica'})
+            return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
     else:
         return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
