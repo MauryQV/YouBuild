@@ -40,7 +40,23 @@ def carrito_view(request):
         'carrito_total': carrito_subtotal
     })
 def confirmacion_view(request):
-    return render(request, "confirmacion.html")
+    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+    carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
+    total = carrito_subtotal  # O aplicar impuestos, descuentos, etc.
+
+    context = {
+        'productos': productos_en_carrito,
+        'carrito_subtotal': carrito_subtotal,
+        'total': total,
+    }
+
+    # Solo permitir el paso a la confirmación si hay productos en el carrito
+    if not productos_en_carrito.exists():
+        return redirect('Carrito')  # Redirigir al carrito si está vacío
+
+    return render(request, 'confirmacion.html', context)
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
