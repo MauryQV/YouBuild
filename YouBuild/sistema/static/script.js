@@ -1,45 +1,4 @@
 const title = document.querySelector('.title');
-const text = title.textContent;
-title.textContent = '';
-
-// Crea un span para cada letra del título
-for (let i = 0; i < text.length; i++) {
-    const span = document.createElement('span');
-    span.textContent = text[i];
-    span.style.opacity = '1'; // Opacidad inicial completamente visible
-    span.style.transform = 'scale(1)'; // Tamaño inicial normal
-    title.appendChild(span);
-}
-
-// Efecto de ola
-const spans = title.querySelectorAll('span');
-
-function waveEffect() {
-    spans.forEach((span, index) => {
-        const delay = index * 100; // Tiempo de retardo por letra
-        setTimeout(() => {
-            span.style.transform = 'scale(0.75)'; // Aumenta el tamaño de la letra
-        }, delay);
-        
-        // Decrecer después de un tiempo
-        setTimeout(() => {
-            span.style.transform = 'scale(1)'; // Restaura el tamaño original
-        }, delay + 800); // Tiempo después de crecer
-    });
-}
-
-// Ejecuta el efecto en cadena
-function startWaveEffect() {
-    waveEffect();
-    setTimeout(() => {
-        // Después del efecto y la pausa de 1 segundo, vuelve a ejecutar
-        startWaveEffect();
-    }, (spans.length * 100) + 800 + 5000); // Duración del efecto + pausa de 1 segundo
-}
-
-// Comienza el efecto de onda
-startWaveEffect();
-
 const carousel = document.querySelector('.carousel');
 const items = document.querySelectorAll('.carousel-item');
 const prevBtn = document.querySelector('.prev');
@@ -49,15 +8,12 @@ let currentIndex = 0;
 const totalItems = items.length;
 const transitionTime = 5000; // 5 segundos
 
-// Función para actualizar la posición del carrusel
 function updateCarousel() {
     carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-    updateDots(); // Asegúrate de actualizar los puntos cada vez que cambie el carrusel
+    updateDots(); 
 }
-
-// Función para pasar al siguiente slide
 function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalItems; // Avanza al siguiente índice y reinicia si llega al final
+    currentIndex = (currentIndex + 1) % totalItems; 
     updateCarousel();
 }
 
@@ -89,7 +45,6 @@ let autoSlideInterval = setInterval(nextSlide, transitionTime);
 
 const dotsContainer = document.querySelector('.carousel-dots'); // Selecciona el contenedor de puntos
 
-// Crear puntos de navegación
 function createDots() {
     for (let i = 0; i < totalItems; i++) {
         const dot = document.createElement('div');
@@ -103,7 +58,6 @@ function createDots() {
     }
 }
 
-// Función para actualizar los puntos
 function updateDots() {
     const dots = document.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
@@ -111,9 +65,8 @@ function updateDots() {
     });
 }
 
-// Inicializa los puntos de navegación
 createDots();
-updateDots(); // Asegúrate de que el punto correcto esté activo al inicio
+updateDots(); 
 
 function verDetalles(productId) {
     window.location.href = `/producto/${productId}/`;
@@ -122,3 +75,4 @@ function verDetalles(productId) {
 function volverALista() {
     window.location.href = "/";
 }
+
