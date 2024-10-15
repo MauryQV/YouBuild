@@ -185,3 +185,38 @@ body {
     background-color: #595450;
 }
 
+/* Selector de cantidad redondeado y ajustado para dos dígitos */
+.quantity-selector {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Borde redondeado */
+    overflow: hidden;
+    width: fit-content; /* Ajusta el ancho al contenido */
+}
+
+.quantity-selector input {
+    width: 30px; /* Tamaño ajustado para dos dígitos */
+    text-align: center;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    appearance: none;
+}
+
+.quantity-btn {
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.quantity-btn.decrement {
+    border-right: 1px solid #ddd;
+}
+
+.quantity-btn.increment {
+    border-left: 1px solid #ddd;
+}

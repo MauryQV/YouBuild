@@ -1,6 +1,6 @@
 /* confirmacion.css */
 
-body {
+.confirmacion-body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -11,122 +11,21 @@ body {
     min-height: 100vh; /* Permite que el footer esté al final */
 }
 
-.container {
+.confirmacion-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-header {
+.confirmacion-header {
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px 0;
     width: 100%;
 }
 
-.topbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.topbar-left, .topbar-center, .topbar-right {
-    display: flex;
-    align-items: center;
-}
-
-.topbar-center {
-    flex-grow: 1;
-    justify-content: center;
-}
-
-.search-box {
-    display: flex;
-    width: 100%;
-    max-width: 400px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px 0 0 5px;
-}
-
-.search-box button {
-    padding: 10px;
-    background-color: #2980b9;
-    color: #fff;
-    border: none;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-}
-
-.search-box button:hover {
-    background-color: #3498db;
-}
-
-.icon-btn {
-    padding: 10px;
-    margin-left: 15px;
-}
-
-.btn-link {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #2c3e50;
-    font-weight: bold;
-}
-
-/* Footer */
-footer {
-    background-color: #2c3e50;
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-    width: 100%;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-around;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.footer-description, .footer-links, .footer-contact, .footer-legal {
-    flex: 1;
-    margin: 10px;
-    min-width: 200px;
-}
-
-.footer-contact a, .footer-legal a {
-    color: #fff;
-    text-decoration: none;
-}
-
-.footer-legal ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.social-buttons a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: white;
-    font-size: 1.5rem;
-}
-
-.social-buttons a:hover {
-    color: #3498db;
-}
-
 /* Centrado del contenido principal */
-.container-main {
+.confirmacion-container-main {
     flex: 1; /* Para ocupar el espacio disponible */
     display: flex;
     justify-content: center;
@@ -134,14 +33,14 @@ footer {
 }
 
 /* Estilo para los títulos principales y subtítulos */
-h1, h2 {
+.confirmacion-h1, .confirmacion-h2 {
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
     color: #2c3e50;
 }
 
-h1 {
+.confirmacion-h1 {
     font-size: 2.5rem;
     padding: 10px;
     background-color: #f0f0f0;
@@ -149,7 +48,7 @@ h1 {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+.confirmacion-h2 {
     font-size: 2rem;
     padding: 8px;
     background-color: #f7f7f7;
@@ -158,7 +57,7 @@ h2 {
 }
 
 /* Estilo de las secciones */
-section {
+.confirmacion-section {
     margin: 30px 0;
     padding: 20px;
     background-color: #ffffff;
@@ -170,7 +69,7 @@ section {
 }
 
 /* Estilo del botón Confirmar Compra */
-button.confirm-btn {
+button.confirmacion-confirm-btn {
     margin-top: 20px;
     padding: 15px 20px;
     background-color: #e67e22; /* Naranja */
@@ -187,14 +86,13 @@ button.confirm-btn {
     margin-right: auto;
 }
 
-button.confirm-btn:hover {
+button.confirmacion-confirm-btn:hover {
     background-color: #d35400; /* Naranja oscuro al pasar el mouse */
     transform: scale(1.05);
 }
-/* confirmacion.css */
 
 /* Estilo para la sección de información de envío (shipping-info) */
-.shipping-info form {
+.confirmacion-shipping-info form {
     display: flex;
     flex-direction: column;
     gap: 15px; /* Espacio entre los campos de formulario */
@@ -206,13 +104,13 @@ button.confirm-btn:hover {
     margin: 0 auto; /* Centrar el formulario */
 }
 
-.shipping-info label {
+.confirmacion-shipping-info label {
     font-weight: bold;
     margin-bottom: 5px; /* Espacio entre la etiqueta y el campo de entrada */
     color: #333;
 }
 
-.shipping-info input {
+.confirmacion-shipping-info input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -223,19 +121,17 @@ button.confirm-btn:hover {
     margin-bottom: 10px; /* Espacio debajo de cada campo */
 }
 
-.shipping-info input:focus {
+.confirmacion-shipping-info input:focus {
     outline: none;
     border-color: #3498db; /* Cambia el color del borde al enfocar */
 }
 
 /* Alinear el campo País y darle un poco más de espacio */
-label[for="country"], #country {
+.confirmacion-shipping-info label[for="country"], .confirmacion-shipping-info #country {
     margin-top: 20px; /* Baja el campo País para mayor separación */
 }
 
 /* Estilo para los campos de Dirección de Envío */
-.shipping-info input[type="text"] {
+.confirmacion-shipping-info input[type="text"] {
     max-width: 400px; /* Establecer un ancho máximo para los campos */
 }
-
-

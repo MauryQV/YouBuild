@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h1>Confirmación de Compra</h1>
+  <div class="confirmacion-container">
+    <h1 class="confirmacion-h1">Confirmación de Compra</h1>
 
     <!-- Sección de Dirección de Envío -->
-    <section class="shipping-info">
-      <h2>Dirección de Envío</h2>
+    <section class="confirmacion-shipping-info">
+      <h2 class="confirmacion-h2">Dirección de Envío</h2>
       <form>
         <label for="name">Nombre Completo:</label>
         <input type="text" id="name" name="name" required>
@@ -32,9 +32,40 @@
       </form>
     </section>
 
+    <!-- Sección de Carrito -->
+    <section class="confirmacion-carrito">
+      <h2 class="confirmacion-h2">Resumen del Carrito</h2>
+      <table class="confirmacion-carrito-tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in productos %}
+          <tr>
+            <td>{{ item.producto_fk.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.producto_fk.precio }} Bs.</td>
+            <td>{{ item.producto_fk.precio|floatformat:2|add:"*"|add:item.cantidad|floatformat:2 }} Bs.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Mostrar el Subtotal y Total -->
+    <section class="confirmacion-total">
+      <h3>Subtotal: {{ carrito_subtotal|floatformat:2 }} Bs.</h3>
+      <h3>Total: {{ total|floatformat:2 }} Bs.</h3>
+    </section>
+
     <!-- Sección de Método de Pago -->
-    <section class="payment-method">
-      <h2>Método de Pago</h2>
+    <section class="confirmacion-section">
+      <h2 class="confirmacion-h2">Método de Pago</h2>
       <form>
         <label for="payment-option">Selecciona tu método de pago:</label>
         <select id="payment-option" name="payment-option" required>
@@ -46,6 +77,6 @@
     </section>
 
     <!-- Botón para Confirmar Compra -->
-    <button type="submit" class="confirm-btn">Confirmar Compra</button>
+    <button type="submit" class="confirmacion-confirm-btn">Confirmar Compra</button>
   </div>
 {% endblock %}
