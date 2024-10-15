@@ -61,7 +61,7 @@ def confirmacion_view(request):
     if not productos_en_carrito.exists():
         return redirect('Carrito')  # Redirigir al carrito si está vacío
 
-    return render(request, 'checkout.html', context)
+    return render(request, 'confirmacion.html', context)
 
 
 

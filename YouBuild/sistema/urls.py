@@ -14,6 +14,7 @@ urlpatterns = [
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
+    
 
 
 ]
