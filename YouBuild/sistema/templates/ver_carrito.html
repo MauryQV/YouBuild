@@ -17,13 +17,13 @@
     <!-- Topbar -->
     <header>
         <div class="topbar-container">
-            <!-- Sección izquierda (Logo) -->
+            <!-- Left (Logo) -->
             <div class="topbar-left">
                 <a href="{% url 'index' %}" class="logo">
-                    <img src="your-logo.png" alt="Logo" width="50"> <!-- Imagen del logo -->
+                    <img src="your-logo.png" alt="Logo" width="50"> <!-- Logo image -->
                 </a>
             </div>
-            <!-- Sección centro (Búsqueda) -->
+            <!-- Center (Search) -->
             <div class="topbar-center">
               <form action="{% url 'buscar' %}" method="GET">
                 <div class="search-box">
@@ -32,17 +32,19 @@
                 </div>
               </form>
             </div>
-            <!-- Sección derecha (Botones) -->
+            <!-- Right (Buttons) -->
             <div class="topbar-right">
                 <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
                 <a href="#registrarse" class="btn-link">Registrarse</a>
-                <a href="{% url 'ver_carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="{% url 'ver_carrito' %}" class="icon-btn">
+                    <i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span>
+                </a>
                 <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
     </header>
 
-    <!-- Contenido del carrito -->
+    <!-- Cart Content -->
     <main>
       <h1 class="title">Tu Carrito</h1>
       
@@ -50,24 +52,23 @@
         {% if productos_en_carrito %}
           <ul>
             {% for item in productos_en_carrito %}
-              <li class="cart-item">
+              <li id="cart-item-{{ item.id }}" class="cart-item">
                 <div class="cart-item-info">
                   <span>{{ item.producto_fk.nombre }}</span> - 
                   <span>Precio: Bs{{ item.producto_fk.precio }}</span> - 
                   <span>Cantidad: {{ item.cantidad }}</span>
                 </div>
-                <!-- Botones para agregar cantidad y eliminar -->
+                <!-- Buttons to increment or delete -->
                 <div class="cart-buttons">
-                  <!-- Botón para incrementar cantidad -->
+                  <!-- Button to increment quantity -->
                   <a href="{% url 'agregar_cantidad' item.producto_fk.id %}" class="icon-btn">
                     <i class="fas fa-plus-circle"></i>
                   </a>
-                  <!-- Botón para eliminar producto -->
-                  <a href="{% url 'eliminar_producto' item.producto_fk.id %}" class="icon-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
-                </div>
-              </li>
+                  <!-- Button to delete product -->
+                <a href="javascript:void(0);" class="icon-btn" onclick="eliminarProducto('{{ item.id }}')">
+                  <i class="fas fa-trash-alt"></i>
+              </a>
+              <li id="cart-item-{{ item.id }}" class="cart-item">          
             {% endfor %}
           </ul>
         {% else %}
@@ -75,7 +76,7 @@
         {% endif %}
       </div>
 
-      <!-- Botón de volver -->
+      <!-- Back button -->
       <div class="back-button">
         <a href="{% url 'index' %}" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
       </div>
@@ -116,6 +117,29 @@
       </div>
     </footer>
 
-    <script src="{% static 'script.js' %}"></script>
-  </body>
-</html>
+    <!-- JavaScript for dynamic deletion -->
+    <script>
+      function eliminarProducto(itemId) {
+        fetch(`/carrito/eliminar/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token for security
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+              document.querySelector('.cart-count').innerText = data.new_cart_count;
+              document.getElementById(`cart-item-${itemId}`).remove();
+      
+              // Refresh the page if needed
+              location.reload();
+          } else {
+              alert(data.message);
+          }
+      });
+      
+    }
+    
+      </script>
+      

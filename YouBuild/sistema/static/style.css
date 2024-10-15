@@ -341,3 +341,26 @@ footer {
 .carousel-productos-dots .dot.active {
     background-color: orange;
 }
+
+/* Style for the Cart Counter */
+.cart-count {
+    position: absolute;
+    bottom: -4px;  /* Move the counter a bit lower */
+    right: -4px;   /* Move the counter a bit to the right */
+    background-color: rgb(254, 128, 44); /* Change background to match the orange color */
+    color: rgb(250, 249, 248);  /* Text color: set to white or off-white */
+    border-radius: 50%; /* Keep it circular */
+    border: 2px solid white; /* Add a white border */
+    width: 18px;  /* Slightly smaller width */
+    height: 18px;  /* Slightly smaller height */
+    display: flex;  /* Center the number inside */
+    justify-content: center; /* Center horizontally */
+    align-items: center;  /* Center vertically */
+    font-size: 11px;  /* Smaller font size */
+    font-weight: bold;  /* Bold text */
+    box-shadow: none;  /* Remove any shadow */
+}
+/* Ensure the cart icon itself is positioned relative */
+.icon-btn {
+    position: relative;
+}

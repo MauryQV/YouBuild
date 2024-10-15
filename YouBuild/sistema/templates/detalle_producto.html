@@ -33,8 +33,9 @@
             </div>
             <div class="botones button-row">
                 <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
-                <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarCarrito()">Agregar al
-                    Carrito</button>
+                <a href="{% url 'ver_carrito' %}" class="icon-btn">
+                    <i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span>
+                  </a>                  
                 <button class="btn add-to-view" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
                     Deseos</button>
             </div>
@@ -68,3 +69,5 @@
             <script src="{% static 'carrouselproductos.js' %}"></script>
            {% endblock %}
     
+
+           
