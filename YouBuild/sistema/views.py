@@ -67,14 +67,25 @@ def confirmacion_view(request):
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
-        # Obtener el producto del carrito usando el ID
-        producto = get_object_or_404(CarritoProductoDB, id=item_id)
-        
-        # Eliminar el producto del carrito
-        producto.delete()
-        
-        # Redirigir de vuelta al carrito
-        return redirect('Carrito')
+        try:
+            # Obtener el producto del carrito usando el ID
+            producto = get_object_or_404(CarritoProductoDB, id=item_id)
+
+            # Eliminar el producto del carrito
+            producto.delete()
+
+            # Actualizar el conteo del carrito en la sesión
+            cart = request.session.get('cart', {})
+            if str(producto.producto_fk.id) in cart:
+                del cart[str(producto.producto_fk.id)]
+                request.session['cart'] = cart
+                request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
+
+            # Redirigir a la página del carrito en lugar de devolver JSON
+            return redirect('Carrito')  # Aquí asume que 'Carrito' es el nombre de la vista que muestra el carrito
+        except CarritoProductoDB.DoesNotExist:
+            # Manejar si el producto no se encuentra en el carrito
+            return redirect('Carrito')  # Redirigir de vuelta al carrito si hay un error
 
 @csrf_exempt
 def update_cart_quantity(request):
@@ -138,7 +149,6 @@ def agregar_al_carrito(request, producto_id):
 
         # Check stock and add to the database cart
         if carrito_producto.cantidad <= producto.cantidad:
-            carrito_producto.cantidad += 1  # Increment quantity
             carrito_producto.save()
 
             # Redirect the user to the 'carrito' page after adding
@@ -151,3 +161,7 @@ def agregar_al_carrito(request, producto_id):
             return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
     
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+def get_cart_count(request):
+    cart_count = request.session.get('cart_count', 0)
+    return JsonResponse({'cart_count': cart_count})
