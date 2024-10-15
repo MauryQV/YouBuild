@@ -19,7 +19,7 @@
         <div class="topbar-container">
             <!-- Sección izquierda (Logo) -->
             <div class="topbar-left">
-                <a href="{% url 'index' %}" class="logo">
+                <a href="#home" class="logo">
                     <img src="your-logo.png" alt="Logo" width="50"> <!-- Imagen del logo -->
                 </a>
             </div>
@@ -36,7 +36,7 @@
             <div class="topbar-right">
                 <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
                 <a href="#registrarse" class="btn-link">Registrarse</a>
-                <a href="{% url 'ver_carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#carrito" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
                 <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
             </div>
         </div>
@@ -50,34 +50,15 @@
         {% if productos_en_carrito %}
           <ul>
             {% for item in productos_en_carrito %}
-              <li class="cart-item">
-                <div class="cart-item-info">
-                  <span>{{ item.producto_fk.nombre }}</span> - 
-                  <span>Precio: Bs{{ item.producto_fk.precio }}</span> - 
-                  <span>Cantidad: {{ item.cantidad }}</span>
-                </div>
-                <!-- Botones para agregar cantidad y eliminar -->
-                <div class="cart-buttons">
-                  <!-- Botón para incrementar cantidad -->
-                  <a href="{% url 'agregar_cantidad' item.producto_fk.id %}" class="icon-btn">
-                    <i class="fas fa-plus-circle"></i>
-                  </a>
-                  <!-- Botón para eliminar producto -->
-                  <a href="{% url 'eliminar_producto' item.producto_fk.id %}" class="icon-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
-                </div>
+              <li>
+                {{ item.producto_fk.nombre }} - Cantidad: {{ item.cantidad }}
+                - Precio: Bs{{ item.producto_fk.precio }}
               </li>
             {% endfor %}
           </ul>
         {% else %}
           <p>Tu carrito está vacío.</p>
         {% endif %}
-      </div>
-
-      <!-- Botón de volver -->
-      <div class="back-button">
-        <a href="{% url 'index' %}" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
       </div>
     </main>
 

@@ -9,8 +9,6 @@ def IndexView(request):
     productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
-
-
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1  
@@ -46,7 +44,6 @@ def carrito_view(request):
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': carrito_subtotal
     })
-    
 def confirmacion_view(request):
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
@@ -65,6 +62,7 @@ def confirmacion_view(request):
         return redirect('Carrito')  # Redirigir al carrito si está vacío
 
     return render(request, 'checkout.html', context)
+
 
 
 def eliminar_producto(request, item_id):
@@ -108,20 +106,48 @@ def update_cart_quantity(request):
 
     return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
 
-
+@csrf_exempt  # Disable CSRF for this view
 def agregar_al_carrito(request, producto_id):
     if request.method == 'POST':
-        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+        # Fetch the product from the database
         producto = get_object_or_404(ProductoDb, id=producto_id)
+
+        # Update session cart for counting
+        cart = request.session.get('cart', {})
+
+        # Check if the product is already in the session cart
+        if str(producto_id) in cart:
+            cart[str(producto_id)]['quantity'] += 1  # Increment quantity
+        else:
+            # Add new product to session cart
+            cart[str(producto_id)] = {
+                'name': producto.nombre,
+                'price': producto.precio,
+                'quantity': 1
+            }
+
+        # Save the updated cart in the session
+        request.session['cart'] = cart
+        request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
+
+        # Handle the database cart (CarritoDB)
+        # In this example, we're adding it to both the session and the database
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)  # Replace this with the appropriate user logic
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
         carrito_producto, created = CarritoProductoDB.objects.get_or_create(carrito_fk=carrito, producto_fk=producto)
 
+        # Check stock and add to the database cart
         if carrito_producto.cantidad <= producto.cantidad:
+            carrito_producto.cantidad += 1  # Increment quantity
             carrito_producto.save()
-            
-            return JsonResponse({'success': True, 'message': 'Producto agregado correctamente.'})
+
+            # Redirect the user to the 'carrito' page after adding
+            return JsonResponse({
+                'success': True,
+                'message': 'Producto agregado correctamente.',
+                'redirect_url': '/carrito/'  # Adjust this to the actual URL for your carrito page
+            })
         else:
             return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
-    else:
-        return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
