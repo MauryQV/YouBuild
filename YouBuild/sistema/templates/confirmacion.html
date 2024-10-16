@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Confirmación de Compra{% endblock %}
+
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'confirmacion.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="confirmacion-container">
+    <h1 class="confirmacion-h1">Confirmación de Compra</h1>
+
+    <!-- Mostrar Mensajes de Feedback -->
+    {% if messages %}
+      <div class="messages mb-4">
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} p-2 mb-2 rounded">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Sección de Dirección de Envío -->
+    <section class="confirmacion-shipping-info">
+      <h2 class="confirmacion-h2">Dirección de Envío</h2>
+      <p><strong>Nombre Completo:</strong> {{ direccion.nombre }}</p>
+      <p><strong>Dirección:</strong> {{ direccion.direccion }}</p>
+      <p><strong>Ciudad:</strong> {{ direccion.ciudad }}</p>
+    </section>
+
+    <!-- Sección de Carrito -->
+    <section class="confirmacion-carrito">
+      <h2 class="confirmacion-h2">Resumen del Carrito</h2>
+      <table class="confirmacion-carrito-tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in productos %}
+          <tr>
+            <td>{{ item.producto_fk.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.producto_fk.precio }} Bs.</td>
+            <td>{{ item.producto_fk.precio|multiply:item.cantidad|floatformat:2 }} Bs.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Mostrar el Subtotal y Total -->
+    <section class="confirmacion-total">
+      <h3>Subtotal: {{ carrito_subtotal|floatformat:2 }} Bs.</h3>
+      <h3>Total: {{ carrito_subtotal|floatformat:2 }} Bs.</h3>
+    </section>
+
+    <!-- Sección de Método de Pago -->
+    <section class="confirmacion-section">
+      <h2 class="confirmacion-h2">Método de Pago</h2>
+      <form id="paymentForm" class="payment-form">
+        <label for="payment-option">Selecciona tu método de pago:</label>
+        <select id="payment-option" name="payment-option" required>
+          <option value="">-- Selecciona una opción --</option>
+          <option value="bank-transfer">Pago con Código QR</option>
+        </select>
+      </form>
+    </section>
+
+    <!-- Botón para Confirmar Compra -->
+    <button id="confirmPurchaseBtn" type="button" class="confirmacion-confirm-btn">
+      Confirmar Compra
+    </button>
+
+    <!-- Sección de Pago con QR, inicialmente oculta -->
+    <div id="paymentSection" class="hidden mt-8">
+      <h3 class="text-xl font-bold mb-4 text-center">Pago con Código QR</h3>
+      <div id="paymentInfo" class="space-y-4">
+        <p class="text-center">Monto a pagar: <span id="amount">{{ carrito_subtotal|floatformat:2 }} Bs.</span></p>
+        <div id="qrcode" class="flex justify-center"></div>
+        <p class="text-center text-sm">Tu código vence en 24 horas</p>
+        <p class="text-center text-sm">Escanea y paga</p>
+        <button id="checkPayment" class="confirmacion-confirm-btn">YA REALICE EL PAGO</button>
+      </div>
+      <div id="paymentStatus" class="hidden mt-4">
+        <p id="statusMessage" class="text-center text-lg font-medium"></p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'checkout.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+{% endblock %}
+
+
+

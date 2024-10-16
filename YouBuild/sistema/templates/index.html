@@ -1,15 +1,16 @@
-
+<!DOCTYPE html>
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Product Carousel{% endblock %}
-{% block extra_styles %}
+{% block title %}YouBuild | Home {% endblock %}
 
+{% block extra_styles %}
 <link rel="stylesheet" href="{% static 'resultadosVacios.css' %}" /> 
 <link rel="stylesheet" href="{% static 'style.css' %}" /> 
 <link rel="stylesheet" href="{% static 'listaProduct.css' %}" /> 
 <link rel="stylesheet" href="{% static 'topbar.css' %}" /> 
 {% endblock %}
+
 {% block content %}
 <main>
   <div class="carousel-container">
@@ -40,12 +41,9 @@
       <div class="buttons-container">
         <div class="button-row">
           <button class="btn buy-now">Comprar Ahora</button>
-          <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
-            {% csrf_token %}
-            <button type="submit" class="btn add-to-cart">
-              <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-            </button>
-          </form>
+          <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
+            <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+          </button>
         </div>
         <div class="button-row">
           <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">
@@ -68,4 +66,32 @@
     {% endfor %}
   </div>
 </main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+
+  function agregarAlCarrito(productId) {
+    fetch(`/agregar-al-carrito/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/carrito/';
+        } else {
+            alert(data.message || 'Error al agregar al carrito');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
 {% endblock %}

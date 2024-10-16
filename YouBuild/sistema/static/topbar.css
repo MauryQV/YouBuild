@@ -82,3 +82,34 @@
     background-color: #ef6605;
     color: white;
 }
+
+/* Style for the little cart count number */
+.cart-count {
+    position: absolute;
+    bottom: -5px; /* Moves the number outside the cart icon */
+    right: -5px;  /* Adjusts the number slightly to the right */
+    background-color: orange;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+    border: 2px solid white; /* Optional: border for better visibility */
+}
+
+/* Ensure the icon-btn is relatively positioned */
+.icon-btn {
+    position: relative; /* Allows the .cart-count to be positioned correctly */
+    padding: 10px 15px;
+    background-color: white;
+    border: 2px solid #ef6605;
+    border-radius: 8px;
+    color: #ef6605;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}

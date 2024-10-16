@@ -343,3 +343,27 @@ footer {
     font-size: 1.4em;
     
 }
+
+.carrito-container {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carrito-container h1 {
+    font-size: 2em;
+    color: #333;
+}
+
+.carrito-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.carrito-container li {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: #555;
+}
