@@ -94,6 +94,37 @@
       </div>
     </div>
   </div>
+  <!-- Contenedor para el mensaje de éxito -->
+<div id="successMessage" class="hidden mt-4 success-message">
+  <h2 class="text-center text-lg font-medium">¡Compra Confirmada!</h2>
+  <p id="orderDetails" class="text-center text-lg font-medium"></p>
+  <div id="orderSummary" class="order-summary">
+      <h3>Resumen del Pedido</h3>
+      <table class="order-summary-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Total</th>
+          </tr>
+          </thead>
+          <tbody id="orderSummaryBody">
+              <!-- Detalles del pedido se llenarán aquí -->
+          </tbody>
+          <tfoot>
+              <tr>
+                  <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                  <td id="orderTotal"></td>
+              </tr>
+          </tfoot>
+          </table>
+          </div>
+          <div id="shippingInfo" class="shipping-info">
+              <h3>Dirección de Envío</h3>
+              <p id="shippingDetails"></p>
+          </div>
+          </div>
 {% endblock %}
 
 {% block extra_scripts %}
