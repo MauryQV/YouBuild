@@ -114,3 +114,38 @@
   align-items: center;
   margin-top: 20px;
 }
+
+.success-message {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.order-summary {
+  margin-top: 20px;
+}
+
+.order-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.order-summary-table th, .order-summary-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.order-summary-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.shipping-info {
+  margin-top: 20px;
+  text-align: left;
+}

@@ -33,12 +33,9 @@
             </div>
             <div class="botones button-row">
                 <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
-                <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn add-to-cart">
-                      <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                    </button>
-                </form>
+                <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
+                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                  </button>
                 <button class="btn add-to-list">
                         <i class="fas fa-heart"></i> Agregar a Lista
                 </button>
@@ -71,5 +68,29 @@
       {% endblock %}
            {% block extra_scripts %}
             <script src="{% static 'carrouselproductos.js' %}"></script>
-           {% endblock %}
+            <script>
+function agregarAlCarrito(productId) {
+    fetch(`/agregar-al-carrito/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/carrito/';
+        } else {
+            alert(data.message || 'Error al agregar al carrito');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
+{% endblock %}
     
