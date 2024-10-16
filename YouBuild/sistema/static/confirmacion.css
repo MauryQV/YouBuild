@@ -78,7 +78,7 @@
 .confirmacion-confirm-btn {
   background-color: #ef6605;
   border: 1px solid #000000;
-  color: #000000; /* Color del texto */
+  color: #ffffff; /* Color del texto */
 }
 
 .confirmacion-confirm-btn:hover {
@@ -108,9 +108,114 @@
 .payment-status .status-message {
   font-size: 1.1em;
 }
+
 #qrcode {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 }
+
+/* Estilos para centrar el contenido */
+.confirmacion-container {
+  background-color: white; /* Fondo blanco */
+  padding: 30px; /* Espaciado interno */
+  margin: 50px auto; /* Centrar la caja verticalmente y horizontalmente */
+  max-width: 800px; /* Tamaño máximo del cuadro */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para resaltar el cuadro */
+}
+
+/* Títulos */
+.confirmacion-h1 {
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.confirmacion-h2 {
+  font-size: 1.8em;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Tabla de carrito */
+.confirmacion-carrito-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.confirmacion-carrito-tabla th, .confirmacion-carrito-tabla td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.confirmacion-carrito-tabla th {
+  background-color: #f9f9f9;
+}
+
+/* Sección de total */
+.confirmacion-total h3 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+/* Botón de confirmar compra */
+.confirmacion-confirm-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #e67e22;
+  color: white;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.confirmacion-confirm-btn:hover {
+  background-color: #e67e22;
+}
+
+/* Ajustar sección de QR y método de pago */
+.confirmacion-section {
+  margin-bottom: 30px;
+}
+
+/* Ocultar inicialmente la sección de pago con QR */
+.hidden {
+  display: none;
+}
+
+/* Mensajes de alerta */
+.messages {
+  margin-bottom: 20px;
+}
+.alert {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.editable-input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+

@@ -45,16 +45,23 @@ def carrito_view(request):
         'carrito_total': carrito_subtotal
     })
 def confirmacion_view(request):
+    # Obtener el usuario con id=1
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+    
+    # Obtener el carrito del usuario
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    # Calcular el subtotal del carrito
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
     total = carrito_subtotal  # O aplicar impuestos, descuentos, etc.
 
+    # Preparar el contexto con los datos del usuario
     context = {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
         'total': total,
+        'usuario': usuario_prueba
     }
 
     # Solo permitir el paso a la confirmación si hay productos en el carrito
@@ -62,7 +69,6 @@ def confirmacion_view(request):
         return redirect('Carrito')  # Redirigir al carrito si está vacío
 
     return render(request, 'confirmacion.html', context)
-
 
 
 def eliminar_producto(request, item_id):
@@ -165,3 +171,22 @@ def agregar_al_carrito(request, producto_id):
 def get_cart_count(request):
     cart_count = request.session.get('cart_count', 0)
     return JsonResponse({'cart_count': cart_count})
+
+def obtener_direccion_usuario(request):
+    # Obtener el usuario con id=1
+    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+    # Obtener información de dirección
+    municipio = usuario_prueba.municipio_fk
+    provincia = municipio.provincia_fk if municipio else None
+    departamento = provincia.departamento_fk if provincia else None
+
+    # Crear un diccionario con los datos que quieres enviar
+    data = {
+        'municipio': municipio.nombre if municipio else 'No especificado',
+        'provincia': provincia.nombre if provincia else 'No especificado',
+        'departamento': departamento.nombre if departamento else 'No especificado',
+    }
+
+    # Devolver los datos en formato JSON
+    return JsonResponse(data)

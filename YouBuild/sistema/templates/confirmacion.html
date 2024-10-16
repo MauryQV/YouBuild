@@ -24,11 +24,25 @@
     {% endif %}
 
     <!-- Sección de Dirección de Envío -->
+    <!-- Sección de Dirección de Envío con campos editables -->
     <section class="confirmacion-shipping-info">
       <h2 class="confirmacion-h2">Dirección de Envío</h2>
-      <p><strong>Nombre Completo:</strong> {{ direccion.nombre }}</p>
-      <p><strong>Dirección:</strong> {{ direccion.direccion }}</p>
-      <p><strong>Ciudad:</strong> {{ direccion.ciudad }}</p>
+      
+      <label for="nombre">Nombre Completo:</label>
+      <input type="text" id="nombre" value="{{ usuario.nombre }} {{ usuario.apellido }}" class="editable-input" readonly>
+      
+      <label for="departamento">Departamento:</label>
+      <input type="text" id="departamento" value="{{ direccion.departamento }}" class="editable-input" readonly>
+      
+      <label for="provincia">Provincia:</label>
+      <input type="text" id="provincia" value="{{ direccion.provincia }}" class="editable-input" readonly>
+      
+      <label for="municipio">Municipio:</label>
+      <input type="text" id="municipio" value="{{ direccion.municipio }}" class="editable-input" readonly>
+    
+      <button id="autocompletarBtn" type="button" class="confirmacion-confirm-btn">
+        Autocompletar
+      </button>
     </section>
 
     <!-- Sección de Carrito -->
@@ -87,7 +101,7 @@
         <div id="qrcode" class="flex justify-center"></div>
         <p class="text-center text-sm">Tu código vence en 24 horas</p>
         <p class="text-center text-sm">Escanea y paga</p>
-        <button id="checkPayment" class="confirmacion-confirm-btn">YA REALICE EL PAGO</button>
+        <button id="checkPayment" class="confirmacion-confirm-btn">Ya realice el pago</button>
       </div>
       <div id="paymentStatus" class="hidden mt-4">
         <p id="statusMessage" class="text-center text-lg font-medium"></p>

@@ -1,32 +1,55 @@
-// Mostrar la sección de pago con QR
-document.getElementById('confirmPurchaseBtn').addEventListener('click', function() {
-    const paymentOption = document.getElementById('payment-option').value;
-    if (paymentOption === 'bank-transfer') {
-        document.getElementById('paymentSection').classList.remove('hidden');
-        generateQRCode();
-        window.scrollTo(0, document.body.scrollHeight);
-    } else {
-        alert('Selecciona un método de pago');
-    }
+document.getElementById('autocompletarBtn').addEventListener('click', function() {
+    // Realizamos la petición AJAX para obtener los datos de dirección
+    fetch('/obtener-direccion/')
+        .then(response => response.json())
+        .then(data => {
+            // Mantener el nombre completo que ya está cargado en el input del HTML
+            // No es necesario actualizar el campo de nombre ya que no cambia.
+            
+            // Actualizamos los campos con los datos recibidos
+            document.getElementById('departamento').value = data.departamento;
+            document.getElementById('provincia').value = data.provincia;
+            document.getElementById('municipio').value = data.municipio;
+        })
+        .catch(error => {
+            console.error('Error al autocompletar la dirección:', error);
+        });
 });
 
-// Generar el código QR
+document.getElementById('confirmPurchaseBtn').addEventListener('click', function() {
+    const paymentSection = document.getElementById('paymentSection');
+    const paymentOption = document.getElementById('payment-option').value;
+
+    // Verificar que se haya seleccionado un método de pago antes de mostrar el QR
+    if (!paymentOption) {
+        alert('Por favor selecciona un método de pago.');
+        return;
+    }
+
+    // Hacer visible la sección de pago con QR
+    paymentSection.classList.remove('hidden');
+    
+    // Generar el código QR
+    generateQRCode();
+});
+
+// Función para generar el código QR
 function generateQRCode() {
     const amount = document.getElementById('amount').textContent;
-    const transactionId = 'TRANS-' + Math.random().toString(36).substr(2, 9);
+    const transactionId = 'TRANS-' + Math.random().toString(36).substr(2, 9); // Generar un ID de transacción único
     const paymentInfo = {
         amount: amount,
         transactionId: transactionId,
-        merchantName: 'Tienda Ejemplo'
+        merchantName: 'Transaccion Youbuild'
     };
 
-    const qr = qrcode(0, 'M');
-    qr.addData(JSON.stringify(paymentInfo));
-    qr.make();
-    document.getElementById('qrcode').innerHTML = qr.createImgTag(5, 10, "Código QR de pago");
+    const qr = qrcode(0, 'M');  // Crear la instancia del QR
+    qr.addData(JSON.stringify(paymentInfo));  // Agregar los datos de la transacción al QR
+    qr.make();  // Generar el QR
+    document.getElementById('qrcode').innerHTML = qr.createImgTag(5, 10, "Código QR de pago");  // Insertar el QR en el HTML
 }
 
-// Verificar el estado de pago
+// Verificar el estado de pago (simulado)
 document.getElementById('checkPayment').addEventListener('click', function() {
     const checkPaymentButton = document.getElementById('checkPayment');
     const paymentStatus = document.getElementById('paymentStatus');
@@ -35,12 +58,13 @@ document.getElementById('checkPayment').addEventListener('click', function() {
     checkPaymentButton.disabled = true;
     checkPaymentButton.textContent = 'Verificando...';
 
+    // Simulación del estado de pago (esto deberías reemplazarlo con una verificación real si usas un sistema de pagos)
     setTimeout(() => {
-        const isPaid = Math.random() < 0.5; 
+        const isPaid = Math.random() < 0.5;  // Simular pago exitoso o fallido aleatoriamente
         paymentStatus.classList.remove('hidden');
 
         if (isPaid) {
-            statusMessage.textContent = '¡Pago exitoso!';
+            statusMessage.textContent = '¡Su compra ha sido realizada exitosamente!';
             statusMessage.classList.add('text-green-600');
             statusMessage.classList.remove('text-red-600');
         } else {
@@ -50,6 +74,6 @@ document.getElementById('checkPayment').addEventListener('click', function() {
         }
 
         checkPaymentButton.disabled = false;
-        checkPaymentButton.textContent = 'YA REALICE EL PAGO';
+        checkPaymentButton.textContent = 'Ya realicé el pago';
     }, 2000);
 });
