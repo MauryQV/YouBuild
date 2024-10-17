@@ -35,8 +35,9 @@
                 <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
 
                 
-                <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarCarrito()">Agregar al
-                    Carrito</button>
+                <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">Agregar al Carrito</button>
+
+
 
 
                 <button class="btn add-to-view" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
@@ -70,5 +71,29 @@
       {% endblock %}
            {% block extra_scripts %}
             <script src="{% static 'carrouselproductos.js' %}"></script>
+            <script>
+                function agregarAlCarrito(productId) {
+                    fetch(`/agregar-al-carrito/${productId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'  
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/carrito/';
+                        } else {
+                            alert(data.message || 'Error al agregar al carrito');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+                
+                </script>
            {% endblock %}
     
