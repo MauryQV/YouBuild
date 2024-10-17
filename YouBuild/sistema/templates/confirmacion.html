@@ -107,7 +107,58 @@
         <p id="statusMessage" class="text-center text-lg font-medium"></p>
       </div>
     </div>
+
+      <!-- Añadir la sección de recibo al final del HTML -->
+<!-- Contenedor para el mensaje de éxito -->
+<div id="successMessage" class="hidden mt-4 success-message">
+  <h2 class="text-center text-lg font-medium">¡Compra Confirmada!</h2>
+  <p id="orderDetails" class="text-center text-lg font-medium">Gracias por tu compra. Aquí está el resumen de tu pedido:</p>
+  
+  <!-- Resumen del pedido -->
+  <div id="orderSummary" class="order-summary">
+    <h3>Resumen del Pedido</h3>
+    <table class="order-summary-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="orderSummaryBody">
+        <!-- Detalles del pedido se llenarán aquí dinámicamente -->
+        {% for item in productos %}
+        <tr>
+          <td>{{ item.producto_fk.nombre }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>{{ item.producto_fk.precio }} Bs.</td>
+          <td>{{ item.producto_fk.precio|multiply:item.cantidad|floatformat:2 }} Bs.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+          <td id="orderTotal">{{ carrito_subtotal|floatformat:2 }} Bs.</td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
+
+  <!-- Información de envío -->
+  <div id="shippingInfo" class="shipping-info">
+    <h3>Dirección de Envío</h3>
+    <p><strong>Dirección:</strong> {{ direccion.departamento }}</p>
+  </div>
+</div>
+
+
+  </div>
+
+  
+
+
 {% endblock %}
 
 {% block extra_scripts %}

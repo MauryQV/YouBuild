@@ -219,3 +219,113 @@
   border-radius: 4px;
 }
 
+/* Contenedor del mensaje de éxito */
+.success-message {
+  background-color: #f9f9f9;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.success-message h2 {
+  color: #4CAF50;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.success-message p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #333;
+  text-align: center;
+}
+
+/* Tabla de resumen de pedido en el recibo */
+.order-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.order-summary-table th,
+.order-summary-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.order-summary-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.order-summary-table tfoot {
+  font-weight: bold;
+}
+
+/* Resaltar el total */
+#orderTotal {
+  font-size: 18px;
+  font-weight: bold;
+  color: #e67e22;
+  text-align: right;
+}
+
+/* Información de envío */
+.shipping-info h3 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.shipping-info p {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+}
+
+/* Estilos adicionales para mejorar la visualización */
+.success-message table {
+  border-spacing: 0;
+}
+
+.success-message th, .success-message td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.success-message td {
+  text-align: right;
+}
+
+.success-message tfoot td {
+  font-weight: bold;
+  text-align: right;
+}
+
+.success-message h3, .success-message h2, .success-message p {
+  margin: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .success-message {
+    padding: 10px;
+  }
+
+  .order-summary-table th,
+  .order-summary-table td {
+    font-size: 14px;
+  }
+
+  #orderTotal {
+    font-size: 16px;
+  }
+}
