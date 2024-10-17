@@ -9,7 +9,6 @@ def IndexView(request):
     productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
-
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1  
@@ -45,18 +44,54 @@ def carrito_view(request):
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': carrito_subtotal
     })
+def confirmacion_view(request):
+    # Obtener el usuario con id=1
+    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+    
+    # Obtener el carrito del usuario
+    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    # Calcular el subtotal del carrito
+    carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
+    total = carrito_subtotal  # O aplicar impuestos, descuentos, etc.
+
+    # Preparar el contexto con los datos del usuario
+    context = {
+        'productos': productos_en_carrito,
+        'carrito_subtotal': carrito_subtotal,
+        'total': total,
+        'usuario': usuario_prueba
+    }
+
+    # Solo permitir el paso a la confirmación si hay productos en el carrito
+    if not productos_en_carrito.exists():
+        return redirect('Carrito')  # Redirigir al carrito si está vacío
+
+    return render(request, 'confirmacion.html', context)
 
 
 def eliminar_producto(request, item_id):
     if request.method == 'POST':
-        # Obtener el producto del carrito usando el ID
-        producto = get_object_or_404(CarritoProductoDB, id=item_id)
-        
-        # Eliminar el producto del carrito
-        producto.delete()
-        
-        # Redirigir de vuelta al carrito
-        return redirect('Carrito')
+        try:
+            # Obtener el producto del carrito usando el ID
+            producto = get_object_or_404(CarritoProductoDB, id=item_id)
+
+            # Eliminar el producto del carrito
+            producto.delete()
+
+            # Actualizar el conteo del carrito en la sesión
+            cart = request.session.get('cart', {})
+            if str(producto.producto_fk.id) in cart:
+                del cart[str(producto.producto_fk.id)]
+                request.session['cart'] = cart
+                request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
+
+            # Redirigir a la página del carrito en lugar de devolver JSON
+            return redirect('Carrito')  # Aquí asume que 'Carrito' es el nombre de la vista que muestra el carrito
+        except CarritoProductoDB.DoesNotExist:
+            # Manejar si el producto no se encuentra en el carrito
+            return redirect('Carrito')  # Redirigir de vuelta al carrito si hay un error
 
 @csrf_exempt
 def update_cart_quantity(request):
@@ -88,20 +123,101 @@ def update_cart_quantity(request):
 
     return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
 
-
+@csrf_exempt  # Disable CSRF for this view
 def agregar_al_carrito(request, producto_id):
     if request.method == 'POST':
-        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+        # Fetch the product from the database
         producto = get_object_or_404(ProductoDb, id=producto_id)
+
+        # Update session cart for counting
+        cart = request.session.get('cart', {})
+
+        # Check if the product is already in the session cart
+        if str(producto_id) in cart:
+            cart[str(producto_id)]['quantity'] += 1  # Increment quantity
+        else:
+            # Add new product to session cart
+            cart[str(producto_id)] = {
+                'name': producto.nombre,
+                'price': producto.precio,
+                'quantity': 1
+            }
+
+        # Save the updated cart in the session
+        request.session['cart'] = cart
+        request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
+
+        # Handle the database cart (CarritoDB)
+        # In this example, we're adding it to both the session and the database
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)  # Replace this with the appropriate user logic
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
         carrito_producto, created = CarritoProductoDB.objects.get_or_create(carrito_fk=carrito, producto_fk=producto)
 
+        # Check stock and add to the database cart
         if carrito_producto.cantidad <= producto.cantidad:
             carrito_producto.save()
-            # En lugar de redirigir directamente, se envía una respuesta JSON
-            return JsonResponse({'success': True, 'message': 'Producto agregado correctamente.'})
+
+            # Redirect the user to the 'carrito' page after adding
+            return JsonResponse({
+                'success': True,
+                'message': 'Producto agregado correctamente.',
+                'redirect_url': '/carrito/'  # Adjust this to the actual URL for your carrito page
+            })
         else:
             return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
-    else:
-        return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
+def get_cart_count(request):
+    cart_count = request.session.get('cart_count', 0)
+    return JsonResponse({'cart_count': cart_count})
+
+def obtener_direccion_usuario(request):
+    # Obtener el usuario con id=1
+    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+    # Obtener información de dirección
+    municipio = usuario_prueba.municipio_fk
+    provincia = municipio.provincia_fk if municipio else None
+    departamento = provincia.departamento_fk if provincia else None
+
+    # Crear un diccionario con los datos que quieres enviar
+    data = {
+        'municipio': municipio.nombre if municipio else 'No especificado',
+        'provincia': provincia.nombre if provincia else 'No especificado',
+        'departamento': departamento.nombre if departamento else 'No especificado',
+    }
+
+    # Devolver los datos en formato JSON
+    return JsonResponse(data)
+
+def compra_directa_view(request, producto_id):
+    if request.method == 'POST':
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        
+        # Obtener el usuario de prueba (luego deberías cambiar esto cuando implementes autenticación)
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+        # Crear o recuperar el carrito del usuario
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+
+        # Agregar el producto al carrito con una cantidad de 1
+        carrito_producto, created = CarritoProductoDB.objects.get_or_create(
+            carrito_fk=carrito, 
+            producto_fk=producto,
+            defaults={'cantidad': 1}
+        )
+
+        # Si el producto ya estaba en el carrito, aumentar la cantidad
+        if not created:
+            carrito_producto.cantidad += 1
+            carrito_producto.save()
+
+        # Redirigir a la página de confirmación
+        return JsonResponse({
+            'success': True,
+            'redirect_url': '/confirmacion/'
+        })
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
