@@ -75,4 +75,3 @@ function verDetalles(productId) {
 function volverALista() {
     window.location.href = "/";
 }
-

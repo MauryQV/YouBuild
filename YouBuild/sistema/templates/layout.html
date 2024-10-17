@@ -37,8 +37,10 @@
         <div class="topbar-right">
           <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
           <a href="#registrarse" class="btn-link">Registrarse</a>
-          <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i></a>
-          <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
+          <a href="{% url 'Carrito' %}" class="icon-btn">
+            <i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span>
+          </a>          
+        <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
         </div>
       </div>
     </header>
