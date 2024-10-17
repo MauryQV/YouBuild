@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from sistema.views import IndexView, ProductoView, BuscarView, CheckoutView, carrito_view, eliminar_producto,update_cart_quantity, agregar_al_carrito, confirmacion_view, get_cart_count,obtener_direccion_usuario
+from sistema.views import IndexView, ProductoView, BuscarView, CheckoutView, carrito_view, eliminar_producto,update_cart_quantity, agregar_al_carrito, confirmacion_view, get_cart_count,obtener_direccion_usuario,compra_directa_view
 
 urlpatterns = [
     path('', IndexView, name='index'),
@@ -15,6 +15,7 @@ urlpatterns = [
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
      path('confirmacion/', confirmacion_view, name='confirmacion'),
       path('obtener-direccion/', obtener_direccion_usuario, name='obtener_direccion_usuario'),
+       path('comprar-directo/<int:producto_id>/', compra_directa_view, name='comprar_directo'),
 
 
 ]

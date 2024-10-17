@@ -32,7 +32,8 @@
                 {% endfor %}
             </div>
             <div class="botones button-row">
-                <button class="btn" id="btn-comprar" onclick="comprar()">Comprar</button>
+                <button class="btn" id="btn-comprar" onclick="comprar({{ producto.id }})">Comprar</button>
+
 
                 
                 <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">Agregar al Carrito</button>
@@ -93,7 +94,27 @@
                         console.error('Error:', error);
                     });
                 }
-                
+                function comprar(productId) {
+                    fetch(`/comprar-directo/${productId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/confirmacion/';  // Redirige a la página de confirmación
+                        } else {
+                            alert(data.message || 'Error al realizar la compra');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
                 </script>
            {% endblock %}
     

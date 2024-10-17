@@ -190,3 +190,34 @@ def obtener_direccion_usuario(request):
 
     # Devolver los datos en formato JSON
     return JsonResponse(data)
+
+def compra_directa_view(request, producto_id):
+    if request.method == 'POST':
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        
+        # Obtener el usuario de prueba (luego deberías cambiar esto cuando implementes autenticación)
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+        # Crear o recuperar el carrito del usuario
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+
+        # Agregar el producto al carrito con una cantidad de 1
+        carrito_producto, created = CarritoProductoDB.objects.get_or_create(
+            carrito_fk=carrito, 
+            producto_fk=producto,
+            defaults={'cantidad': 1}
+        )
+
+        # Si el producto ya estaba en el carrito, aumentar la cantidad
+        if not created:
+            carrito_producto.cantidad += 1
+            carrito_producto.save()
+
+        # Redirigir a la página de confirmación
+        return JsonResponse({
+            'success': True,
+            'redirect_url': '/confirmacion/'
+        })
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
