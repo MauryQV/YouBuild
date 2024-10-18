@@ -69,8 +69,9 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
 
+<script>
+  <script src="{% static 'script.js' %}"></script>
   function agregarAlCarrito(productId) {
     fetch(`/agregar-al-carrito/${productId}/`, {
         method: 'POST',
