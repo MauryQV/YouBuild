@@ -11,8 +11,9 @@ const transitionTime = 5000; // 5 segundos
 
 // Función que actualiza el desplazamiento del carrusel
 function updateCarousel() {
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-    updateDots(); 
+    const itemWidth = items[0].clientWidth; // Obtener el ancho actual del ítem
+    carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`; // Usar el ancho dinámico
+    updateDots();
 }
 
 // Función para ir al siguiente slide
