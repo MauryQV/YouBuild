@@ -1,3 +1,4 @@
+// Variables para el carrusel
 const title = document.querySelector('.title');
 const carousel = document.querySelector('.carousel');
 const items = document.querySelectorAll('.carousel-item');
@@ -8,10 +9,13 @@ let currentIndex = 0;
 const totalItems = items.length;
 const transitionTime = 5000; // 5 segundos
 
+// Función que actualiza el desplazamiento del carrusel
 function updateCarousel() {
     carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
     updateDots(); 
 }
+
+// Función para ir al siguiente slide
 function nextSlide() {
     currentIndex = (currentIndex + 1) % totalItems; 
     updateCarousel();
@@ -19,17 +23,17 @@ function nextSlide() {
 
 // Función para regresar al slide anterior
 function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalItems) % totalItems; // Regresa al índice anterior y reinicia si llega al inicio
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
     updateCarousel();
 }
 
-// Reinicia el temporizador al presionar los botones
+// Función para reiniciar el auto-slide después de interacción del usuario
 function resetAutoSlide() {
     clearInterval(autoSlideInterval);
     autoSlideInterval = setInterval(nextSlide, transitionTime);
 }
 
-// Listeners para los botones
+// Eventos para los botones "prev" y "next"
 nextBtn.addEventListener('click', () => {
     nextSlide();
     resetAutoSlide(); // Reinicia el temporizador
@@ -43,30 +47,39 @@ prevBtn.addEventListener('click', () => {
 // Automático: Cambia de imagen cada 5 segundos
 let autoSlideInterval = setInterval(nextSlide, transitionTime);
 
-const dotsContainer = document.querySelector('.carousel-dots'); // Selecciona el contenedor de puntos
+// Control de los puntos de navegación (dots)
+const dotsContainer = document.querySelector('.carousel-dots');
 
 function createDots() {
     for (let i = 0; i < totalItems; i++) {
         const dot = document.createElement('div');
         dot.classList.add('dot');
         dot.addEventListener('click', () => {
-            currentIndex = i; // Actualiza el índice actual al hacer clic en el punto
-            updateCarousel(); // Actualiza el carrusel
+            currentIndex = i; 
+            updateCarousel(); 
             resetAutoSlide(); // Reinicia el temporizador
         });
         dotsContainer.appendChild(dot);
     }
 }
 
+// Actualiza los puntos de navegación para reflejar el slide activo
 function updateDots() {
     const dots = document.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentIndex); // Activa el punto correspondiente
+        dot.classList.toggle('active', index === currentIndex);
     });
 }
 
+// Crea los puntos al iniciar
 createDots();
-updateDots(); 
+updateDots();
+
+// Ajusta el carrusel al cambiar el tamaño de la ventana (para mantener la responsividad)
+window.addEventListener('resize', () => {
+    updateCarousel(); // Actualiza el carrusel cuando cambia el tamaño de la ventana
+});
+
 
 function verDetalles(productId) {
     window.location.href = `/producto/${productId}/`;
