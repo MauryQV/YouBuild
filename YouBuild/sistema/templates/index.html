@@ -28,8 +28,6 @@
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>
-
-
   <div class="carousel-dots"></div>
 
   <!-- Lista de productos disponibles -->
@@ -71,8 +69,9 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
 
+<script>
+  <script src="{% static 'script.js' %}"></script>
   function agregarAlCarrito(productId) {
     fetch(`/agregar-al-carrito/${productId}/`, {
         method: 'POST',
@@ -85,7 +84,7 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-           alert(data.message || 'Producto agregado correctamente al carrito');
+            window.location.href = '/carrito/';
         } else {
             alert(data.message || 'Error al agregar al carrito');
         }
