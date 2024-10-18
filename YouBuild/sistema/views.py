@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
+from django.contrib.auth.decorators import login_required
 
 # Vista principal
 def IndexView(request): 
@@ -157,11 +158,10 @@ def agregar_al_carrito(request, producto_id):
         if carrito_producto.cantidad <= producto.cantidad:
             carrito_producto.save()
 
-            # Redirect the user to the 'carrito' page after adding
+            # Return a JSON response without redirection
             return JsonResponse({
                 'success': True,
-                'message': 'Producto agregado correctamente.',
-                'redirect_url': '/carrito/'  # Adjust this to the actual URL for your carrito page
+                'message': 'Producto agregado correctamente.'
             })
         else:
             return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
