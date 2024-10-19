@@ -37,20 +37,23 @@ class MunicipioDB(models.Model):
     def __str__(self):
         return self.nombre
 
-
-# Usuario
 class UsuarioDB(models.Model):
-    nombre = models.CharField(max_length=100, verbose_name="Nombre") 
-    apellido = models.CharField(max_length=100, verbose_name="Apellido")
-    contraseña = models.CharField(max_length=20, verbose_name="Contraseña")
-    municipio_fk = models.ForeignKey(MunicipioDB, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_nac = models.DateField(verbose_name="Fecha_de_nacimiento",null=False, blank=False)
+    USUARIO_TIPOS = [
+        ('comprador', 'Comprador'),
+        ('vendedor', 'Vendedor'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    tipo_usuario = models.CharField(max_length=10, choices=USUARIO_TIPOS, default='comprador')
+    fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
+    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
+
     class Meta:
-        verbose_name = "Usuario"
-        verbose_name_plural = "Usuarios"
+        verbose_name = "Perfil de Usuario"
+        verbose_name_plural = "Perfiles de Usuarios"
 
     def __str__(self):
-        return f'{self.nombre} {self.apellido}'
+        return f'{self.user.username} - {self.tipo_usuario}'
 
 
 # Carrito

@@ -4,8 +4,48 @@ import json
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.views import LoginView
+from .forms import LoginForm
+from .forms import RegistroUsuarioForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth import login
 
+
+class RegistroUsuarioForm(UserCreationForm):
+    fecha_nacimiento = forms.DateField(required=True, widget=forms.TextInput(attrs={'type': 'date'}))
+    tipo_usuario = forms.ChoiceField(choices=UsuarioDB.USUARIO_TIPOS)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'fecha_nacimiento', 'tipo_usuario']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            # Crear perfil de usuario
+            perfil = UsuarioDB(user=user, fecha_nacimiento=self.cleaned_data['fecha_nacimiento'], tipo_usuario=self.cleaned_data['tipo_usuario'])
+            perfil.save()
+        return user
+    
+def registrar_usuario(request):
+    if request.method == 'POST':
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Loguear al usuario tras registrarlo
+            return redirect('home')  # Redirigir a la página principal
+    else:
+        form = RegistroUsuarioForm()
+    return render(request, 'registro.html', {'form': form})
 # Vista principal
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+    template_name = 'login.html'
+    
 def IndexView(request): 
     productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")

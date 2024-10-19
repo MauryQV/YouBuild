@@ -85,6 +85,7 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+          window.location.href = '/ ';
            alert(data.message || 'Producto agregado correctamente al carrito');
         } else {
             alert(data.message || 'Error al agregar al carrito');
