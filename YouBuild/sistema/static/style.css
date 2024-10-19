@@ -118,6 +118,10 @@ footer {
     display: block; /* Mostrar cuando la clase esté activa */
 }
 
+
+
+
+/*CARRUSEL VICENTE*/
 .carousel-container {
     display: flex; /* Utiliza flexbox para organizar los elementos en fila */
     align-items: center; /* Centra los ítems verticalmente */
@@ -203,6 +207,49 @@ footer {
     transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
 
+/* Ajustes para pantallas medianas (tablets) */
+@media (max-width: 768px) {
+    .carousel-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .carousel-item {
+        height: 150px; /* Reduce la altura en pantallas medianas */
+    }
+
+    .carousel-button {
+        font-size: 1.5rem; /* Botones más pequeños */
+        width: 40px;
+        height: 40px;
+    }
+
+    .dot {
+        width: 4px;
+        height: 4px;
+    }
+}
+
+/* Ajustes para pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+    .carousel-item {
+        height: 120px; /* Reduce la altura aún más para móviles */
+    }
+
+    .carousel-button {
+        font-size: 1.2rem; 
+        width: 30px;
+        height: 30px;
+    }
+
+    .dot {
+        width: 3px;
+        height: 3px;
+    }
+}
+/*CARRUSEL VICENTE*/
+
+
 /* Estilos base para contenedores flex */
 .flex-container {
     display: flex; 
@@ -253,6 +300,8 @@ footer {
     color: #d58729;
 }
 
+
+/*CARRUSIEL DE JUAN JOSE*/
 /* Media Queries para hacer el diseño responsive */
 @media (max-width: 768px) {
     .flex-container {
@@ -338,12 +387,16 @@ footer {
 .carousel-productos-dots .dot.active {
     background-color: orange;
 }
+<<<<<<< HEAD
 
 .data{
     font-size: 1.4em;
     
 }
 
+=======
+/*CARRUSEL DE JUAN JOSE*/
+>>>>>>> ad7fdcb333c3fe25977185af58681e54b4440d26
 .carrito-container {
     margin: 20px;
     padding: 20px;

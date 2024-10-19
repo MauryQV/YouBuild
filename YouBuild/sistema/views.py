@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
+from django.contrib.auth.decorators import login_required
 
 # Vista principal
 def IndexView(request): 
@@ -45,16 +46,23 @@ def carrito_view(request):
         'carrito_total': carrito_subtotal
     })
 def confirmacion_view(request):
+    # Obtener el usuario con id=1
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+    
+    # Obtener el carrito del usuario
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    # Calcular el subtotal del carrito
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
     total = carrito_subtotal  # O aplicar impuestos, descuentos, etc.
 
+    # Preparar el contexto con los datos del usuario
     context = {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
         'total': total,
+        'usuario': usuario_prueba
     }
 
     # Solo permitir el paso a la confirmación si hay productos en el carrito
@@ -62,7 +70,6 @@ def confirmacion_view(request):
         return redirect('Carrito')  # Redirigir al carrito si está vacío
 
     return render(request, 'confirmacion.html', context)
-
 
 
 def eliminar_producto(request, item_id):
@@ -151,11 +158,10 @@ def agregar_al_carrito(request, producto_id):
         if carrito_producto.cantidad <= producto.cantidad:
             carrito_producto.save()
 
-            # Redirect the user to the 'carrito' page after adding
+            # Return a JSON response without redirection
             return JsonResponse({
                 'success': True,
-                'message': 'Producto agregado correctamente.',
-                'redirect_url': '/carrito/'  # Adjust this to the actual URL for your carrito page
+                'message': 'Producto agregado correctamente.'
             })
         else:
             return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
@@ -165,3 +171,53 @@ def agregar_al_carrito(request, producto_id):
 def get_cart_count(request):
     cart_count = request.session.get('cart_count', 0)
     return JsonResponse({'cart_count': cart_count})
+
+def obtener_direccion_usuario(request):
+    # Obtener el usuario con id=1
+    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+    # Obtener información de dirección
+    municipio = usuario_prueba.municipio_fk
+    provincia = municipio.provincia_fk if municipio else None
+    departamento = provincia.departamento_fk if provincia else None
+
+    # Crear un diccionario con los datos que quieres enviar
+    data = {
+        'municipio': municipio.nombre if municipio else 'No especificado',
+        'provincia': provincia.nombre if provincia else 'No especificado',
+        'departamento': departamento.nombre if departamento else 'No especificado',
+    }
+
+    # Devolver los datos en formato JSON
+    return JsonResponse(data)
+
+def compra_directa_view(request, producto_id):
+    if request.method == 'POST':
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        
+        # Obtener el usuario de prueba (luego deberías cambiar esto cuando implementes autenticación)
+        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+
+        # Crear o recuperar el carrito del usuario
+        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+
+        # Agregar el producto al carrito con una cantidad de 1
+        carrito_producto, created = CarritoProductoDB.objects.get_or_create(
+            carrito_fk=carrito, 
+            producto_fk=producto,
+            defaults={'cantidad': 1}
+        )
+
+        # Si el producto ya estaba en el carrito, aumentar la cantidad
+        if not created:
+            carrito_producto.cantidad += 1
+            carrito_producto.save()
+
+        # Redirigir a la página de confirmación
+        return JsonResponse({
+            'success': True,
+            'redirect_url': '/confirmacion/'
+        })
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
