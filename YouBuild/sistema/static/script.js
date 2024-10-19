@@ -1,85 +1,84 @@
-// Variables para el carrusel
-const title = document.querySelector('.title');
-const carousel = document.querySelector('.carousel');
-const items = document.querySelectorAll('.carousel-item');
-const prevBtn = document.querySelector('.prev');
-const nextBtn = document.querySelector('.next');
+document.addEventListener('DOMContentLoaded', function() {
+    // Todo tu código de carrusel aquí.
+    const title = document.querySelector('.title');
+    const carousel = document.querySelector('.carousel');
+    const items = document.querySelectorAll('.carousel-item');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
 
-let currentIndex = 0;
-const totalItems = items.length;
-const transitionTime = 5000; // 5 segundos
+    let currentIndex = 0;
+    const totalItems = items.length;
+    const transitionTime = 5000; // 5 segundos
 
-// Función que actualiza el desplazamiento del carrusel
-function updateCarousel() {
-    const itemWidth = items[0].clientWidth; // Obtener el ancho actual del ítem
-    carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`; // Usar el ancho dinámico
-    updateDots();
-}
-
-// Función para ir al siguiente slide
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalItems; 
-    updateCarousel();
-}
-
-// Función para regresar al slide anterior
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-    updateCarousel();
-}
-
-// Función para reiniciar el auto-slide después de interacción del usuario
-function resetAutoSlide() {
-    clearInterval(autoSlideInterval);
-    autoSlideInterval = setInterval(nextSlide, transitionTime);
-}
-
-// Eventos para los botones "prev" y "next"
-nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetAutoSlide(); // Reinicia el temporizador
-});
-
-prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetAutoSlide(); // Reinicia el temporizador
-});
-
-// Automático: Cambia de imagen cada 5 segundos
-let autoSlideInterval = setInterval(nextSlide, transitionTime);
-
-// Control de los puntos de navegación (dots)
-const dotsContainer = document.querySelector('.carousel-dots');
-
-function createDots() {
-    for (let i = 0; i < totalItems; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        dot.addEventListener('click', () => {
-            currentIndex = i; 
-            updateCarousel(); 
-            resetAutoSlide(); // Reinicia el temporizador
-        });
-        dotsContainer.appendChild(dot);
+    function updateCarousel() {
+        if (items.length > 0) {
+            const itemWidth = items[0].clientWidth; // Solo obtener si hay elementos
+            carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+            updateDots();
+        }
     }
-}
 
-// Actualiza los puntos de navegación para reflejar el slide activo
-function updateDots() {
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentIndex);
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCarousel();
+    }
+
+    let autoSlideInterval = setInterval(nextSlide, transitionTime);
+
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetAutoSlide();
     });
-}
 
-// Crea los puntos al iniciar
-createDots();
-updateDots();
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetAutoSlide();
+    });
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(nextSlide, transitionTime);
+    }
+
+    const dotsContainer = document.querySelector('.carousel-dots');
+
+    function createDots() {
+        for (let i = 0; i < totalItems; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateCarousel();
+                resetAutoSlide();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    createDots();
+    updateDots();
+    window.addEventListener('resize', updateCarousel);
+    window.addEventListener('resize', () => {
+        updateCarousel(); // Actualiza el carrusel cuando cambia el tamaño de la ventana
+    });
+    
+});
+
+
 
 // Ajusta el carrusel al cambiar el tamaño de la ventana (para mantener la responsividad)
-window.addEventListener('resize', () => {
-    updateCarousel(); // Actualiza el carrusel cuando cambia el tamaño de la ventana
-});
 
 
 function verDetalles(productId) {

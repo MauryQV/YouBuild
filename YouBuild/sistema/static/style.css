@@ -119,96 +119,89 @@ footer {
 }
 
 
-/*VICENTE*/
-
 .carousel-container {
-    display: flex;
-    align-items: center;
+    display: flex; /* Utiliza flexbox para organizar los elementos en fila */
+    align-items: center; /* Centra los ítems verticalmente */
     position: relative;
-    width: 90%;
-    margin: -25px auto;
-    overflow: hidden;
-    height: 350px;
-    max-width: 1200px;
+    width: 90%; /* Aumenta el ancho según sea necesario */
+   /* max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+    margin: -25px auto; /* Reduce aún más el margen superior e inferior */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+    /*height: 200px;  Mantiene la altura reducida del contenedor */
+    height: auto; /* Permitir que la altura se ajuste automáticamente */
+    max-width: 1200px; /* Puedes aumentar el ancho máximo del carrusel si es necesario */
 }
 
 .carousel {
-    display: flex;
-    transition: transform 0.5s ease;
-    flex: 1;
+    display: flex; /* Utiliza flexbox para organizar los elementos en fila */
+    transition: transform 0.5s ease; /* Transición suave al cambiar de slide */
+    flex: 1; /* Ocupa todo el espacio disponible */
 }
 
 .carousel-item {
-    margin-bottom: 25px;
-    flex: 0 0 100%;
+    margin-bottom: 25px; /* Reduce el margen inferior entre el título y el carrusel */
+    flex: 0 0 100%; /* Cada ítem ocupa el 100% del contenedor */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    height: auto; /* Cambiar la altura a 'auto' para evitar restricción en la imagen */
-    box-sizing: border-box;
-}
-
-.carousel-item a {
-    display: block;
-    width: 100%;
-    height: 100%; /* Asegura que el enlace cubra todo el espacio del contenedor */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    font-size: 3rem; /* Tamaño de la fuente de los íconos */
+    background-color: #fff; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    cursor: pointer; /* Cambia el cursor */
+    height: 200px; /* Ajusta la altura */
+    box-sizing: border-box; /* Incluye padding y borde en el tamaño */
 }
 
 .carousel-item img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: block;
-    border-radius: 10px; /* Opcional: Para bordes redondeados en las imágenes */
+    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    height: auto; /* Deja que la altura se ajuste automáticamente */
+    object-fit: cover; /* Sigue cubriendo el área de manera proporcional */
+    display: block; /* Asegura que la imagen sea un bloque */
 }
 
 .carousel-button {
-    flex: 0 0 40px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 2rem;
-    z-index: 2;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    flex: 0 0 40px; /* Cambia el ancho del botón para que sea más delgado */
+    position: absolute; /* Posiciona los botones en el contenedor */
+    top: 50%; /* Centra los botones verticalmente */
+    transform: translateY(-50%); /* Ajusta la posición verticalmente */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi-transparente */
+    color: white; /* Color blanco para el texto de los botones */
+    border: none; /* Sin borde */
+    padding: 10px; /* Espaciado interno */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 2rem; /* Tamaño de la fuente */
+    z-index: 2; /* Asegura que los botones estén por encima del carrusel */
+    width: 50px; /* Ancho del botón */
+    height: 50px; /* Alto del botón */
+    border-radius: 50%; /* Hace que los botones sean circulares */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra de los botones */
 }
 
 .carousel-button.prev {
-    left: 10px;
+    left: 10px; /* Posición a la izquierda */
 }
 
 .carousel-button.next {
-    right: 10px;
+    right: 10px; /* Posición a la derecha */
 }
 
 .carousel-dots {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    display: flex; /* Alinea los puntos en una fila */
+    justify-content: center; /* Centra los puntos */
+    margin-top: 20px; /* Espacio entre el carrusel y los puntos */
 }
 
 .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: black;
-    margin: 0 5px;
-    transition: transform 0.3s ease;
+    width: 5px; /* Tamaño inicial */
+    height: 5px; /* Tamaño inicial */
+    border-radius: 50%; /* Forma circular */
+    background-color: black; /* Color de los puntos */
+    margin: 0 5px; /* Espacio entre los puntos */
+    transition: transform 0.3s ease; /* Transición suave para el crecimiento */
 }
 
 .dot.active {
-    transform: scale(1.5);
+    transform: scale(1.5); /* Aumenta el tamaño cuando está activo */
 }
 
 
