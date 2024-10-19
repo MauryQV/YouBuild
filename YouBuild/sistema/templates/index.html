@@ -69,7 +69,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{% static 'script.js' %}"></script>
+
 <script>
 
   function agregarAlCarrito(productId) {
@@ -84,7 +84,9 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-          alert(data.message || 'Producto agregado correctamente al carrito');
+            window.location.href = '/ ';
+            alert(data.message || 'Producto agregado correctamente al carrito');
+            
         } else {
             alert(data.message || 'Error al agregar al carrito');
         }
