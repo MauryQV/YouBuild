@@ -15,23 +15,27 @@
 <main>
   <div class="carousel-container">
     <div class="carousel">
-      {% for carrusel_item in carrusel %}
-      <div class="carousel-item">
-        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
-      </div>
-      {% endfor %}
+        {% for carrusel_item in carrusel %}
+        <div class="carousel-item">
+            <a href="/promociones" class="carousel-link">
+                <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" class="carousel-image" />
+            </a>
+        </div>
+        {% endfor %}
     </div>
     <button class="carousel-button prev">
-      <i class="fas fa-chevron-left"></i>
+        <i class="fas fa-chevron-left"></i>
     </button>
     <button class="carousel-button next">
-      <i class="fas fa-chevron-right"></i>
+        <i class="fas fa-chevron-right"></i>
     </button>
-  </div>
+</div>
+
+
   <div class="carousel-dots"></div>
 
   <!-- Lista de productos disponibles -->
-  <h2 class="products-title">Productos Disponibles</h2>
+  <h1 class="products-title">Productos Disponibles</h1>
   <div class="products-container">
     {% for producto in producto %}
     <div class="product">
