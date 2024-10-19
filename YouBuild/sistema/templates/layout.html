@@ -30,10 +30,20 @@
         <div class="topbar-center">
           <form action="{% url 'buscar' %}" method="GET">
             <div class="search-box">
-              <input type="text" placeholder="Buscar" name="q">
+              <input 
+                type="text" 
+                id="campo-busqueda" 
+                placeholder="Buscar productos" 
+                name="q" 
+                maxlength="120" 
+                pattern="[A-Za-z0-9 ]+" 
+                title="Solo se permiten caracteres alfanuméricos (letras y números)." 
+                required>
+              <p id="contador" style="display: none;"></p>
               <button><i class="fa fa-search"></i></button>
             </div>
           </form>
+          
         </div>
         <div class="topbar-right">
           <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
@@ -89,7 +99,26 @@
 
     <script src="{% static 'script.js' %}"></script>
     {% block extra_scripts %}
-    <!--COLOCAR SUS SCRIPTS AQUI-->
+    <script>
+      // Validación de caracteres y longitud en el campo de búsqueda
+      const campoBusqueda = document.getElementById('campo-busqueda');
+      const contador = document.getElementById('contador');
+      
+      campoBusqueda.addEventListener('input', function () {
+          // Actualiza el contador de caracteres (opcional, puedes habilitarlo si lo deseas)
+          contador.style.display = 'block';
+          contador.textContent = `${campoBusqueda.value.length}/120 caracteres`;
+      
+          // Valida solo caracteres alfanuméricos
+          const regex = /^[A-Za-z0-9 ]*$/;
+          if (!regex.test(campoBusqueda.value)) {
+              campoBusqueda.setCustomValidity('Solo se permiten caracteres alfanuméricos (letras y números).');
+          } else {
+              campoBusqueda.setCustomValidity('');
+          }
+      });
+      </script>
+      
     {% endblock %}
   </body>
 </html>

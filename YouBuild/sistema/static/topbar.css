@@ -1,40 +1,40 @@
-/* Estilo general del topbar */
+/* === ESTILO GENERAL DEL TOPBAR === */
 .topbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: #f5ca9f;
-    margin-top: auto;
+    flex-wrap: wrap; /* Permitir que los elementos se ajusten en pantallas pequeñas */
 }
 
 /* Sección izquierda (Logo) */
 .topbar-left .logo img {
     vertical-align: middle;
+    width: 100px; /* Ajuste responsive para el logo */
 }
 
 /* Sección centro (Búsqueda) */
 .topbar-center {
     flex-grow: 1;
     text-align: center;
-    
 }
 
 .search-box {
     display: inline-flex;
     background-color: #f8f7f5;
-    border: 2px solid #ef6605; /* Añadido borde */
+    border: 2px solid #ef6605;
     border-radius: 10px;
-    padding: 5px; /* Ajustado el padding para tener espacio interior */
-    width: 400px; /* Aumentar el ancho según lo necesites */
+    padding: 5px;
+    width: 400px; /* Tamaño máximo de la barra de búsqueda */
 }
 
 .search-box input {
     border: none;
     background-color: transparent;
     outline: none;
-    flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
-    padding: 5px; /* Espacio interior del input */
+    flex-grow: 1;
+    padding: 5px;
 }
 
 .search-box button {
@@ -52,6 +52,7 @@
 .topbar-right {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 /* Estilo de los botones de enlace e icono */
@@ -64,6 +65,7 @@
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap; /* Evitar que el texto de los botones se divida en varias líneas */
 }
 
 /* Estilo del ícono en el botón icon-btn */
@@ -83,33 +85,62 @@
     color: white;
 }
 
-/* Style for the little cart count number */
-.cart-count {
-    position: absolute;
-    bottom: -5px; /* Moves the number outside the cart icon */
-    right: -5px;  /* Adjusts the number slightly to the right */
-    background-color: orange;
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    line-height: 18px;
-    border: 2px solid white; /* Optional: border for better visibility */
+/* === MEDIA QUERIES PARA RESPONSIVE === */
+
+/* Para pantallas pequeñas de 768px o menos */
+@media (max-width: 768px) {
+    .topbar-container {
+        flex-direction: row; /* Mantener en fila */
+        justify-content: space-between;
+        align-items: center; /* Mantener alineación vertical */
+    }
+
+    .topbar-right {
+        padding-right: 20px; /* Espacio adicional al borde derecho */
+        margin-left: auto; /* Alinear botones a la derecha */
+    }
+
+    .topbar-center {
+        margin-top: 10px; /* Espacio superior para separación */
+        text-align: center; /* Centrar búsqueda */
+        order: 2; /* Asegurar que la búsqueda esté debajo */
+    }
+
+    .search-box {
+        width: calc(100% - 40px); /* Ocupar casi todo el ancho disponible */
+        max-width: 400px; /* Tamaño máximo de la barra de búsqueda */
+        margin: 0 auto; /* Centrar horizontalmente */
+        padding: 5px 10px; /* Añadir padding interno */
+    }
+
+    .btn-link, .icon-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .topbar-left img {
+        width: 80px; /* Reducir el tamaño del logo */
+    }
 }
 
-/* Ensure the icon-btn is relatively positioned */
-.icon-btn {
-    position: relative; /* Allows the .cart-count to be positioned correctly */
-    padding: 10px 15px;
-    background-color: white;
-    border: 2px solid #ef6605;
-    border-radius: 8px;
-    color: #ef6605;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Para pantallas extra pequeñas de 480px o menos */
+@media (max-width: 480px) {
+    .topbar-left img {
+        width: 60px; /* Logo más pequeño en pantallas extra pequeñas */
+    }
+
+    .search-box {
+        width: calc(100% - 20px); /* Ocupar todo el ancho disponible, menos margen */
+        padding: 5px 10px; /* Añadir padding interno */
+        margin: 0 10px; /* Espacio a los lados para evitar que choque */
+    }
+
+    .btn-link, .icon-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .icon-btn i {
+        font-size: 14px; /* Iconos más pequeños */
+    }
 }
