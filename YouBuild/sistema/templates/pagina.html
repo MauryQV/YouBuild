@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Pagina{% endblock %}
+    {% block extra_styles %}
+
+    {% endblock %}
+    {% block content %}
+    <form id="logout-form" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Cerrar sesión</button>
+    </form>
+      {% endblock %}
+           {% block extra_scripts %}
+           
+          
+           {% endblock %}

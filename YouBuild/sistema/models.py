@@ -58,10 +58,19 @@ class UsuarioDB(models.Model):
 
 # Carrito
 class CarritoDB(models.Model):
-    usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
+    usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)  # Añadir un campo de fecha de creación
+    
     class Meta:
         verbose_name = "Carrito"
         verbose_name_plural = "Carritos"
+
+    def calcular_total(self):
+        total = sum([item.calcular_subtotal() for item in self.carritoproductodb_set.all()])
+        return total
+
+    def __str__(self):
+        return f"Carrito de {self.usuario_fk}"
 
 
 # Categoria
@@ -127,12 +136,19 @@ class PagoDB(models.Model):
     
 class CarritoProductoDB(models.Model):
     carrito_fk = models.ForeignKey(CarritoDB, on_delete=models.CASCADE)
-    producto_fk = models.ForeignKey('ProductoDb', on_delete=models.CASCADE)
+    producto_fk = models.ForeignKey('ProductoDB', on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = "Carrito Producto"
         verbose_name_plural = "Carrito Productos"
+        unique_together = ('carrito_fk', 'producto_fk')  # Evitar productos duplicados en el mismo carrito
+
+    def calcular_subtotal(self):
+        return self.producto_fk.precio * self.cantidad
+
+    def __str__(self):
+        return f"{self.producto_fk.nombre} (x{self.cantidad}) en el carrito de {self.carrito_fk.usuario_fk}"
         
         
 class CarruselDB(models.Model):

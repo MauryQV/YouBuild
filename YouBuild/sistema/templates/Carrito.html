@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     <!-- Mostrar productos en el carrito -->
-                    {% for item in productos %}
+                    {% for item in carrito_productos %}
                     <tr>
                         <td>
                             <form action="{% url 'eliminar_producto' item.id %}" method="post">
@@ -47,13 +47,13 @@
                                 <button class="quantity-btn decrement">-</button>
                                 <input type="text" 
                                        value="{{ item.cantidad }}" 
-                                       maxlength="2" 
+                                       maxlength="3" 
                                        data-item-id="{{ item.id }}" 
                                        data-stock="{{ item.producto_fk.cantidad }}" />
                                 <button class="quantity-btn increment">+</button>
                             </div>
                         </td>
-                        <td>Bs {{ item.subtotalp }}</td>  <!-- Placeholder para el subtotal -->
+                        <td>Bs {{ carrito_subtotal|floatformat:2 }}</td>  <!-- Subtotal calculado -->
                     </tr>
                     {% empty %}
                     <tr>
@@ -70,7 +70,7 @@
             <h2>TOTALES DEL CARRITO</h2>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span>Bs {{carrito_subtotal}}</span>  <!-- Placeholder para el subtotal -->
+                <span>Bs {{carrito_subtotal|floatformat:2}}</span>  <!-- Subtotal del carrito -->
             </div>
             <div class="summary-item">
                 <span>Envío</span>
@@ -78,7 +78,7 @@
             </div>
             <div class="summary-item">
                 <span>Total</span>
-                <span>Bs {{carrito_total}}</span>  <!-- Placeholder para el total -->
+                <span>Bs {{total|floatformat:2}}</span>  <!-- Total del carrito -->
             </div>
             <a href="{% url 'confirmacion' %}" class="btn-Proceder-pago">Proceder al Pago</a>
         </div>

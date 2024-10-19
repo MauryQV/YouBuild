@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth import login
-
-
+from django.contrib import messages
+from django.db.models import F
 class RegistroUsuarioForm(UserCreationForm):
     fecha_nacimiento = forms.DateField(required=True, widget=forms.TextInput(attrs={'type': 'date'}))
     tipo_usuario = forms.ChoiceField(choices=UsuarioDB.USUARIO_TIPOS)
@@ -37,19 +37,26 @@ def registrar_usuario(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Loguear al usuario tras registrarlo
-            return redirect('home')  # Redirigir a la página principal
+            return redirect('index')  # Redirigir a la página principal
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro.html', {'form': form})
-# Vista principal
+
+
 class CustomLoginView(LoginView):
-    form_class = LoginForm
     template_name = 'login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('index')  # Redirige si ya está autenticado
+        return super().dispatch(request, *args, **kwargs)
+
     
 def IndexView(request): 
     productos = ProductoDb.objects.all().order_by('-visitas')  
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
+
 def ProductoView(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1  
@@ -68,150 +75,95 @@ def BuscarView(request):
 def CheckoutView(request):
     return render(request, "checkout.html")  # Asegúrate de que checkout.html esté en la carpeta de plantillas
 
+@login_required(login_url='/login/')
 def carrito_view(request):
-    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
-    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+    usuario = request.user.usuariodb
+    carrito = CarritoDB.objects.filter(usuario_fk=usuario).first()
+    carrito_productos = carrito.carritoproductodb_set.all() if carrito else []
+    carrito_subtotal = sum([item.calcular_subtotal() for item in carrito_productos])
 
-    for item in productos_en_carrito:
-        item.subtotalp = item.producto_fk.precio * item.cantidad  # Calcular subtotal por producto
+    total = carrito.calcular_total() if carrito else 0
 
-    # Calcular el subtotal y total del carrito
-    carrito_subtotal = sum(item.subtotalp for item in productos_en_carrito)
-    
-    # Renderiza el template con los productos en el carrito
-    return render(request, 'Carrito.html', {
-        'productos': productos_en_carrito,
+    context = {
+        'carrito_productos': carrito_productos,
         'carrito_subtotal': carrito_subtotal,
-        'carrito_total': carrito_subtotal
-    })
-def confirmacion_view(request):
-    # Obtener el usuario con id=1
-    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
+        'total': total,
+    }
+    return render(request, 'Carrito.html', context)
     
-    # Obtener el carrito del usuario
-    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
+    
+@login_required
+def confirmacion_view(request):
+    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
     productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
 
-    # Calcular el subtotal del carrito
     carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
-    total = carrito_subtotal  # O aplicar impuestos, descuentos, etc.
+    total = carrito_subtotal
 
-    # Preparar el contexto con los datos del usuario
     context = {
         'productos': productos_en_carrito,
         'carrito_subtotal': carrito_subtotal,
         'total': total,
-        'usuario': usuario_prueba
+        'usuario': request.user.usuariodb
     }
 
-    # Solo permitir el paso a la confirmación si hay productos en el carrito
     if not productos_en_carrito.exists():
-        return redirect('Carrito')  # Redirigir al carrito si está vacío
+        return redirect('Carrito')
 
     return render(request, 'confirmacion.html', context)
 
-
+@login_required
 def eliminar_producto(request, item_id):
-    if request.method == 'POST':
-        try:
-            # Obtener el producto del carrito usando el ID
-            producto = get_object_or_404(CarritoProductoDB, id=item_id)
+    carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
+    carrito_producto.delete()
 
-            # Eliminar el producto del carrito
-            producto.delete()
+    messages.success(request, "Producto eliminado del carrito.")
+    return redirect('Carrito')
 
-            # Actualizar el conteo del carrito en la sesión
-            cart = request.session.get('cart', {})
-            if str(producto.producto_fk.id) in cart:
-                del cart[str(producto.producto_fk.id)]
-                request.session['cart'] = cart
-                request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
-
-            # Redirigir a la página del carrito en lugar de devolver JSON
-            return redirect('Carrito')  # Aquí asume que 'Carrito' es el nombre de la vista que muestra el carrito
-        except CarritoProductoDB.DoesNotExist:
-            # Manejar si el producto no se encuentra en el carrito
-            return redirect('Carrito')  # Redirigir de vuelta al carrito si hay un error
-
-@csrf_exempt
+@login_required
 def update_cart_quantity(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        item_id = data.get('item_id')
-        new_quantity = data.get('quantity')
-        carrito_producto = CarritoProductoDB.objects.filter(id=item_id).first()
-        if carrito_producto:
-            # Verificar que la nueva cantidad no exceda el stock del producto
-            if new_quantity <= carrito_producto.producto_fk.cantidad:
-                if new_quantity > 0:
-                    carrito_producto.cantidad = new_quantity
-                    carrito_producto.save()
-                else:
-                    carrito_producto.delete()  # Elimina el producto si la cantidad es 0
+        producto_id = request.POST.get('producto_id')
+        nueva_cantidad = int(request.POST.get('cantidad'))
 
-                # Calcular subtotal actualizado para el producto
-                new_subtotal = carrito_producto.cantidad * carrito_producto.producto_fk.precio
-
-                # Calcular el total actualizado para el carrito
-                carrito_total = sum(
-                    item.cantidad * item.producto_fk.precio for item in CarritoProductoDB.objects.filter(carrito_fk=carrito_producto.carrito_fk)
-                )
-
-                return JsonResponse({"success": True, "new_subtotal": new_subtotal, "new_total": carrito_total})
-            else:
-                return JsonResponse({"success": False, "message": "No hay suficiente stock disponible."})
-
-    return JsonResponse({"success": False, "message": "Error al actualizar el carrito."})
-
-@csrf_exempt  # Disable CSRF for this view
-def agregar_al_carrito(request, producto_id):
-    if request.method == 'POST':
-        # Fetch the product from the database
         producto = get_object_or_404(ProductoDb, id=producto_id)
+        usuario = request.user.usuariodb
+        carrito = get_object_or_404(CarritoDB, usuario_fk=usuario)
 
-        # Update session cart for counting
-        cart = request.session.get('cart', {})
+        carrito_producto = get_object_or_404(CarritoProductoDB, carrito_fk=carrito, producto_fk=producto)
+        carrito_producto.cantidad = nueva_cantidad
+        carrito_producto.save()
 
-        # Check if the product is already in the session cart
-        if str(producto_id) in cart:
-            cart[str(producto_id)]['quantity'] += 1  # Increment quantity
-        else:
-            # Add new product to session cart
-            cart[str(producto_id)] = {
-                'name': producto.nombre,
-                'price': producto.precio,
-                'quantity': 1
-            }
+        messages.success(request, "Cantidad actualizada.")
+        return redirect('Carrito')
 
-        # Save the updated cart in the session
-        request.session['cart'] = cart
-        request.session['cart_count'] = sum(item['quantity'] for item in cart.values())
+@login_required
+def agregar_al_carrito(request, producto_id):
+    # Obtener el producto a partir del ID proporcionado
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    usuario = request.user.usuariodb
 
-        # Handle the database cart (CarritoDB)
-        # In this example, we're adding it to both the session and the database
-        usuario_prueba = get_object_or_404(UsuarioDB, id=1)  # Replace this with the appropriate user logic
-        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
-        carrito_producto, created = CarritoProductoDB.objects.get_or_create(carrito_fk=carrito, producto_fk=producto)
+    # Verificar si el usuario ya tiene un carrito o crear uno nuevo
+    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario)
 
-        # Check stock and add to the database cart
-        if carrito_producto.cantidad <= producto.cantidad:
-            carrito_producto.save()
+    # Verificar si el producto ya está en el carrito
+    carrito_producto, created = CarritoProductoDB.objects.get_or_create(
+        carrito_fk=carrito, producto_fk=producto)
 
-            # Return a JSON response without redirection
-            return JsonResponse({
-                'success': True,
-                'message': 'Producto agregado correctamente.'
-            })
-        else:
-            return JsonResponse({'success': False, 'message': 'No hay suficiente stock disponible.'})
-    
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+    if not created:
+        # Si el producto ya está en el carrito, incrementar la cantidad
+        carrito_producto.cantidad = F('cantidad') + 1
+        carrito_producto.save()
+
+    messages.success(request, "Producto agregado al carrito.")
+    return redirect('Carrito')
+
 
 def get_cart_count(request):
     cart_count = request.session.get('cart_count', 0)
     return JsonResponse({'cart_count': cart_count})
 
+"""
 def obtener_direccion_usuario(request):
     # Obtener el usuario con id=1
     usuario_prueba = get_object_or_404(UsuarioDB, id=1)
@@ -261,3 +213,6 @@ def compra_directa_view(request, producto_id):
         })
     
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+"""
+def test(request):
+    return render(request, "pagina.html")

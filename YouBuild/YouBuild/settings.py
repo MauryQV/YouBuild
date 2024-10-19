@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'sistema.apps.SistemaConfig'
 ]
 
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
