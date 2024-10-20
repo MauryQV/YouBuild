@@ -1,6 +1,43 @@
-<h2>Registro de Usuario</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrar</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="{% static 'login.css' %}">  <!-- Asegúrate de tener estilos CSS -->
+</head>
+<body>
+    <div class="registro-container">
+        <h2 class="registro-titulo">Registro de Usuario</h2>
+        <form method="post" class="registro-formulario" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="registro-form-group">
+                {{ form.username.label_tag }} {{ form.username }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.email.label_tag }} {{ form.email }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.password1.label_tag }} {{ form.password1 }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.password2.label_tag }} {{ form.password2 }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.fecha_nacimiento.label_tag }} {{ form.fecha_nacimiento }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.tipo_usuario.label_tag }} {{ form.tipo_usuario }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.direccion.label_tag }} {{ form.direccion }}
+            </div>
+            <button type="submit" class="registro-btn-submit">Registrar</button>
+        </form>
+    </div>
+</body>
+</html>

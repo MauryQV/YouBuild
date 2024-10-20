@@ -1,0 +1,177 @@
+/* Estilos generales */
+h2.login-titulo {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+}
+
+.login-formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-group {
+  margin-bottom: 15px;
+}
+
+.login-form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
+.login-form-group input[type="text"],
+.login-form-group input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.login-btn-submit {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn-submit:hover {
+  background-color: #45a049;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .login-container {
+      padding: 15px;
+      max-width: 100%;
+  }
+
+  .login-btn-submit {
+      width: 100%;
+  }
+}
+
+  /*PARA REGISTRARSE*/
+
+  /* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h2.registro-titulo {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.registro-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+}
+
+.registro-formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.registro-form-group {
+  margin-bottom: 15px;
+}
+
+.registro-form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
+.registro-form-group input[type="text"],
+.registro-form-group input[type="email"],
+.registro-form-group input[type="password"],
+.registro-form-group input[type="date"],
+.registro-form-group select,
+.registro-form-group input[type="file"],
+.registro-form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.registro-form-group input[type="file"] {
+  padding: 5px;
+}
+
+.registro-form-group select {
+  padding: 10px;
+  background-color: white;
+}
+
+.registro-form-group textarea {
+  resize: vertical;
+}
+
+.registro-btn-submit {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registro-btn-submit:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para el mensaje de error (si lo agregas en tu lógica de Django) */
+.registro-error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .registro-container {
+      padding: 15px;
+      max-width: 100%;
+  }
+
+  .registro-btn-submit {
+      width: 100%;
+  }
+}

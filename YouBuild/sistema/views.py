@@ -1,6 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductoDb, CategoriaDb, CarruselDB, UsuarioDB, CarritoProductoDB, CarritoDB
 from django.contrib.auth.decorators import login_required
@@ -14,23 +12,7 @@ from django import forms
 from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models import F
-class RegistroUsuarioForm(UserCreationForm):
-    fecha_nacimiento = forms.DateField(required=True, widget=forms.TextInput(attrs={'type': 'date'}))
-    tipo_usuario = forms.ChoiceField(choices=UsuarioDB.USUARIO_TIPOS)
 
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2', 'fecha_nacimiento', 'tipo_usuario']
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        if commit:
-            user.save()
-            # Crear perfil de usuario
-            perfil = UsuarioDB(user=user, fecha_nacimiento=self.cleaned_data['fecha_nacimiento'], tipo_usuario=self.cleaned_data['tipo_usuario'])
-            perfil.save()
-        return user
-    
 def registrar_usuario(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)
@@ -119,6 +101,8 @@ def eliminar_producto(request, item_id):
 
     messages.success(request, "Producto eliminado del carrito.")
     return redirect('Carrito')
+
+
 
 @login_required
 def update_cart_quantity(request):

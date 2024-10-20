@@ -38,22 +38,18 @@ class MunicipioDB(models.Model):
         return self.nombre
 
 class UsuarioDB(models.Model):
-    USUARIO_TIPOS = [
-        ('comprador', 'Comprador'),
-        ('vendedor', 'Vendedor'),
-    ]
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    tipo_usuario = models.CharField(max_length=10, choices=USUARIO_TIPOS, default='comprador')
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
-    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
+    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)  # Campo Municipio
+    direccion = models.CharField(max_length=255, null=True, blank=True)
+    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True)  # Campo Imagen de Perfil
 
     class Meta:
         verbose_name = "Perfil de Usuario"
         verbose_name_plural = "Perfiles de Usuarios"
 
     def __str__(self):
-        return f'{self.user.username} - {self.tipo_usuario}'
+        return self.user.username
 
 
 # Carrito
