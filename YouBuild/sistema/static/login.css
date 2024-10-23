@@ -143,7 +143,7 @@ h2.registro-titulo {
 }
 
 .registro-btn-submit {
-  background-color: #4CAF50;
+  background-color: #e79026;
   color: white;
   padding: 10px;
   border: none;
@@ -154,7 +154,7 @@ h2.registro-titulo {
 }
 
 .registro-btn-submit:hover {
-  background-color: #45a049;
+  background-color: #53430f;
 }
 
 /* Estilo para el mensaje de error (si lo agregas en tu lógica de Django) */

@@ -1,4 +1,3 @@
-// Variables para el carrusel
 const title = document.querySelector('.title');
 const carousel = document.querySelector('.carousel');
 const items = document.querySelectorAll('.carousel-item');

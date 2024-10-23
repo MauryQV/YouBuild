@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
-    <link rel="stylesheet" href="{% static 'login.css' %}">  <!-- Asegúrate de tener estilos CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+    
 </head>
 <body>
     <div class="registro-container">
@@ -28,16 +30,63 @@
                 {{ form.fecha_nacimiento.label_tag }} {{ form.fecha_nacimiento }}
             </div>
             <div class="registro-form-group">
-                {{ form.tipo_usuario.label_tag }} {{ form.tipo_usuario }}
+                {{ form.departamento_fk.label_tag }} {{ form.departamento_fk }}
             </div>
             <div class="registro-form-group">
-                {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
+                {{ form.provincia_fk.label_tag }} {{ form.provincia_fk }}
+            </div>
+            <div class="registro-form-group">
+                {{ form.municipio_fk.label_tag }} {{ form.municipio_fk }}
             </div>
             <div class="registro-form-group">
                 {{ form.direccion.label_tag }} {{ form.direccion }}
             </div>
+            <div class="registro-form-group">
+                {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
+            </div>
             <button type="submit" class="registro-btn-submit">Registrar</button>
         </form>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Cargar provincias cuando se selecciona un departamento
+            $('#id_departamento_fk').change(function() {
+                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
+                var departamentoId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'departamento_id': departamentoId
+                    },
+                    success: function(data) {
+                        $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
+            });
+
+            // Cargar municipios cuando se selecciona una provincia
+            $('#id_provincia_fk').change(function() {
+                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
+                var provinciaId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'provincia_id': provinciaId
+                    },
+                    success: function(data) {
+                        $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
+

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.db.models import Sum, F
 
 # Departamento
 class DepartamentoDB(models.Model):
@@ -55,15 +55,37 @@ class UsuarioDB(models.Model):
 # Carrito
 class CarritoDB(models.Model):
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)  # Añadir un campo de fecha de creación
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     
-    class Meta:
-        verbose_name = "Carrito"
-        verbose_name_plural = "Carritos"
+    def agregar_producto(self, producto, cantidad=1):
+        """Agrega un producto al carrito o actualiza su cantidad si ya está en el carrito."""
+        carrito_producto, created = CarritoProductoDB.objects.get_or_create(
+            carrito_fk=self, producto_fk=producto,
+            defaults={'cantidad': cantidad}
+        )
+        if not created:
+            carrito_producto.cantidad = F('cantidad') + cantidad  # Usamos F() para evitar una lectura adicional
+            carrito_producto.save()
+
+    def eliminar_producto(self, producto):
+        """Elimina un producto del carrito."""
+        CarritoProductoDB.objects.filter(carrito_fk=self, producto_fk=producto).delete()
+
+    def actualizar_cantidad(self, producto, cantidad):
+        """Actualiza la cantidad de un producto en el carrito o lo elimina si la cantidad es 0."""
+        if cantidad <= 0:
+            self.eliminar_producto(producto)
+        else:
+            carrito_producto = CarritoProductoDB.objects.filter(carrito_fk=self, producto_fk=producto).first()
+            if carrito_producto:
+                carrito_producto.cantidad = cantidad
+                carrito_producto.save()
 
     def calcular_total(self):
-        total = sum([item.calcular_subtotal() for item in self.carritoproductodb_set.all()])
-        return total
+        """Calcula el total del carrito sumando los subtotales de cada producto."""
+        return self.carritoproductodb_set.aggregate(
+            total=Sum(F('cantidad') * F('producto_fk__precio'))
+        )['total'] or 0
 
     def __str__(self):
         return f"Carrito de {self.usuario_fk}"
@@ -122,7 +144,7 @@ class PagoDB(models.Model):
     usuario_fk = models.ForeignKey(UsuarioDB,on_delete=models.CASCADE,null=True, blank=True)
     carrito_fk = models.ForeignKey(CarritoDB,on_delete=models.CASCADE,null=True,blank=True)
     tipo_pago_fk = models.ForeignKey(TipoPagoDB,on_delete=models.CASCADE,null=True,blank=True)
-    fecha = models.DateField(verbose_name="Fecha_de_pago",null=False, blank=False)
+    fecha = models.DateField(verbose_name="Fecha_de_pago", null=False, blank=False, db_index=True)  # Índice en fecha
     monto_pagado = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto Pagado")
     
     class Meta:
@@ -132,20 +154,14 @@ class PagoDB(models.Model):
     
 class CarritoProductoDB(models.Model):
     carrito_fk = models.ForeignKey(CarritoDB, on_delete=models.CASCADE)
-    producto_fk = models.ForeignKey('ProductoDB', on_delete=models.CASCADE)
+    producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
 
-    class Meta:
-        verbose_name = "Carrito Producto"
-        verbose_name_plural = "Carrito Productos"
-        unique_together = ('carrito_fk', 'producto_fk')  # Evitar productos duplicados en el mismo carrito
-
     def calcular_subtotal(self):
-        return self.producto_fk.precio * self.cantidad
+        return self.cantidad * self.producto_fk.precio
 
     def __str__(self):
-        return f"{self.producto_fk.nombre} (x{self.cantidad}) en el carrito de {self.carrito_fk.usuario_fk}"
-        
+        return f"{self.producto_fk.nombre} (x{self.cantidad}) en el carrito"
         
 class CarruselDB(models.Model):
     imagen = models.ImageField(upload_to="carrusel",null=True)

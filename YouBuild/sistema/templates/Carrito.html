@@ -45,15 +45,15 @@
                         <td>
                             <div class="quantity-selector">
                                 <button class="quantity-btn decrement">-</button>
-                                <input type="text" 
-                                       value="{{ item.cantidad }}" 
-                                       maxlength="3" 
-                                       data-item-id="{{ item.id }}" 
+                                <input type="text"
+                                       value="{{ item.cantidad }}"
+                                       maxlength="3"
+                                       data-item-id="{{ item.id }}"
                                        data-stock="{{ item.producto_fk.cantidad }}" />
                                 <button class="quantity-btn increment">+</button>
                             </div>
                         </td>
-                        <td>Bs {{ carrito_subtotal|floatformat:2 }}</td>  <!-- Subtotal calculado -->
+                        <td>Bs {{ item.calcular_subtotal }}</td>  <!-- Cambio para mostrar correctamente el subtotal -->
                     </tr>
                     {% empty %}
                     <tr>
@@ -70,7 +70,7 @@
             <h2>TOTALES DEL CARRITO</h2>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span>Bs {{carrito_subtotal|floatformat:2}}</span>  <!-- Subtotal del carrito -->
+                <span>Bs {{carrito_subtotal}}</span>  <!-- Mostrar correctamente el subtotal -->
             </div>
             <div class="summary-item">
                 <span>Envío</span>
@@ -78,21 +78,21 @@
             </div>
             <div class="summary-item">
                 <span>Total</span>
-                <span>Bs {{total|floatformat:2}}</span>  <!-- Total del carrito -->
+                <span>Bs {{carrito_total}}</span>  <!-- Mostrar correctamente el total -->
             </div>
-            <a href="{% url 'confirmacion' %}" class="btn-Proceder-pago">Proceder al Pago</a>
+            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
         </div>
     </div>
 </div>
+
 {% endblock %}
-
 {% block extra_scripts %}
-<script src="{% static 'carrouselproductos.js' %}"></script>
-
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
-        const updateCart = (itemId, quantity) => {
-            fetch(`/update_cart_quantity/`, {
+    
+        const updateCart = (itemId, quantity, callback) => {
+            fetch("{% url 'update_cart_quantity' %}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,12 +103,23 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Recarga la página automáticamente al completar la actualización en el servidor
-                    location.reload();
+                    window.location.reload()
                 } else {
                     alert(data.message);
                 }
+            })
+            .catch(error => {
+                console.error('Error al actualizar el carrito:', error);
             });
+        };
+    
+        const updateSubtotalAndTotal = (itemRow, subtotal, total) => {
+            // Actualiza el subtotal del producto
+            const subtotalElement = itemRow.querySelector('td:last-child');
+            subtotalElement.textContent = `Bs ${subtotal}`;
+    
+            // Actualiza el total general del carrito
+            document.querySelector('.summary-item span:last-child').textContent = `Bs ${total}`;
         };
     
         document.querySelectorAll('.quantity-btn.increment').forEach(button => {
@@ -116,10 +127,14 @@
                 const input = this.previousElementSibling;
                 const itemId = input.dataset.itemId;
                 let quantity = parseInt(input.value);
+                const stock = parseInt(input.dataset.stock);
+                const itemRow = this.closest('tr');
     
-                if (quantity < parseInt(input.dataset.stock)) {
+                if (quantity < stock) {
                     input.value = quantity + 1;
-                    updateCart(itemId, quantity + 1);
+                    updateCart(itemId, quantity + 1, (data) => {
+                        updateSubtotalAndTotal(itemRow, data.subtotal, data.total);
+                    });
                 } else {
                     alert("No hay más unidades disponibles de este producto.");
                 }
@@ -131,18 +146,26 @@
                 const input = this.nextElementSibling;
                 const itemId = input.dataset.itemId;
                 let quantity = parseInt(input.value);
+                const itemRow = this.closest('tr');
     
                 if (quantity > 1) {
                     input.value = quantity - 1;
-                    updateCart(itemId, quantity - 1);
+                    updateCart(itemId, quantity - 1, (data) => {
+                        updateSubtotalAndTotal(itemRow, data.subtotal, data.total);
+                    });
                 } else {
                     if (confirm("¿Deseas eliminar este producto del carrito?")) {
-                        updateCart(itemId, 0);
+                        updateCart(itemId, 0, () => {
+                            // Remover la fila del producto si es eliminado
+                            itemRow.remove();
+                            // Recargar el total del carrito
+                            location.reload(); // En este caso, recargamos para actualizar el carrito
+                        });
                     }
                 }
             });
         });
-    });    
+    });
+    
 </script>
-
 {% endblock %}
