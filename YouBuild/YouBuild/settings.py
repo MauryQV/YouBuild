@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #mis apps
-    'sistema.apps.SistemaConfig'
+    'sistema.apps.SistemaConfig',
+    'rest_framework',
 ]
 
 LOGIN_REDIRECT_URL = '/'
