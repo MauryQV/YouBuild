@@ -88,3 +88,57 @@ function verDetalles(productId) {
 function volverALista() {
     window.location.href = "/";
 }
+
+function agregarAlCarrito(productId) {
+    fetch(`/agregar-al-carrito/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || 'Producto agregado correctamente al carrito');
+        } else {
+            alert(data.message || 'Error al agregar al carrito');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+function agregarAlCarrito(productId) {
+    // Usamos fetch para enviar la solicitud POST al servidor
+    fetch(`/agregar-al-carrito/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  // Añadir el CSRF token para la protección
+        },
+        body: JSON.stringify({})  // Cuerpo vacío ya que no necesitamos pasar datos adicionales
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Si la respuesta tiene redirección, el carrito fue actualizado correctamente
+            window.location.href = response.url;  // Redirigir a la página de carrito o la página original
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.success) {
+            // Si la respuesta JSON indica éxito, mostrar un mensaje
+            alert(data.message || 'Producto agregado correctamente al carrito');
+        } else if (data && data.message) {
+            // En caso de error, mostrar el mensaje de error
+            alert(data.message || 'Error al agregar el producto al carrito');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al agregar al carrito');
+    });
+  }

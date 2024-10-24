@@ -71,8 +71,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="{% static 'script.js' %}"></script>
 <script>
-
   function agregarAlCarrito(productId) {
     // Usamos fetch para enviar la solicitud POST al servidor
     fetch(`/agregar-al-carrito/${productId}/`, {
@@ -105,6 +105,5 @@
         alert('Error al agregar al carrito');
     });
   }
-
 </script>
 {% endblock %}

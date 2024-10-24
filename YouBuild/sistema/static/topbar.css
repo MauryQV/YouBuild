@@ -3,9 +3,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: #f5ca9f;
+    padding: 20px 20px;
+    background-color: #FFFFFF;
     margin-top: auto;
+    position: relative;
+    /* Necesario para posicionar el pseudo-elemento */
+}
+
+/* Franja naranja en la parte inferior del topbar */
+.topbar-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    /* Ajusta la altura según sea necesario */
+    background-color: #ef6605;
+    /* Color naranja brillante */
 }
 
 /* Sección izquierda (Logo) */
@@ -17,24 +32,28 @@
 .topbar-center {
     flex-grow: 1;
     text-align: center;
-    
 }
 
 .search-box {
     display: inline-flex;
     background-color: #f8f7f5;
-    border: 2px solid #ef6605; /* Añadido borde */
+    border: 2px solid #ef6605;
+    /* Añadido borde */
     border-radius: 10px;
-    padding: 5px; /* Ajustado el padding para tener espacio interior */
-    width: 400px; /* Aumentar el ancho según lo necesites */
+    padding: 5px;
+    /* Ajustado el padding para tener espacio interior */
+    width: 400px;
+    /* Aumentar el ancho según lo necesites */
 }
 
 .search-box input {
     border: none;
     background-color: transparent;
     outline: none;
-    flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
-    padding: 5px; /* Espacio interior del input */
+    flex-grow: 1;
+    /* Hace que el input ocupe todo el espacio disponible */
+    padding: 5px;
+    /* Espacio interior del input */
 }
 
 .search-box button {
@@ -55,11 +74,12 @@
 }
 
 /* Estilo de los botones de enlace e icono */
-.btn-link, .icon-btn {
+.btn-link,
+.icon-btn {
     padding: 10px 15px;
     background-color: white;
     border: 2px solid #ef6605;
-    border-radius: 8px;
+    border-radius: 25px;
     color: #ef6605;
     text-decoration: none;
     cursor: pointer;
@@ -72,7 +92,8 @@
 }
 
 /* Hover (Cambios al acercar el cursor) */
-.btn-link:hover, .icon-btn:hover {
+.btn-link:hover,
+.icon-btn:hover {
     background-color: #ef6605;
     color: white;
 }
@@ -86,8 +107,10 @@
 /* Style for the little cart count number */
 .cart-count {
     position: absolute;
-    bottom: -5px; /* Moves the number outside the cart icon */
-    right: -5px;  /* Adjusts the number slightly to the right */
+    bottom: -5px;
+    /* Moves the number outside the cart icon */
+    right: -5px;
+    /* Adjusts the number slightly to the right */
     background-color: orange;
     color: white;
     border-radius: 50%;
@@ -98,18 +121,50 @@
     align-items: center;
     font-size: 12px;
     line-height: 18px;
-    border: 2px solid white; /* Optional: border for better visibility */
+    border: 2px solid white;
+    /* Optional: border for better visibility */
 }
 
 /* Ensure the icon-btn is relatively positioned */
 .icon-btn {
-    position: relative; /* Allows the .cart-count to be positioned correctly */
+    position: relative;
+    /* Allows the .cart-count to be positioned correctly */
     padding: 10px 15px;
     background-color: white;
     border: 2px solid #ef6605;
-    border-radius: 8px;
+    border-radius: 25px;
     color: #ef6605;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.btn-sell {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ef6605;
+    /* Color naranja */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    /* Bordes curvos */
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-sell i {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 50%;
+    /* Círculo alrededor del "+" */
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.btn-sell:hover {
+    background-color: #ea580c;
+    /* Fondo más oscuro al pasar el ratón */
 }

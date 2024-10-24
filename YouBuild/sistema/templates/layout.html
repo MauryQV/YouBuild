@@ -14,7 +14,7 @@
     <link rel="icon" href={% static 'icono.ico' %}>
     
     {% block extra_styles %}
-    <!--colocar sus dependencias personalizadas/STATIC-->
+    
     {% endblock %}
   </head>
 
@@ -24,7 +24,7 @@
       <div class="topbar-container">
         <div class="topbar-left">
           <a href="/ " class="logo">
-            <img src="{% static 'logo.png' %}" alt="Logo" width="125">
+            <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
           </a>
         </div>
         <div class="topbar-center">
@@ -41,7 +41,9 @@
           <a href="{% url 'Carrito' %}" class="icon-btn">
             <i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span>
           </a>          
-        <a href="#menu-hamburguesa" class="icon-btn"><i class="fa fa-bars"></i></a>
+          <a href="#" class="btn-sell">
+            <i class="fas fa-plus"></i> Vender
+          </a>
         </div>
       </div>
     </header>
