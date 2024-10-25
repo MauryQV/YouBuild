@@ -26,6 +26,11 @@ urlpatterns = [
     path('ajax/cargar-provincias/', cargar_provincias, name='ajax_cargar_provincias'),
     path('ajax/cargar-municipios/', cargar_municipios, name='ajax_cargar_municipios'),
     path('test/', test, name='testeo'),
+    path('api/registro/', RegistroUsuario.as_view(), name='registro_usuario'),
+
+    
+    path('test/',test,name="testeo")
+
 ]
 
 if settings.DEBUG:

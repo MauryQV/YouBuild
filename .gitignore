@@ -16,3 +16,6 @@ __pycache__/
 
 # Ignorar la carpeta .vscode
 .vscode/
+
+YouBuild/__pycache__/
+db.sqlite3

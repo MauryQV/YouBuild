@@ -10,6 +10,12 @@ from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 import json
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
+from .models import UsuarioDB
+from .serializers import UsuarioSerializer
 
 def registrar_usuario(request):
     if request.method == 'POST':
@@ -234,9 +240,41 @@ def compra_directa_view(request, producto_id):
 def test(request):
     return render(request, "pagina.html")
 
+<<<<<<< HEAD
 
 
 from django.shortcuts import render
 
 def CrearCuentaView(request):
     return render(request, 'CrearCuenta.html')
+=======
+class RegistroUsuario(APIView):
+    def post(self, request):
+        # Crear el usuario de Django
+        user_data = {
+            'username': request.data.get('nombre_usuario'),
+            'password': request.data.get('contraseña'),  
+            'first_name': request.data.get('nombre_completo').split()[0],
+            'last_name': ' '.join(request.data.get('nombre_completo').split()[1:]),
+        }
+
+        # Validar y crear el usuario
+        user = User(**user_data)
+        user.set_password(user_data['password'])  
+        user.save()
+
+        # Crear el perfil de UsuarioDB
+        usuario_data = {
+            'user': user,
+            'fecha_nacimiento': request.data.get('fecha_nacimiento'),
+            'municipio_fk': request.data.get('municipio_fk'),
+            'direccion': request.data.get('direccion'),
+            'imagen_perfil': request.data.get('imagen_perfil'),
+        }
+        serializer = UsuarioSerializer(data=usuario_data)
+
+        if serializer.is_valid():
+            serializer.save()  # Guardar los datos en la base de datos
+            return Response({"mensaje": "Usuario registrado exitosamente."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+>>>>>>> origin/develop
