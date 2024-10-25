@@ -31,7 +31,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
      path('ajax/cargar-provincias/', cargar_provincias, name='ajax_cargar_provincias'),
     path('ajax/cargar-municipios/', cargar_municipios, name='ajax_cargar_municipios'),
-    path('api/registro/', RegistroUsuario.as_view(), name='registro_usuario'),
+   # path('api/registro/', RegistroUsuario.as_view(), name='registro_usuario'),
 
     
     path('test/',test,name="testeo")
