@@ -269,3 +269,9 @@ class RegistroUsuario(APIView):
             serializer.save()  # Guardar los datos en la base de datos
             return Response({"mensaje": "Usuario registrado exitosamente."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.shortcuts import render
+
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
