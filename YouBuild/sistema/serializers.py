@@ -12,8 +12,6 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     direccion_1 = serializers.CharField(required=True)
     direccion_2 = serializers.CharField(required=True)
     telefono = serializers.CharField(required=True)
-    
-    # Campos para las imágenes
     imagen_perfil = serializers.ImageField(required=False, allow_null=True)
     qr_imagen = serializers.ImageField(required=False, allow_null=True)
 
