@@ -233,3 +233,10 @@ def compra_directa_view(request, producto_id):
 """
 def test(request):
     return render(request, "pagina.html")
+
+
+
+from django.shortcuts import render
+
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
