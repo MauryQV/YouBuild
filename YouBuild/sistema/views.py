@@ -214,3 +214,5 @@ def test(request):
         # En caso de error de validación
         user.delete()  # Borramos el usuario si el perfil no es válido para evitar inconsistencias
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
