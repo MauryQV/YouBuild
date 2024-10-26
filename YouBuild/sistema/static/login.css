@@ -184,3 +184,16 @@ h2.registro-titulo {
       width: 100%;
   }
 }
+.custom-file-upload {
+  display: inline-block;
+  padding: 8px 20px;
+  cursor: pointer;
+  background-color: #e79026; /* Color del botón */
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+.registro-form-group input[type="file"] {
+  display: none; 
+}

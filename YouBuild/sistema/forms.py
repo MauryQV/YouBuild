@@ -1,6 +1,5 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from .models import UsuarioDB, MunicipioDB, ProvinciaDB, DepartamentoDB
 from django.core.exceptions import ValidationError
@@ -25,46 +24,35 @@ class RegistroUsuarioForm(UserCreationForm):
     class Meta:
         model = User
         fields = [
-            'username', 
-            'email', 
-            'password1', 
-            'password2', 
-            'nombre_completo', 
-            'fecha_nacimiento', 
-            'departamento_fk', 
-            'provincia_fk', 
-            'municipio_fk', 
-            'direccion_1', 
-            'direccion_2', 
-            'telefono', 
-            'imagen_perfil',
-            'qr_imagen'
+            'username', 'email', 'password1', 'password2',
+            'nombre_completo', 'fecha_nacimiento',
+            'departamento_fk', 'provincia_fk', 'municipio_fk',
+            'direccion_1', 'direccion_2', 'telefono',
+            'imagen_perfil', 'qr_imagen'
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        if 'departamento_fk' in self.data:
+        # Actualizar el queryset de Provincia basado en Departamento seleccionado
+        departamento_id = self.data.get('departamento_fk') or (self.instance.pk and self.instance.municipio_fk.provincia_fk.departamento_fk.id)
+        if departamento_id:
             try:
-                departamento_id = int(self.data.get('departamento_fk'))
-                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=departamento_id).order_by('nombre')
+                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=int(departamento_id)).order_by('nombre')
             except (ValueError, TypeError):
                 pass
-        elif self.instance.pk:
-            self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=self.instance.municipio_fk.provincia_fk.departamento_fk).order_by('nombre')
 
-        if 'provincia_fk' in self.data:
+        # Actualizar el queryset de Municipio basado en Provincia seleccionada
+        provincia_id = self.data.get('provincia_fk') or (self.instance.pk and self.instance.municipio_fk.provincia_fk.id)
+        if provincia_id:
             try:
-                provincia_id = int(self.data.get('provincia_fk'))
-                self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=provincia_id).order_by('nombre')
+                self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=int(provincia_id)).order_by('nombre')
             except (ValueError, TypeError):
                 pass
-        elif self.instance.pk:
-            self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=self.instance.municipio_fk.provincia_fk).order_by('nombre')
 
     def clean_fecha_nacimiento(self):
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
-        if fecha_nacimiento > timezone.now().date():
+        if fecha_nacimiento and fecha_nacimiento > timezone.now().date():
             raise ValidationError("La fecha de nacimiento no puede ser en el futuro.")
         return fecha_nacimiento
 
@@ -83,18 +71,20 @@ class RegistroUsuarioForm(UserCreationForm):
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
-        if commit:
-            user.save()
-            
-            perfil = UsuarioDB.objects.create(
-                user=user,
-                nombre_completo=self.cleaned_data['nombre_completo'],
-                fecha_nacimiento=self.cleaned_data['fecha_nacimiento'],
-                municipio_fk=self.cleaned_data['municipio_fk'],
-                direccion_1=self.cleaned_data['direccion_1'],
-                direccion_2=self.cleaned_data['direccion_2'],
-                telefono=self.cleaned_data['telefono'],
-                imagen_perfil=self.cleaned_data.get('imagen_perfil'),
-                qr_imagen=self.cleaned_data.get('qr_imagen')
-            )
+        try:
+            if commit:
+                user.save()
+                UsuarioDB.objects.create(
+                    user=user,
+                    nombre_completo=self.cleaned_data['nombre_completo'],
+                    fecha_nacimiento=self.cleaned_data['fecha_nacimiento'],
+                    municipio_fk=self.cleaned_data['municipio_fk'],
+                    direccion_1=self.cleaned_data['direccion_1'],
+                    direccion_2=self.cleaned_data['direccion_2'],
+                    telefono=self.cleaned_data['telefono'],
+                    imagen_perfil=self.cleaned_data.get('imagen_perfil'),
+                    qr_imagen=self.cleaned_data.get('qr_imagen')
+                )
+        except Exception as e:
+            raise ValidationError(f"Ocurrió un error al guardar los datos: {str(e)}")
         return user
