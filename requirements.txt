@@ -1,3 +1,4 @@
 django==5.1.1
 psycopg2-binary==2.9.9
 pillow==10.4.0
+djangorestframework==3.14.0  # O la versión que necesites
