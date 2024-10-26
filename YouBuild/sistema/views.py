@@ -227,9 +227,4 @@ def CrearCuentaView(request):
         user.delete()  # Borramos el usuario si el perfil no es válido para evitar inconsistencias
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 def CrearCuentaView(request):
-<<<<<<< HEAD
     return render(request, 'CrearCuenta.html')
->>>>>>> 8204c0f9d53f4899550176cde6f19067de21e805
-=======
-    return render(request, 'CrearCuenta.html')
->>>>>>> 8204c0f9d53f4899550176cde6f19067de21e805
