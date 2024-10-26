@@ -68,9 +68,6 @@ h2.login-titulo {
   }
 }
 
-  /*PARA REGISTRARSE*/
-
-  /* Estilos generales */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -142,6 +139,16 @@ h2.registro-titulo {
   resize: vertical;
 }
 
+/* Inline fields (provincia y municipio) */
+.registro-inline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.registro-inline .registro-inline-item {
+  width: 48%;
+}
+
 .registro-btn-submit {
   background-color: #e79026;
   color: white;
@@ -157,13 +164,6 @@ h2.registro-titulo {
   background-color: #53430f;
 }
 
-/* Estilo para el mensaje de error (si lo agregas en tu lógica de Django) */
-.registro-error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
 /* Responsividad para pantallas pequeñas */
 @media (max-width: 768px) {
   .registro-container {
@@ -171,7 +171,29 @@ h2.registro-titulo {
       max-width: 100%;
   }
 
+  .registro-inline {
+      flex-direction: column;
+  }
+
+  .registro-inline .registro-inline-item {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
   .registro-btn-submit {
       width: 100%;
   }
+}
+.custom-file-upload {
+  display: inline-block;
+  padding: 8px 20px;
+  cursor: pointer;
+  background-color: #e79026; /* Color del botón */
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+.registro-form-group input[type="file"] {
+  display: none; 
 }

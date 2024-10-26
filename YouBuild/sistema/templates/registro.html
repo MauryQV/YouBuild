@@ -11,43 +11,97 @@
 </head>
 <body>
     <div class="registro-container">
-        <h2 class="registro-titulo">Registro de Usuario</h2>
+        <h2 class="registro-titulo">Crear Cuenta</h2>
         <form method="post" class="registro-formulario" enctype="multipart/form-data">
             {% csrf_token %}
+            
             <div class="registro-form-group">
-                {{ form.username.label_tag }} {{ form.username }}
+                {{ form.nombre_completo.label_tag }}
+                {{ form.nombre_completo }}
+                <div class="error">{{ form.nombre_completo.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.email.label_tag }} {{ form.email }}
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                <div class="error">{{ form.username.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.password1.label_tag }} {{ form.password1 }}
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                <div class="error">{{ form.password1.errors }}</div>
             </div>
+            
+            <!-- Campo de confirmación de contraseña (password2) -->
             <div class="registro-form-group">
-                {{ form.password2.label_tag }} {{ form.password2 }}
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                <div class="error">{{ form.password2.errors }}</div> <!-- Error para este campo -->
             </div>
+
             <div class="registro-form-group">
-                {{ form.fecha_nacimiento.label_tag }} {{ form.fecha_nacimiento }}
+                {{ form.departamento_fk.label_tag }}
+                {{ form.departamento_fk }}
+                <div class="error">{{ form.departamento_fk.errors }}</div>
             </div>
+    
+            <div class="registro-form-group registro-inline">
+                <div class="registro-inline-item">
+                    {{ form.provincia_fk.label_tag }}
+                    {{ form.provincia_fk }}
+                    <div class="error">{{ form.provincia_fk.errors }}</div>
+                </div>
+                <div class="registro-inline-item">
+                    {{ form.municipio_fk.label_tag }}
+                    {{ form.municipio_fk }}
+                    <div class="error">{{ form.municipio_fk.errors }}</div>
+                </div>
+            </div>
+    
             <div class="registro-form-group">
-                {{ form.departamento_fk.label_tag }} {{ form.departamento_fk }}
+                {{ form.direccion_1.label_tag }}
+                {{ form.direccion_1 }}
+                <div class="error">{{ form.direccion_1.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.provincia_fk.label_tag }} {{ form.provincia_fk }}
+                {{ form.direccion_2.label_tag }}
+                {{ form.direccion_2 }}
+                <div class="error">{{ form.direccion_2.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.municipio_fk.label_tag }} {{ form.municipio_fk }}
+                {{ form.qr_imagen.label_tag }}
+                <label for="id_qr_imagen" class="custom-file-upload">Seleccionar imagen de QR</label>
+                {{ form.qr_imagen }} <!-- Input de carga oculto -->
+                <div class="error">{{ form.qr_imagen.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.direccion.label_tag }} {{ form.direccion }}
+                {{ form.telefono.label_tag }}
+                {{ form.telefono }}
+                <div class="error">{{ form.telefono.errors }}</div>
             </div>
+    
             <div class="registro-form-group">
-                {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                <div class="error">{{ form.email.errors }}</div>
             </div>
-            <button type="submit" class="registro-btn-submit">Registrar</button>
+    
+            <div class="registro-form-group">
+                {{ form.imagen_perfil.label_tag }}
+                <label for="id_imagen_perfil" class="custom-file-upload">Seleccionar imagen de perfil</label>
+                {{ form.imagen_perfil }} <!-- Input de carga oculto -->
+                <div class="error">{{ form.imagen_perfil.errors }}</div>
+            </div>
+    
+            <div class="registro-form-group">
+                <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+            </div>
         </form>
     </div>
-
     <script type="text/javascript">
         $(document).ready(function() {
             // Cargar provincias cuando se selecciona un departamento
