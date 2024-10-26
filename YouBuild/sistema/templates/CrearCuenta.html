@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-orange': '#ff6e14',
+                        'light-orange': '#fff0e8',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <main class="container mx-auto mt-8 p-4 max-w-lg">
+        <h1 class="text-3xl font-bold text-center mb-6">Crear Cuenta</h1>
+
+        <form id="registro-form" class="space-y-6">
+            <!-- Nombre Completo -->
+            <div>
+                <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Introduce tu nombre completo" maxlength="50" required pattern="[a-zA-Z\s]+" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+            </div>
+
+            <!-- Nombre de usuario -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+                <input type="text" id="username" name="username" placeholder="@nombre de usuario" minlength="5" maxlength="15" pattern="[a-zA-Z0-9]+" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+            </div>
+
+            <!-- Contraseña -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Contraseña" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                <small class="text-gray-600 block">Debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</small>
+            </div>
+
+            <!-- Ciudad -->
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                <select id="city" name="city" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                    <option value="" disabled selected>Seleccionar</option>
+                    <option value="Cochabamba">Cochabamba</option>
+                    <option value="Quillacollo">Quillacollo</option>
+                    <option value="Sacaba">Sacaba</option>
+                    <option value="Vinto">Vinto</option>
+                    <option value="Tiquipaya">Tiquipaya</option>
+                    <option value="Colcapirhua">Colcapirhua</option>
+                    <option value="Sipe Sipe">Sipe Sipe</option>
+                </select>
+            </div>
+
+            <!-- Provincia y Municipio -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="province" class="block text-sm font-medium text-gray-700">Provincia</label>
+                    <select id="province" name="province" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option value="Cochabamba">Cochabamba</option>
+                        <option value="Quillacollo">Quillacollo</option>
+                        <option value="Punata">Punata</option>
+                        <option value="Cliza">Cliza</option>
+                        <option value="Tacarigua">Tacarigua</option>
+                        <option value="Vallegrande">Vallegrande</option>
+                        <option value="Bolívar">Bolívar</option>
+                        <option value="Mizque">Mizque</option>
+                        <option value="Arani">Arani</option>
+                        <option value="Tiquipaya">Tiquipaya</option>
+                        <option value="Sipe Sipe">Sipe Sipe</option>
+                        <option value="Colcapirhua">Colcapirhua</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="municipality" class="block text-sm font-medium text-gray-700">Municipio</label>
+                    <select id="municipality" name="municipality" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option value="Cochabamba">Cochabamba</option>
+                        <option value="Quillacollo">Quillacollo</option>
+                        <option value="Sacaba">Sacaba</option>
+                        <option value="Tiquipaya">Tiquipaya</option>
+                        <option value="Vinto">Vinto</option>
+                        <option value="Colcapirhua">Colcapirhua</option>
+                        <option value="Sipe Sipe">Sipe Sipe</option>
+                        <option value="Punata">Punata</option>
+                        <option value="Arani">Arani</option>
+                        <option value="Cliza">Cliza</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="address1" class="block text-sm font-medium text-gray-700">Dirección</label>
+                    <input type="text" id="address1" name="address1" placeholder="123 Avenida, calle, etc." required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                </div>
+                <div>
+                    <label for="address2" class="block text-sm font-medium text-gray-700">Dirección 2</label>
+                    <input type="text" id="address2" name="address2" placeholder="Dpto, bloque, piso, edificio" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                </div>
+            </div>
+
+            <!-- Método de pago QR -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Método de pago QR</label>
+                <button type="button" class="mt-2 w-full py-4 px-6 bg-light-orange border border-primary-orange text-black rounded-md text-sm flex justify-center items-center hover:bg-primary-orange hover:text-white transition-colors" onclick="document.getElementById('qrInput').click();">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16V4H4z M8 4v16M4 8h16M12 12v4M8 12h4v4"/>
+                    </svg>
+                    Subir imagen de QR
+                </button>
+                <input type="file" id="qrInput" class="hidden" accept=".jpg,.png">
+            </div>
+
+            <!-- Número de teléfono y email -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Número de teléfono</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(+51) 65782345" pattern="^\+591 \d{8}$" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email (opcional)</label>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                </div>
+            </div>
+
+            <!-- Subir foto de perfil -->
+            <div>
+                <button type="button" class="mt-4 w-full py-4 px-6 bg-light-orange border border-primary-orange text-black rounded-md text-sm flex justify-center items-center hover:bg-primary-orange hover:text-white transition-colors" onclick="document.getElementById('profileInput').click();">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    Subir foto de perfil
+                </button>
+                <input type="file" id="profileInput" class="hidden" accept=".jpg,.png">
+            </div>
+
+            <!-- Botón de crear cuenta -->
+            <div>
+                <button type="submit" id="crear-cuenta" class="w-full py-2 px-4 bg-primary-orange text-white rounded-md hover:bg-opacity-90">
+                    Crear una cuenta
+                </button>
+            </div>
+
+            <!-- Aviso de términos y política -->
+            <p class="text-sm text-center mt-4 text-gray-600">
+                Al crear una cuenta, aceptas nuestros <a href="#" class="text-primary-orange hover:underline">Términos de servicio</a> y <a href="#" class="text-primary-orange hover:underline">Política de privacidad</a>.
+            </p>
+        </form>
+    </main>
+</body>
+</html>
