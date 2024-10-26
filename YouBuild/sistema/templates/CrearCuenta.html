@@ -1,159 +1,551 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cuenta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-orange': '#ff6e14',
-                        'light-orange': '#fff0e8',
-                    }
-                }
-            }
+    <title>Registrar datos personales</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
         }
-    </script>
+        .container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e5e7eb;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+        .progress {
+            height: 100%;
+            background-color: #ff6e14;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 16px;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 0.25rem;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button[type="button"] {
+            background-color: #9ca3af;
+            color: white;
+        }
+        button[type="button"]:not(:disabled) {
+            background-color: #ff6e14;
+        }
+        button[type="submit"] {
+            background-color: #ff6e14;
+            color: white;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .terms-text {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .terms-text a {
+            color: #ff6e14;
+            text-decoration: none;
+        }
+        .terms-text a:hover {
+            text-decoration: underline;
+        }
+        .upload-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .upload-button:hover {
+            background-color: #e5e7eb;
+        }
+        .phone-input-group {
+            display: flex;
+            align-items: center;
+        }
+        .country-code {
+            width: 80px;
+            margin-right: 10px;
+        }
+        .form-group {
+    margin: 20px 0; /* Espaciado entre los grupos de formulario */
+}
+
+.upload-button {
+    display: inline-flex; /* Usa flexbox para alinear el icono y texto */
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    background-color: #ffffff; /* Color de fondo naranja suave */
+    color: #000000; /* Color del texto blanco */
+    padding: 12px 25px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: background-color 0.3s; /* Transición suave para el fondo */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 0 auto; /* Centra el botón horizontalmente */
+}
+
+.upload-button i {
+    margin-right: 8px; /* Espaciado entre el icono y el texto */
+}
+
+.upload-button:hover {
+    background-color: #ff6e14; /* Color de fondo naranja fuerte al pasar el mouse */
+}
+
+
+    </style>
 </head>
-<body class="bg-gray-100">
-    <main class="container mx-auto mt-8 p-4 max-w-lg">
-        <h1 class="text-3xl font-bold text-center mb-6">Crear Cuenta</h1>
-        
-        <form id="registro-form" class="space-y-6">
-            <!-- Nombre Completo -->
-            <div>
-                <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre completo</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Introduce tu nombre completo" maxlength="50" required pattern="[a-zA-Z\s]+" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-            </div>
-            
-            <!-- Nombre de usuario -->
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-                <input type="text" id="username" name="username" placeholder="@nombre de usuario" minlength="5" maxlength="15" pattern="[a-zA-Z0-9]+" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-            </div>
-            
-            <!-- Contraseña -->
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="Contraseña" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                <small class="text-gray-600 block">Debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</small>
-            </div>
-            
-            <!-- Ciudad -->
-            <div>
-                <label for="city" class="block text-sm font-medium text-gray-700">Ciudad</label>
-                <select id="city" name="city" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                    <option value="" disabled selected>Seleccionar</option>
-                    <option value="Cochabamba">Cochabamba</option>
-                    <option value="Quillacollo">Quillacollo</option>
-                    <option value="Sacaba">Sacaba</option>
-                    <option value="Vinto">Vinto</option>
-                    <option value="Tiquipaya">Tiquipaya</option>
-                    <option value="Colcapirhua">Colcapirhua</option>
-                    <option value="Sipe Sipe">Sipe Sipe</option>
-                </select>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-6 font-bold" style="font-size: 32px;">Registrar datos personales</h1>
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar" style="width: 25%;"></div>
+        </div>
+        <form id="registro-form">
+            <div id="section1" class="form-section active">
+                <h2>Información Personal</h2>
+                <div class="form-group">
+                    <label for="nombreCompleto">Nombre completo</label>
+                    <input type="text" id="nombreCompleto" name="nombreCompleto" placeholder="Introduzca su nombre completo" required>
+                    <div class="error" id="error-nombreCompleto"></div>
+                </div>
+                <div class="form-group">
+                    <label for="nombreUsuario">Nombre de usuario</label>
+                    <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Introduzca su nombre de usuario" required>
+                    <div class="error" id="error-nombreUsuario"></div>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required>
+                    <div class="error" id="error-contrasena"></div>
+                </div>
             </div>
 
-            <!-- Provincia y Municipio -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="province" class="block text-sm font-medium text-gray-700">Provincia</label>
-                    <select id="province" name="province" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                        <option value="" disabled selected>Seleccionar</option>
+            <div id="section2" class="form-section">
+                <h2>Información de Ubicación</h2>
+                <div class="form-group">
+                    <label for="departamento">Departamento</label>
+                    <select id="departamento" name="departamento" required>
+                        <option value="">Seleccione su departamento</option>
                         <option value="Cochabamba">Cochabamba</option>
-                        <option value="Quillacollo">Quillacollo</option>
-                        <option value="Punata">Punata</option>
-                        <option value="Cliza">Cliza</option>
-                        <option value="Tacarigua">Tacarigua</option>
-                        <option value="Vallegrande">Vallegrande</option>
-                        <option value="Bolívar">Bolívar</option>
-                        <option value="Mizque">Mizque</option>
-                        <option value="Arani">Arani</option>
-                        <option value="Tiquipaya">Tiquipaya</option>
-                        <option value="Sipe Sipe">Sipe Sipe</option>
-                        <option value="Colcapirhua">Colcapirhua</option>
+                        <!-- Otros departamentos... -->
                     </select>
+                    <div class="error" id="error-departamento"></div>
                 </div>
-                <div>
-                    <label for="municipality" class="block text-sm font-medium text-gray-700">Municipio</label>
-                    <select id="municipality" name="municipality" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                        <option value="" disabled selected>Seleccionar</option>
-                        <option value="Cochabamba">Cochabamba</option>
-                        <option value="Quillacollo">Quillacollo</option>
-                        <option value="Sacaba">Sacaba</option>
-                        <option value="Tiquipaya">Tiquipaya</option>
-                        <option value="Vinto">Vinto</option>
-                        <option value="Colcapirhua">Colcapirhua</option>
-                        <option value="Sipe Sipe">Sipe Sipe</option>
-                        <option value="Punata">Punata</option>
-                        <option value="Arani">Arani</option>
-                        <option value="Cliza">Cliza</option>
+                <div class="form-group">
+                    <label for="provincia">Provincia</label>
+                    <select id="provincia" name="provincia" required disabled>
+                        <option value="">Seleccione su Provincia</option>
                     </select>
+                    <div class="error" id="error-provincia"></div>
+                </div>
+                <div class="form-group">
+                    <label for="municipio">Municipio</label>
+                    <select id="municipio" name="municipio" required disabled>
+                        <option value="">Seleccione su Municipio</option>
+                    </select>
+                    <div class="error" id="error-municipio"></div>
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" placeholder="Ingrese su dirección" required>
+                    <div class="error" id="error-direccion"></div>
                 </div>
             </div>
 
-            <!-- Dirección -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="address1" class="block text-sm font-medium text-gray-700">Dirección</label>
-                    <input type="text" id="address1" name="address1" placeholder="123 Avenida, calle, etc." required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+            <div id="section3" class="form-section">
+                <h2>Información Adicional</h2>
+                <div class="form-group">
+                    <label for="numeroCelular">Número de celular</label>
+                    <div class="phone-input-group">
+                        <select id="codigoPais" name="codigoPais" class="country-code">
+                            <option value="+591">+591</option>
+                            <option value="+54">+54</option>
+                            <option value="+55">+55</option>
+                            <option value="+56">+56</option>
+                            <option value="+51">+51</option>
+                            <option value="+595">+595</option>
+                            <!-- Añade más códigos de país según sea necesario -->
+                        </select>
+                        <input type="tel" id="numeroCelular" name="numeroCelular" placeholder="Ingrese su número de celular" required>
+                    </div>
+                    <div class="error" id="error-numeroCelular"></div>
                 </div>
-                <div>
-                    <label for="address2" class="block text-sm font-medium text-gray-700">Dirección 2</label>
-                    <input type="text" id="address2" name="address2" placeholder="Dpto, bloque, piso, edificio" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
+                <div class="form-group">
+                    <label for="correoElectronico">Correo electrónico (opcional)</label>
+                    <input type="email" id="correoElectronico" name="correoElectronico" placeholder="Ingrese su correo electrónico">
+                    <div class="error" id="error-correoElectronico"></div>
                 </div>
-            </div>
-            
-            <!-- Método de pago QR -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Método de pago QR</label>
-                <button type="button" class="mt-2 w-full py-4 px-6 bg-light-orange border border-primary-orange text-black rounded-md text-sm flex justify-center items-center hover:bg-primary-orange hover:text-white transition-colors" onclick="document.getElementById('qrInput').click();">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16V4H4z M8 4v16M4 8h16M12 12v4M8 12h4v4"/>
-                    </svg>
-                    Subir imagen de QR
-                </button>
-                <input type="file" id="qrInput" class="hidden" accept=".jpg,.png">
-            </div>
-            
-            <!-- Número de teléfono y email -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Número de teléfono</label>
-                    <input type="tel" id="phone" name="phone" placeholder="(+51) 65782345" pattern="^\+591 \d{8}$" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email (opcional)</label>
-                    <input type="email" id="email" name="email" placeholder="email@example.com" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-orange focus:ring-0">
-                </div>
-            </div>
-            
-            <!-- Subir foto de perfil -->
-            <div>
-                <button type="button" class="mt-4 w-full py-4 px-6 bg-light-orange border border-primary-orange text-black rounded-md text-sm flex justify-center items-center hover:bg-primary-orange hover:text-white transition-colors" onclick="document.getElementById('profileInput').click();">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                    Subir foto de perfil
-                </button>
-                <input type="file" id="profileInput" class="hidden" accept=".jpg,.png">
-            </div>
-            
-            <!-- Botón de crear cuenta -->
-            <div>
-                <button type="submit" id="crear-cuenta" class="w-full py-2 px-4 bg-primary-orange text-white rounded-md hover:bg-opacity-90">
-                    Crear una cuenta
-                </button>
             </div>
 
-            <!-- Aviso de términos y política -->
-            <p class="text-sm text-center mt-4 text-gray-600">
+            <div id="section4" class="form-section">
+                <h2>Foto de Perfil</h2>
+                <div class="form-group">
+                    <label for="fotoPerfil" class="upload-button">
+                        <i class="fas fa-user-circle"></i> Subir foto de perfil
+                        <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" style="display: none;">
+                    </label>
+                    <div id="fotoPerfilPreview"></div>
+                    <div class="error" id="error-fotoPerfil"></div>
+                </div>
+            
+                <h2>Método de Pago por QR</h2>
+                <div class="form-group">
+                    <label for="codigoQR" class="upload-button">
+                        <i class="fas fa-qrcode"></i> Subir código QR
+                        <input type="file" id="codigoQR" name="codigoQR" accept="image/*" style="display: none;">
+                    </label>
+                    <div id="codigoQRPreview"></div>
+                    <div class="error" id="error-codigoQR"></div>
+                </div>
+            </div>
+            
+
+            <div class="button-group">
+                <button type="button" id="prevBtn" style="display: none;">Anterior</button>
+                <button type="button" id="nextBtn" disabled>Siguiente</button>
+                <button type="submit" id="submitBtn" style="display: none;">Crear una cuenta</button>
+            </div>
+
+            <p class="terms-text">
                 Al crear una cuenta, aceptas nuestros <a href="#" class="text-primary-orange hover:underline">Términos de servicio</a> y <a href="#" class="text-primary-orange hover:underline">Política de privacidad</a>.
             </p>
         </form>
-    </main>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        const totalSections = 4;
+
+        const form = document.getElementById('registro-form');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const provincias = {
+            Cochabamba: ['Cochabamba', 'Quillacollo', 'Tunari', 'Arani', 'Cercado', 'San Benito', 'Santa Rosa de la Sierra', 'Sacaba', 'Tapacarí', 'Champa', 'Morochata', 'Tiraque', 'Bolivar', 'Ayopaya', 'Campero', 'Esteban Arze']
+        };
+
+        const municipios = {
+            Cochabamba: ['Cochabamba', 'Quillacollo', 'Sacaba', 'Tiraque', 'Colcapirhua', 'Vinto', 'Sipe Sipe', 'San Benito', 'Tarata', 'Arani', 'Ayopaya', 'Bolivar', 'Campero', 'Chapare', 'Cliza', 'Mizque', 'Punata', 'Totora', 'Morochata', 'Cercado', 'Esteban Arze', 'Tapacarí', 'Colomi', 'Bolívar', 'Cuchumuela', 'Germán Busch', 'San Pedro de Tiquipaya', 'Tocopilla']
+        };
+
+        function updateProgressBar() {
+            const progress = 25 + ((currentSection - 1) / (totalSections - 1)) * 75;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showSection(sectionNumber) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`section${sectionNumber}`).classList.add('active');
+
+            if (sectionNumber === 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            } else if (sectionNumber === totalSections) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+
+            updateProgressBar();
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            const name = field.name;
+            const errorElement = document.getElementById(`error-${name}`);
+            let error = '';
+
+            switch (name) {
+                case 'nombreCompleto':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    } else if (value.length < 4) {
+                        error = 'Mínimo 4 caracteres';
+                    } else if (value.length > 50) {
+                        error = 'Máximo 50 caracteres';
+                    } else if (/[^a-zA-Z\s]/.test(value)) {
+                        error = 'El nombre solo puede contener letras';
+                    } else if ((value.match(/\s/g) || []).length > 7) {
+                        error = 'Número máximo de espacios 7';
+                    } else if (/\s{2,}/.test(value)) {
+                        error = 'No se permiten más de 2 espacios seguidos';
+                    }
+                    break;
+                case 'nombreUsuario':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    } else if (value.length < 5) {
+                        error = 'Mínimo 5 caracteres';
+                    } else if (value.length > 15) {
+                        error = 'Máximo 15 caracteres';
+                    } else if (/[^a-zA-Z0-9@]/.test(value)) {
+                        error = 'El nombre de usuario solo puede contener letras y números';
+                    } else if (/\s/.test(value)) {
+                        error = 'No se permiten espacios';
+                
+                    }
+                    break;
+                case 'contrasena':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    } else if (value.length < 8) {
+                        error = 'Mínimo 8 caracteres';
+                    } else if (value.length > 16) {
+                        error = 'Límite de caracteres excedido (16)';
+                    } else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[ª!"·$%&/()=?¿]).*$/.test(value)) {
+                        error = 'La contraseña debe tener al menos una letra mayúscula, un número y un carácter especial (ª!"·$%&/()=?¿)';
+                    }
+                    break;
+                case 'departamento':
+                case 'provincia':
+                case 'municipio':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    }
+                    break;
+                case 'direccion':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    } else if (value.length < 10) {
+                        error = 'Mínimo 10 caracteres';
+                    } else if (value.length > 150) {
+                        error = 'Límite de caracteres excedido (150)';
+                    } else if (/[^a-zA-Z0-9\s,#]/.test(value)) {
+                        error = 'No se permiten caracteres especiales (ª!"$%&/()=?)';
+                    } else if (/\s{2,}/.test(value)) {
+                        error = 'No se permiten más de 2 espacios seguidos';
+                    }
+                    break;
+                case 'numeroCelular':
+                    if (!value) {
+                        error = 'Campo obligatorio';
+                    } else if (!/^\d{8,}$/.test(value)) {
+                        error = 'El número de celular debe tener al menos 8 dígitos';
+                    }
+                    break;
+                case 'correoElectronico':
+                    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                        error = 'Correo electrónico inválido';
+                    }
+                    break;
+            }
+
+            errorElement.textContent = error;
+            return error === '';
+        }
+
+        function validateSection(sectionNumber) {
+            const section = document.getElementById(`section${sectionNumber}`);
+            const fields = section.querySelectorAll('input, select');
+            let isValid = true;
+
+            fields.forEach(field => {
+                if (field.required && !validateField(field)) {
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        function updateNextButtonState() {
+            nextBtn.disabled = !validateSection(currentSection);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (validateSection(currentSection)) {
+                currentSection++;
+                showSection(currentSection);
+                updateNextButtonState();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSection--;
+            showSection(currentSection);
+            updateNextButtonState();
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateSection(currentSection)) {
+                alert('Formulario enviado con éxito!');
+                // Aquí puedes agregar la lógica para enviar el formulario
+            }
+        });
+
+        // Inicializar
+        updateProgressBar();
+
+        // Validación en tiempo real
+        form.querySelectorAll('input, select').forEach(field => {
+            field.addEventListener('input', () => {
+                validateField(field);
+                updateNextButtonState();
+            });
+        });
+
+        // Lógica para habilitar/deshabilitar selects de Provincia y Municipio
+        const departamentoSelect = document.getElementById('departamento');
+        const provinciaSelect = document.getElementById('provincia');
+        const municipioSelect = document.getElementById('municipio');
+
+        departamentoSelect.addEventListener('change', () => {
+            const selectedDepartamento = departamentoSelect.value;
+            provinciaSelect.disabled = !selectedDepartamento;
+            municipioSelect.disabled = true;
+            provinciaSelect.innerHTML = '<option value="">Seleccione su Provincia</option>';
+            municipioSelect.innerHTML = '<option value="">Seleccione su Municipio</option>';
+            
+            if (selectedDepartamento && provincias[selectedDepartamento]) {
+                provincias[selectedDepartamento].forEach(provincia => {
+                    const option = document.createElement('option');
+                    option.value = provincia;
+                    option.textContent = provincia;
+                    provinciaSelect.appendChild(option);
+                });
+            }
+        });
+
+        provinciaSelect.addEventListener('change', () => {
+            const selectedProvincia = provinciaSelect.value;
+            municipioSelect.disabled = !selectedProvincia;
+            municipioSelect.innerHTML = '<option value="">Seleccione su Municipio</option>';
+            
+            if (selectedProvincia && municipios[departamentoSelect.value]) {
+                municipios[departamentoSelect.value].forEach(municipio => {
+                    const option = document.createElement('option');
+                    option.value = municipio;
+                    option.textContent = municipio;
+                    municipioSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Autocompletar "@" en el nombre de usuario
+        const nombreUsuarioInput = document.getElementById('nombreUsuario');
+        nombreUsuarioInput.addEventListener('input', function(e) {
+            if (!this.value.startsWith('@') && this.value.length > 0) {
+                this.value = '@' + this.value;
+            }
+        });
+
+        // Previsualización de la foto de perfil
+        const fotoPerfilInput = document.getElementById('fotoPerfil');
+        const fotoPerfilPreview = document.getElementById('fotoPerfilPreview');
+
+        fotoPerfilInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    fotoPerfilPreview.innerHTML = '';
+                    fotoPerfilPreview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Previsualización del código QR
+        const codigoQRInput = document.getElementById('codigoQR');
+        const codigoQRPreview = document.getElementById('codigoQRPreview');
+
+        codigoQRInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    codigoQRPreview.innerHTML = '';
+                    codigoQRPreview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>
