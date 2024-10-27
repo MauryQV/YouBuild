@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
         }
+        
         .container {
             max-width: 500px;
             margin: 2rem auto;
@@ -20,43 +21,52 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
         h1 {
             text-align: center;
             font-size: 32px;
             margin-bottom: 1.5rem;
             font-weight: bold;
         }
+        
         h2 {
             font-size: 24px;
             margin-bottom: 1rem;
         }
+        
         .progress-bar {
             width: 100%;
             height: 10px;
-            background-color: #e5e7eb;
+            background-color: #f6605;
             border-radius: 5px;
             margin-bottom: 1.5rem;
         }
+        
         .progress {
             height: 100%;
-            background-color: #ff6e14;
+            background-color: #ef6605;
             border-radius: 5px;
             transition: width 0.3s ease;
         }
+        
         .form-section {
             display: none;
         }
+        
         .form-section.active {
             display: block;
         }
+        
         .form-group {
             margin-bottom: 1rem;
         }
+        
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-size: 16px;
         }
+        
         input, select {
             width: 100%;
             padding: 0.5rem;
@@ -65,16 +75,19 @@
             font-size: 16px;
             box-sizing: border-box;
         }
+        
         .error {
             color: #ef4444;
             font-size: 14px;
             margin-top: 0.25rem;
         }
+        
         .button-group {
             display: flex;
             justify-content: space-between;
             margin-top: 1.5rem;
         }
+        
         button {
             padding: 0.5rem 1rem;
             border: none;
@@ -83,41 +96,47 @@
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
         }
+        
         button[type="button"] {
-            background-color: #9ca3af;
+            background-color: #ef6605;
             color: white;
         }
-        button[type="button"]:not(:disabled) {
-            background-color: #ff6e14;
+        
+        button[type="button"]:hover {
+            background-color: #d94d0b; /* Tono más oscuro para el hover */
         }
+        
         button[type="submit"] {
-            background-color: #ff6e14;
+            background-color: #ef6605;
             color: white;
         }
+        
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
+        
         .terms-text {
             font-size: 14px;
             color: #6b7280;
             margin-top: 1rem;
             text-align: center;
         }
+        
         .terms-text a {
-            color: #ff6e14;
+            color: #ef6605;
             text-decoration: none;
         }
+        
         .terms-text a:hover {
             text-decoration: underline;
         }
+        
         .input-group {
             display: flex;
             gap: 1rem;
         }
-        .input-group .form-group {
-            flex: 1;
-        }
+        
         select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='4 6 8 2 12 6'%3E%3C/polyline%3E%3Cpolyline points='4 10 8 14 12 10'%3E%3C/polyline%3E%3C/svg%3E");
@@ -126,10 +145,12 @@
             background-size: 1em 1em;
             padding-right: 2.5rem;
         }
+        
         #prevBtn {
             background-color: #e5e7eb;
             color: #000;
         }
+        
         .image-upload-container {
             background-color: #fff;
             border: 1px solid #d1d5db;
@@ -137,40 +158,94 @@
             padding: 1rem;
             margin-bottom: 1rem;
             text-align: center;
+            position: relative;
         }
+        
+        .image-upload-container.hidden {
+            display: none;
+        }
+        
         .image-upload-container i {
             font-size: 48px;
             color: #9ca3af;
             margin-bottom: 0.5rem;
         }
+        
         .image-upload-container p {
             margin: 0.5rem 0;
             color: #000;
         }
+        
         .image-upload-button {
-            background-color: #fff;
-            color: #000;
-            border: 1px solid #d1d5db;
+            background-color: #ef6605;
+            color: white;
+            border: none;
             padding: 0.5rem 1rem;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
             display: inline-block;
             margin-top: 0.5rem;
         }
+        
         .image-upload-button:hover {
-            background-color: #ff6e14;
+            background-color: #d94d0b; /* Tono más oscuro para el hover */
             color: #fff;
         }
+        
         .checkbox-group {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 1rem;
         }
+        
         .checkbox-group input[type="checkbox"] {
             margin-right: 0.5rem;
             width: auto;
         }
+        
+        .image-preview {
+            position: relative;
+            display: none;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin: 1rem auto;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-image-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .remove-image-button:hover {
+            background-color: #d32f2f;
+        }
+        
+        
+         
     </style>
 </head>
 <body>
@@ -257,44 +332,60 @@
                 </div>
             </div>
 
-            <div id="section3" class="form-section">
+            <div id="section3" class="form-section"> 
                 <h2>Fotos y Términos</h2>
+            
+                <!-- Contenedor para la foto de perfil -->
                 <div class="form-group">
                     <label>Agregar foto de perfil (opcional)</label>
-                    <div class="image-upload-container">
-                        <i class="fas fa-image"></i>
-                        <p>Elegir un archivo</p>
-                        <p>Formatos jpg o png</p>
-                        <label for="fotoPerfil" class="image-upload-button">
+                    <div class="image-upload-container" id="imageUploadContainer">
+                        <i class="fas fa-image" id="imageIcon1"></i>
+                        <p id="chooseFileText1">Elegir un archivo</p>
+                        <p id="fileFormatText1">Formatos jpg o png</p>
+                        <label for="fotoPerfil" class="image-upload-button" id="fileButton1">
                             Buscar archivo
-                            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/jpeg,image/png" style="display: none;">
+                            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/jpeg,image/png" style="display: none;" onchange="previewImage(event, 'fotoPerfilPreview', 'imageUploadContainer', 'error-fotoPerfil')">
                         </label>
+                        <!-- Vista previa de la foto de perfil -->
+                        <div id="fotoPerfilPreview" class="image-preview" style="display: none;">
+                            <img id="fotoPerfilImg" src="" alt="Vista previa de la foto de perfil">
+                            <button type="button" class="remove-image-button" onclick="removeImage('fotoPerfil', 'fotoPerfilPreview', 'imageUploadContainer', 'error-fotoPerfil')">X</button>
+                        </div>
                     </div>
-                    <div id="fotoPerfilPreview"></div>
                     <div class="error" id="error-fotoPerfil"></div>
                 </div>
+            
+                <!-- Contenedor para el QR -->
                 <div class="form-group">
                     <label>Agregar imagen para el pago QR (opcional)</label>
-                    <div class="image-upload-container">
-                        <i class="fas fa-qrcode"></i>
-                        <p>Elegir un archivo</p>
-                        <p>Formatos jpg o png</p>
-                        <label for="codigoQR" class="image-upload-button">
+                    <div class="image-upload-container" id="qrUploadContainer">
+                        <i class="fas fa-qrcode" id="imageIcon2"></i>
+                        <p id="chooseFileText2">Elegir un archivo</p>
+                        <p id="fileFormatText2">Formatos jpg o png</p>
+                        <label for="codigoQR" class="image-upload-button" id="fileButton2">
                             Buscar archivo
-                            <input type="file" id="codigoQR" name="codigoQR" accept="image/jpeg,image/png" style="display: none;">
+                            <input type="file" id="codigoQR" name="codigoQR" accept="image/jpeg,image/png" style="display: none;" onchange="previewImage(event, 'codigoQRPreview', 'qrUploadContainer', 'error-codigoQR')">
                         </label>
+                        <!-- Vista previa del QR -->
+                        <div id="codigoQRPreview" class="image-preview" style="display: none;">
+                            <img id="codigoQRImg" src="" alt="Vista previa del QR">
+                            <button type="button" class="remove-image-button" onclick="removeImage('codigoQR', 'codigoQRPreview', 'qrUploadContainer', 'error-codigoQR')">X</button>
+                        </div>
                     </div>
-                    <div id="codigoQRPreview"></div>
                     <div class="error" id="error-codigoQR"></div>
                 </div>
+            
                 <div class="checkbox-group">
                     <input type="checkbox" id="aceptaTerminos" name="aceptaTerminos" required style="accent-color: orange;">
                     <label for="aceptaTerminos">
                         Al crear una cuenta, acepto los Términos de servicio y la Política de privacidad.
                     </label>
                 </div>
-                
             </div>
+            
+            
+
+            
 
             <div class="button-group">
                 <button type="button" id="prevBtn" style="display: none;">Atrás</button>
@@ -556,45 +647,75 @@
             }
         });
 
-        // Previsualización de la foto de perfil
-        const fotoPerfilInput = document.getElementById('fotoPerfil');
-        const fotoPerfilPreview = document.getElementById('fotoPerfilPreview');
+// Función para manejar la previsualización de imágenes
+function handleImagePreview(inputElement, previewElement, chooseFileText, fileFormatText, imageIcon, fileButton) {
+    inputElement.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Limpiar cualquier vista previa anterior
+                previewElement.innerHTML = ''; 
 
-        fotoPerfilInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    fotoPerfilPreview.innerHTML = '';
-                    fotoPerfilPreview.appendChild(img);
-                }
-                reader.readAsDataURL(file);
-            }
-        });
+                // Crear la imagen y agregarla al contenedor de vista previa
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100%';  // Ajusta el tamaño de la imagen
+                img.style.height = 'auto'; // Mantener proporción
 
-        // Previsualización del código QR
-        const codigoQRInput = document.getElementById('codigoQR');
-        const codigoQRPreview = document.getElementById('codigoQRPreview');
+                // Crear el botón de eliminación
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'X';
+                removeBtn.className = 'remove-image-button'; 
 
-        codigoQRInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    codigoQRPreview.innerHTML = '';
-                    codigoQRPreview.appendChild(img);
-                }
-                reader.readAsDataURL(file);
-            }
-        });
+                // Limpiar la imagen cuando se presione la X roja
+                removeBtn.addEventListener('click', () => {
+                    previewElement.innerHTML = ''; 
+                    inputElement.value = '';  // Restablecer input de archivo
+                    previewElement.style.display = 'none'; // Ocultar la vista previa
+
+                    // Mostrar los textos de instrucciones nuevamente
+                    chooseFileText.style.display = 'block';
+                    fileFormatText.style.display = 'block';
+                    imageIcon.style.display = 'block';
+                    fileButton.style.display = 'block';
+                });
+
+                // Agregar la imagen y el botón al contenedor de vista previa
+                previewElement.appendChild(img);
+                previewElement.appendChild(removeBtn);
+                previewElement.style.display = 'block'; // Mostrar la vista previa
+
+                // Ocultar los textos de instrucciones, el ícono y el botón de búsqueda
+                chooseFileText.style.display = 'none';
+                fileFormatText.style.display = 'none';
+                imageIcon.style.display = 'none';
+                fileButton.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// Previsualización de la foto de perfil
+const fotoPerfilInput = document.getElementById('fotoPerfil');
+const fotoPerfilPreview = document.getElementById('fotoPerfilPreview');
+const chooseFileText1 = document.getElementById('chooseFileText1');
+const fileFormatText1 = document.getElementById('fileFormatText1');
+const imageIcon1 = document.getElementById('imageIcon1');
+const fileButton1 = document.getElementById('fileButton1');
+handleImagePreview(fotoPerfilInput, fotoPerfilPreview, chooseFileText1, fileFormatText1, imageIcon1, fileButton1);
+
+// Previsualización del código QR
+const codigoQRInput = document.getElementById('codigoQR');
+const codigoQRPreview = document.getElementById('codigoQRPreview');
+const chooseFileText2 = document.getElementById('chooseFileText2');
+const fileFormatText2 = document.getElementById('fileFormatText2');
+const imageIcon2 = document.getElementById('imageIcon2');
+const fileButton2 = document.getElementById('fileButton2');
+handleImagePreview(codigoQRInput, codigoQRPreview, chooseFileText2, fileFormatText2, imageIcon2, fileButton2);
+
+
     </script>
 </body>
 </html>

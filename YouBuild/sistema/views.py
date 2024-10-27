@@ -228,3 +228,5 @@ def CrearCuentaView(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 def CrearCuentaView(request):
     return render(request, 'CrearCuenta.html')
+
+
