@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 
 def registrar_usuario(request):
     if request.method == 'POST':
-        form = RegistroUsuarioForm(request.POST)
+        form = RegistroUsuarioForm(request.POST, request.FILES)  # Agregar request.FILES
         if form.is_valid():
             user = form.save()
             login(request, user)  # Loguear al usuario tras registrarlo
