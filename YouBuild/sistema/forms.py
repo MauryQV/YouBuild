@@ -10,14 +10,51 @@ class LoginForm(AuthenticationForm):
     pass
 
 class RegistroUsuarioForm(UserCreationForm):
-    nombre_completo = forms.CharField(max_length=255, required=True, label="Nombre completo")
-    departamento_fk = forms.ModelChoiceField(queryset=DepartamentoDB.objects.all(), required=True, label="Departamento")
-    provincia_fk = forms.ModelChoiceField(queryset=ProvinciaDB.objects.none(), required=True, label="Provincia")
-    municipio_fk = forms.ModelChoiceField(queryset=MunicipioDB.objects.none(), required=True, label="Municipio")
-    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección")
-    telefono = forms.CharField(max_length=15, required=True, label="Número de celular")
-    imagen_perfil = forms.ImageField(required=False)
-    qr_imagen = forms.ImageField(required=False, label="Código QR")
+    nombre_completo = forms.CharField(
+        max_length=255, 
+        required=True, 
+        label="Nombre completo",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu nombre completo'})
+    )
+    departamento_fk = forms.ModelChoiceField(
+        queryset=DepartamentoDB.objects.all(), 
+        required=True, 
+        label="Departamento",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu departamento'})
+    )
+    provincia_fk = forms.ModelChoiceField(
+        queryset=ProvinciaDB.objects.none(), 
+        required=True, 
+        label="Provincia",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu provincia'})
+    )
+    municipio_fk = forms.ModelChoiceField(
+        queryset=MunicipioDB.objects.none(), 
+        required=True, 
+        label="Municipio",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu municipio'})
+    )
+    direccion_1 = forms.CharField(
+        max_length=255, 
+        required=True, 
+        label="Dirección",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu dirección'})
+    )
+    telefono = forms.CharField(
+        max_length=15, 
+        required=True, 
+        label="Número de celular",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu número de celular'})
+    )
+    imagen_perfil = forms.ImageField(
+        required=False, 
+        widget=forms.FileInput(attrs={'placeholder': 'Selecciona tu foto de perfil'})
+    )
+    qr_imagen = forms.ImageField(
+        required=False, 
+        label="Código QR",
+        widget=forms.FileInput(attrs={'placeholder': 'Selecciona la imagen QR'})
+    )
 
     class Meta:
         model = User
@@ -31,6 +68,12 @@ class RegistroUsuarioForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+        # Configuración de placeholders adicionales para otros campos
+        self.fields['username'].widget.attrs.update({'placeholder': 'Ingresa tu nombre de usuario'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Ingresa tu correo electrónico'})
+        self.fields['password1'].widget.attrs.update({'placeholder': 'Ingresa tu contraseña'})
+        self.fields['password2'].widget.attrs.update({'placeholder': 'Confirma tu contraseña'})
+
         # Actualizar el queryset de Provincia basado en Departamento seleccionado
         departamento_id = self.data.get('departamento_fk') or (self.instance.pk and self.instance.municipio_fk.provincia_fk.departamento_fk.id)
         if departamento_id:
@@ -46,6 +89,7 @@ class RegistroUsuarioForm(UserCreationForm):
                 self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=int(provincia_id)).order_by('nombre')
             except (ValueError, TypeError):
                 pass
+
 
 
     def clean_imagen_perfil(self):
