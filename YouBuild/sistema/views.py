@@ -7,12 +7,31 @@ from .forms import RegistroUsuarioForm
 from django.contrib.auth import login
 from django.contrib import messages
 import json
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+from django.shortcuts import render
+from rest_framework.response import Response
+from .serializers import UsuarioDBSerializer
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 
+# Create your views here.
+class RegisterUserAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
+
+    def post(self, request):
+        serializer = UsuarioDBSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+def registro_view(request):
+    return render(request, 'registrarse.html') 
+
+
+#CON FORMS.PY
 def registrar_usuario(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST, request.FILES)  # Agregar request.FILES
