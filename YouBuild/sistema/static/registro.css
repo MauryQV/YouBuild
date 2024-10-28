@@ -185,5 +185,12 @@ h2.registro-titulo {
   font-size: 14px; /* Tamaño de la fuente */
   line-height: 1; /* Altura de línea para el texto */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para un efecto de profundidad */
+
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none; /* Hide by default */
+  }
 }
 

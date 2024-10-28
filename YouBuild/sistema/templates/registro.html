@@ -59,6 +59,8 @@
                 <div class="registro-botones">
                     <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
                 </div>
+                
+                
             </div>
 
             <!-- Sección 2: Dirección -->
@@ -113,7 +115,7 @@
     </div>
     <div class="registro-botones registro-inline">
         <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
-        <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+        <button type="button" class="registro-btn-submit" onclick="redirectToSuccess()">Crear una cuenta</button>
     </div>
 </div>
 
@@ -210,7 +212,10 @@
             document.getElementById(inputId).value = ""; // Limpia el input
             document.getElementById(inputId).classList.remove("oculto"); // Vuelve a mostrar el input
         }
-        
+
+        function redirectToSuccess() {
+            window.location.href = "{% url 'success' %}"; // Make sure 'success' is defined in your Django URL configuration
+        }
     </script>
 </body>
 </html>
