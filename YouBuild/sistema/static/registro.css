@@ -63,7 +63,7 @@ h2.registro-titulo {
 }
 
 .registro-progreso .paso.activo {
-  background-color: #e79026;
+  background-color: #ef6605;
 }
 
 .registro-progreso .linea {
@@ -74,7 +74,7 @@ h2.registro-titulo {
 }
 
 .registro-progreso .linea.activa {
-  background-color: #e79026;
+  background-color: #ef6605;
 }
 
 .registro-formulario {
@@ -105,7 +105,7 @@ h2.registro-titulo {
 .registro-btn-siguiente,
 .registro-btn-anterior,
 .registro-btn-submit {
-  background-color: #e79026;
+  background-color: #ef6605;
   color: white;
   padding: 12px;
   border: none;

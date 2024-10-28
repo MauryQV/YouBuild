@@ -11,7 +11,6 @@
     />
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'topbar.css' %}">
-    <link rel="icon" href={% static 'icono.ico' %}>
     
     {% block extra_styles %}
     
@@ -37,8 +36,9 @@
         </div>
         <div class="topbar-right">
           <a href="#iniciar-sesion" class="btn-link">Iniciar Sesión</a>
-          <a href="#registrarse" class="btn-link">Registrarse</a>
+          <a href="{% url 'registro' %}" class="btn-link">Registrarse</a>
           <a href="{% url 'Carrito' %}" class="icon-btn">
+
             <i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span>
           </a>          
           <a href="#" class="btn-sell">

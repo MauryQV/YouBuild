@@ -14,8 +14,8 @@ class RegistroUsuarioForm(UserCreationForm):
     departamento_fk = forms.ModelChoiceField(queryset=DepartamentoDB.objects.all(), required=True, label="Departamento")
     provincia_fk = forms.ModelChoiceField(queryset=ProvinciaDB.objects.none(), required=True, label="Provincia")
     municipio_fk = forms.ModelChoiceField(queryset=MunicipioDB.objects.none(), required=True, label="Municipio")
-    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección 1")
-    telefono = forms.CharField(max_length=15, required=True, label="Número de teléfono")
+    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección")
+    telefono = forms.CharField(max_length=15, required=True, label="Número de celular")
     imagen_perfil = forms.ImageField(required=False)
     qr_imagen = forms.ImageField(required=False, label="Código QR")
 
