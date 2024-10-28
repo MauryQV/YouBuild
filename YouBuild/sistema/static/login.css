@@ -1,82 +1,28 @@
-/* Estilos generales */
-h2.login-titulo {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.login-container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
-  margin: auto;
-}
-
-.login-formulario {
-  display: flex;
-  flex-direction: column;
-}
-
-.login-form-group {
+/* Ajuste general del espacio entre todos los campos */
+.registro-form-group {
   margin-bottom: 15px;
 }
 
-.login-form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
-  color: #555;
+/* Estilos específicos para los elementos que estarán en la misma fila */
+.registro-inline {
+  display: flex;
+  gap: 15px; /* Espacio entre los botones */
 }
 
-.login-form-group input[type="text"],
-.login-form-group input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  box-sizing: border-box;
+.registro-inline-item {
+  flex: 1;
 }
 
-.login-btn-submit {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.login-btn-submit:hover {
-  background-color: #45a049;
-}
-
-/* Responsividad para pantallas pequeñas */
-@media (max-width: 768px) {
-  .login-container {
-      padding: 15px;
-      max-width: 100%;
-  }
-
-  .login-btn-submit {
-      width: 100%;
-  }
-}
-
+/* Otros estilos del formulario */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: #fff;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 h2.registro-titulo {
@@ -87,12 +33,48 @@ h2.registro-titulo {
 
 .registro-container {
   background-color: white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
   width: 100%;
   margin: auto;
+}
+
+.registro-progreso {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.registro-progreso .paso {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.registro-progreso .paso.activo {
+  background-color: #e79026;
+}
+
+.registro-progreso .linea {
+  width: 40px;
+  height: 4px;
+  background-color: #ccc;
+  transition: background-color 0.3s ease;
+}
+
+.registro-progreso .linea.activa {
+  background-color: #e79026;
 }
 
 .registro-formulario {
@@ -100,87 +82,108 @@ h2.registro-titulo {
   flex-direction: column;
 }
 
-.registro-form-group {
-  margin-bottom: 15px;
-}
-
 .registro-form-group label {
-  font-weight: bold;
+  font-size: 14px;
+  color: #333;
   margin-bottom: 5px;
   display: block;
-  color: #555;
 }
 
 .registro-form-group input[type="text"],
 .registro-form-group input[type="email"],
 .registro-form-group input[type="password"],
-.registro-form-group input[type="date"],
 .registro-form-group select,
-.registro-form-group input[type="file"],
-.registro-form-group textarea {
+.registro-form-group input[type="file"] {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+  border: 1px solid #ddd;
+  font-size: 14px;
   box-sizing: border-box;
 }
 
-.registro-form-group input[type="file"] {
-  padding: 5px;
-}
-
-.registro-form-group select {
-  padding: 10px;
-  background-color: white;
-}
-
-.registro-form-group textarea {
-  resize: vertical;
-}
-
-/* Inline fields (provincia y municipio) */
-.registro-inline {
-  display: flex;
-  justify-content: space-between;
-}
-
-.registro-inline .registro-inline-item {
-  width: 48%;
-}
-
+.registro-btn-siguiente,
+.registro-btn-anterior,
 .registro-btn-submit {
   background-color: #e79026;
   color: white;
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
   transition: background-color 0.3s ease;
 }
 
+.registro-btn-siguiente:hover,
+.registro-btn-anterior:hover,
 .registro-btn-submit:hover {
-  background-color: #53430f;
+  background-color: #d67a0b;
 }
 
-/* Responsividad para pantallas pequeñas */
-@media (max-width: 768px) {
-  .registro-container {
-      padding: 15px;
-      max-width: 100%;
-  }
-
-  .registro-inline {
-      flex-direction: column;
-  }
-
-  .registro-inline .registro-inline-item {
-      width: 100%;
-      margin-bottom: 10px;
-  }
-
-  .registro-btn-submit {
-      width: 100%;
-  }
+.registro-btn-anterior {
+  background-color: #e0e0e0;
+  color: #333;
 }
+
+.registro-btn-anterior:hover {
+  background-color: #bdbdbd;
+}
+
+.terminos {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.terminos input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.oculto {
+  display: none;
+}
+
+.imagen-preview {
+  position: relative; /* Permite posicionar la "X" sobre la imagen */
+  margin-top: 10px; /* Espacio arriba de la vista previa */
+  width: 100px; /* Establece el ancho del contenedor de la imagen */
+  height: 100px; /* Establece la altura del contenedor de la imagen */
+  overflow: hidden; /* Oculta la parte de la imagen que sobrepase el contenedor */
+  border: 1px solid #ddd; /* Opción para agregar un borde */
+  border-radius: 8px; /* Bordes redondeados */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin-left: auto; /* Centra el contenedor horizontalmente en su padre */
+  margin-right: auto; /* Centra el contenedor horizontalmente en su padre */
+}
+
+.imagen-preview img {
+  max-width: 100%; /* La imagen ocupa el 100% del ancho del contenedor */
+  max-height: 100%; /* La imagen ocupa el 100% del alto del contenedor */
+  object-fit: cover; /* Mantiene la proporción de la imagen y cubre el contenedor */
+  display: block; /* Asegura que la imagen ocupe el bloque */
+}
+
+.remove {
+  position: absolute; /* Posiciona la "X" en la esquina superior derecha de la imagen */
+  top: 5px; /* Ajusta la posición superior de la "X" */
+  right: 5px; /* Ajusta la posición derecha de la "X" */
+  background-color: #ef4444; /* Color de fondo rojo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 50%; /* Bordes redondeados para hacerla circular */
+  width: 24px; /* Ancho de la "X" */
+  height: 24px; /* Altura de la "X" */
+  display: flex; /* Usar flex para centrar el contenido */
+  align-items: center; /* Alinear verticalmente al centro */
+  justify-content: center; /* Alinear horizontalmente al centro */
+  cursor: pointer; /* Cambia el cursor al pasar sobre la "X" */
+  font-size: 14px; /* Tamaño de la fuente */
+  line-height: 1; /* Altura de línea para el texto */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para un efecto de profundidad */
+}
+

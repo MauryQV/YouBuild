@@ -229,9 +229,23 @@ def test(request):
         if serializer.is_valid():
             serializer.save()  # Guardamos el perfil en la base de datos
             return Response({"mensaje": "Usuario registrado exitosamente."}, status=status.HTTP_201_CREATED)
+<<<<<<< HEAD
+<<<<<<< HEAD
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.shortcuts import render
+
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
+=======
+=======
+>>>>>>> 8204c0f9d53f4899550176cde6f19067de21e805
 
         # En caso de error de validación
         user.delete()  # Borramos el usuario si el perfil no es válido para evitar inconsistencias
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 def CrearCuentaView(request):
     return render(request, 'CrearCuenta.html')
+
+
