@@ -1,3 +1,4 @@
+<!-- templates/register.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,6 +29,7 @@
 
         <label for="password">Contraseña</label>
         <input type="password" name="user[password]" id="password" placeholder="Contraseña" required><br>
+        
         <label for="nombre_completo">Nombre completo</label>
         <input type="text" name="nombre_completo" id="nombre_completo" placeholder="Nombre completo">
 
@@ -70,28 +72,36 @@
         document.getElementById("registerForm").addEventListener("submit", async function(event) {
             event.preventDefault();
             
-            const formData = new FormData(event.target); // Recoge todos los campos del formulario, incluyendo archivos
+            const formData = new FormData(event.target); // Recoge todos los campos del formulario
         
-            // Agregar el token CSRF a los headers (no se puede agregar a FormData, debe ir en headers)
-            const headers = {
-                "X-CSRFToken": csrftoken
-            };
+            // Asegúrate de agregar manualmente los datos de usuario en la estructura que espera el serializer
+            formData.append("user.username", formData.get("user[username]"));
+            formData.append("user.email", formData.get("user[email]"));
+            formData.append("user.password", formData.get("user[password]"));
+        
+            // Elimina los campos originales de usuario que añadiste manualmente
+            formData.delete("user[username]");
+            formData.delete("user[email]");
+            formData.delete("user[password]");
         
             try {
                 const response = await fetch("/register/", {
                     method: "POST",
-                    headers: headers,
-                    body: formData // Envía el FormData directamente
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")  // Añade el token CSRF si es necesario
+                    },
+                    body: formData  // Envía FormData directamente
                 });
         
                 const result = await response.json();
                 if (response.ok) {
                     alert(result.message || "Registro exitoso");
                 } else {
-                    alert(result.message || "Error en el registro");
+                    console.error("Error:", result);
+                    alert(result.user ? result.user[0] : "Error en el registro");
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error en la solicitud:", error);
                 alert("Error en el registro");
             }
         });
