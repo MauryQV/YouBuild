@@ -26,7 +26,7 @@ urlpatterns = [
      #path('obtener-direccion/', obtener_direccion_usuario, name='obtener_direccion_usuario'),
       # path('comprar-directo/<int:producto_id>/', compra_directa_view, name='comprar_directo'),
        
-    path('registro/', registrar_usuario, name='registro'),
+    #path('registro/', registrar_usuario, name='registro'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
      path('ajax/cargar-provincias/', cargar_provincias, name='ajax_cargar_provincias'),
@@ -36,7 +36,10 @@ urlpatterns = [
    # path('api/registro/', RegistroUsuario.as_view(), name='registro_usuario'),
 
     
-    path('test/',test,name="testeo")
+    #path('test/',test,name="testeo")
+    
+    path('registro/', registro_view, name='registros'),  # Página de registro HTM
+   path('register/', RegisterUserAPI.as_view(), name='register'),
 
 ]
 
