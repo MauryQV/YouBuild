@@ -142,3 +142,7 @@ function agregarAlCarrito(productId) {
         alert('Error al agregar al carrito');
     });
   }
+
+  function registrarse() {
+    window.location.href = "/registro";
+}

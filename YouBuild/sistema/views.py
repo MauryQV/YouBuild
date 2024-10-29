@@ -4,22 +4,43 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import RegistroUsuarioForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
-from django.db.models import F
-from django.core.exceptions import ObjectDoesNotExist
 import json
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
-from .models import UsuarioDB
-from .serializers import UsuarioSerializer
+from django.shortcuts import render
+from rest_framework.response import Response
+from .serializers import UsuarioDBSerializer
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 
+@login_required
+def home_view(request):
+    productos = ProductoDb.objects.all().order_by('-visitas')
+    carruseles = CarruselDB.objects.all().order_by("id")
+    # Obtenemos el perfil del usuario logueado
+    usuario = request.user.usuariodb
+
+    return render(request, "home.html", {
+        "producto": productos,
+        "carrusel": carruseles,
+        "usuario": usuario  # Pasamos el perfil del usuario al contexto
+    })
+
+
+def perfil_view(request):
+    return render(request, "perfil.html")
+
+def custom_logout_view(request):
+    logout(request)  # Cierra la sesión
+    return redirect('index') 
+
+#CON FORMS.PY
 def registrar_usuario(request):
     if request.method == 'POST':
-        form = RegistroUsuarioForm(request.POST)
+        form = RegistroUsuarioForm(request.POST, request.FILES)  # Agregar request.FILES
         if form.is_valid():
             user = form.save()
             login(request, user)  # Loguear al usuario tras registrarlo
@@ -38,8 +59,13 @@ class CustomLoginView(LoginView):
         return super().dispatch(request, *args, **kwargs)
 
     
-def IndexView(request): 
-    productos = ProductoDb.objects.all().order_by('-visitas')  
+def index_view(request): 
+    # Redirigir a /home si el usuario ya está autenticado
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    # En caso contrario, mostrar la página de inicio para usuarios no autenticados
+    productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
@@ -63,11 +89,21 @@ def CheckoutView(request):
 
 @login_required
 def carrito_view(request):
-    usuario = request.user.usuariodb
+    user = request.user
+
+    # Verificar si el usuario tiene el objeto Usuariodb, de lo contrario crearlo
+    try:
+        usuario = user.usuariodb
+    except UsuarioDB.DoesNotExist:
+        # Si no existe el usuariodb, redirigir o crearlo automáticamente
+        usuario = UsuarioDB.objects.create(user=user)
+    
+    # Obtener o crear el carrito para el usuario
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario)
+    usuario = request.user.usuariodb
 
     # Obtener los productos del carrito
-    carrito_productos = carrito.carritoproductodb_set.select_related('producto_fk')  # optimizamos la consulta
+    carrito_productos = carrito.carritoproductodb_set.select_related('producto_fk')
 
     # Calcular subtotal y total
     carrito_subtotal = sum([item.calcular_subtotal() for item in carrito_productos])
@@ -77,6 +113,7 @@ def carrito_view(request):
         'carrito_productos': carrito_productos,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': total,
+        "usuario": usuario  # Pasamos el perfil del usuario al contexto
     }
 
     return render(request, 'Carrito.html', context)
@@ -166,106 +203,21 @@ def cargar_municipios(request):
     municipios = MunicipioDB.objects.filter(provincia_fk=provincia_id).order_by('nombre')
     return JsonResponse(list(municipios.values('id', 'nombre')), safe=False)
 
-"""
-
-@login_required
-def confirmacion_view(request):
-    carrito, created = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
-    productos_en_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
-
-    carrito_subtotal = sum(item.producto_fk.precio * item.cantidad for item in productos_en_carrito)
-    total = carrito_subtotal
-
-    context = {
-        'productos': productos_en_carrito,
-        'carrito_subtotal': carrito_subtotal,
-        'total': total,
-        'usuario': request.user.usuariodb
-    }
-
-    if not productos_en_carrito.exists():
-        return redirect('Carrito')
-
-    return render(request, 'confirmacion.html', context)
-def obtener_direccion_usuario(request):
-    # Obtener el usuario con id=1
-    usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-
-    # Obtener información de dirección
-    municipio = usuario_prueba.municipio_fk
-    provincia = municipio.provincia_fk if municipio else None
-    departamento = provincia.departamento_fk if provincia else None
-
-    # Crear un diccionario con los datos que quieres enviar
-    data = {
-        'municipio': municipio.nombre if municipio else 'No especificado',
-        'provincia': provincia.nombre if provincia else 'No especificado',
-        'departamento': departamento.nombre if departamento else 'No especificado',
-    }
-
-    # Devolver los datos en formato JSON
-    return JsonResponse(data)
-
-def compra_directa_view(request, producto_id):
-    if request.method == 'POST':
-        # Obtener el producto
-        producto = get_object_or_404(ProductoDb, id=producto_id)
-        
-        # Obtener el usuario de prueba (luego deberías cambiar esto cuando implementes autenticación)
-        usuario_prueba = get_object_or_404(UsuarioDB, id=1)
-
-        # Crear o recuperar el carrito del usuario
-        carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario_prueba)
-
-        # Agregar el producto al carrito con una cantidad de 1
-        carrito_producto, created = CarritoProductoDB.objects.get_or_create(
-            carrito_fk=carrito, 
-            producto_fk=producto,
-            defaults={'cantidad': 1}
-        )
-
-        # Si el producto ya estaba en el carrito, aumentar la cantidad
-        if not created:
-            carrito_producto.cantidad += 1
-            carrito_producto.save()
-
-        # Redirigir a la página de confirmación
-        return JsonResponse({
-            'success': True,
-            'redirect_url': '/confirmacion/'
-        })
-    
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-"""
 def test(request):
     return render(request, "pagina.html")
 
-class RegistroUsuario(APIView):
+
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
+
+# Create your views here.
+"""class RegisterUserAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
+
     def post(self, request):
-        # Crear el usuario de Django
-        user_data = {
-            'username': request.data.get('nombre_usuario'),
-            'password': request.data.get('contraseña'),  
-            'first_name': request.data.get('nombre_completo').split()[0],
-            'last_name': ' '.join(request.data.get('nombre_completo').split()[1:]),
-        }
-
-        # Validar y crear el usuario
-        user = User(**user_data)
-        user.set_password(user_data['password'])  
-        user.save()
-
-        # Crear el perfil de UsuarioDB
-        usuario_data = {
-            'user': user,
-            'fecha_nacimiento': request.data.get('fecha_nacimiento'),
-            'municipio_fk': request.data.get('municipio_fk'),
-            'direccion': request.data.get('direccion'),
-            'imagen_perfil': request.data.get('imagen_perfil'),
-        }
-        serializer = UsuarioSerializer(data=usuario_data)
-
+        serializer = UsuarioDBSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  # Guardar los datos en la base de datos
-            return Response({"mensaje": "Usuario registrado exitosamente."}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
+    

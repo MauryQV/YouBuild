@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db.models import Sum, F
 
 # Departamento
@@ -37,12 +37,19 @@ class MunicipioDB(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class UsuarioDB(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
-    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)  # Campo Municipio
-    direccion = models.CharField(max_length=255, null=True, blank=True)
-    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True)  # Campo Imagen de Perfil
+    nombre_completo = models.CharField(max_length=50, verbose_name="Nombre completo",null=True)
+    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
+    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1",null=True)
+    # Añadimos una validación para el teléfono
+    telefono = models.CharField(max_length=15, verbose_name="Número de teléfono",
+                                validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                                           message="El número debe estar en el formato: '+59199999999'. Hasta 15 dígitos.")])
+    
+    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True,default='perfil/perfil.png')
+    qr_imagen = models.ImageField(upload_to='qr/', null=True, blank=True, verbose_name="Código QR")
 
     class Meta:
         verbose_name = "Perfil de Usuario"

@@ -6,68 +6,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="{% static 'login.css' %}">
-    <style>
-        .error {
-            color: red;
-            font-size: 0.875em;
-            margin-top: 5px;
-        }
-        .invalid {
-            border-color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'registro.css' %}">
 </head>
 <body>
     <div class="registro-container">
-        <h2 class="registro-titulo">Registro de Usuario</h2>
-        <form id="registro-form" method="post" class="registro-formulario" enctype="multipart/form-data">
+        <h2 class="registro-titulo">Crear Cuenta</h2>
+        
+        <!-- Barra de progreso de pasos -->
+        <div class="registro-progreso">
+            <div class="paso activo">1</div>
+            <div class="paso">2</div>
+            <div class="paso">3</div>
+        </div>
+        
+        <form method="post" class="registro-formulario" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="registro-form-group">
-                {{ form.username.label_tag }} {{ form.username }}
-                <div class="error" id="error-username"></div>
+            
+            <!-- Sección 1: Datos generales -->
+            <div class="form-seccion" id="seccion-1">
+                <div class="registro-form-group">
+                    {{ form.nombre_completo.label_tag }}
+                    {{ form.nombre_completo }}
+                    <div class="error">{{ form.nombre_completo.errors }}</div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <div class="error">{{ form.username.errors }}</div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                    <div class="error">{{ form.password1.errors }}</div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                    <div class="error">{{ form.password2.errors }}</div>
+                </div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.telefono.label_tag }}
+                        {{ form.telefono }}
+                        <div class="error">{{ form.telefono.errors }}</div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        <div class="error">{{ form.email.errors }}</div>
+                    </div>
+                </div>
+                <div class="registro-botones">
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
+                </div>
             </div>
-            <div class="registro-form-group">
-                {{ form.email.label_tag }} {{ form.email }}
-                <div class="error" id="error-email"></div>
+
+            <!-- Sección 2: Dirección -->
+            <div class="form-seccion oculto" id="seccion-2">
+                <div class="registro-form-group">
+                    {{ form.departamento_fk.label_tag }}
+                    {{ form.departamento_fk }}
+                    <div class="error">{{ form.departamento_fk.errors }}</div>
+                </div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.provincia_fk.label_tag }}
+                        {{ form.provincia_fk }}
+                        <div class="error">{{ form.provincia_fk.errors }}</div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.municipio_fk.label_tag }}
+                        {{ form.municipio_fk }}
+                        <div class="error">{{ form.municipio_fk.errors }}</div>
+                    </div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.direccion_1.label_tag }}
+                    {{ form.direccion_1 }}
+                    <div class="error">{{ form.direccion_1.errors }}</div>
+                </div>
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atrás</button>
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
+                </div>
             </div>
-            <div class="registro-form-group">
-                {{ form.password1.label_tag }} {{ form.password1 }}
-                <div class="error" id="error-password1"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.password2.label_tag }} {{ form.password2 }}
-                <div class="error" id="error-password2"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.fecha_nacimiento.label_tag }} {{ form.fecha_nacimiento }}
-                <div class="error" id="error-fecha_nacimiento"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.departamento_fk.label_tag }} {{ form.departamento_fk }}
-                <div class="error" id="error-departamento_fk"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.provincia_fk.label_tag }} {{ form.provincia_fk }}
-                <div class="error" id="error-provincia_fk"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.municipio_fk.label_tag }} {{ form.municipio_fk }}
-                <div class="error" id="error-municipio_fk"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.direccion.label_tag }} {{ form.direccion }}
-                <div class="error" id="error-direccion"></div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
-                <div class="error" id="error-imagen_perfil"></div>
-            </div>
-            <button type="submit" class="registro-btn-submit">Registrar</button>
+
+            <!-- Sección 3: Carga de Imágenes -->
+<div class="form-seccion oculto" id="seccion-3">
+    <div class="registro-form-group">
+        <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
+        <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
+        <div class="error">{{ form.imagen_perfil.errors }}</div>
+        <div id="imagen-perfil-preview" class="imagen-preview oculto">
+            <img id="imagen-perfil-img" src="" alt="Imagen de perfil" />
+            <span class="remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
+        </div>
+    </div>
+    <div class="registro-form-group">
+        <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
+        <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+        <div class="error">{{ form.qr_imagen.errors }}</div>
+        <div id="qr-imagen-preview" class="imagen-preview oculto">
+            <img id="qr-imagen-img" src="" alt="Imagen QR" />
+            <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+        </div>
+    </div>
+    <div class="registro-botones registro-inline">
+        <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
+        <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+    </div>
+</div>
+
+
         </form>
     </div>
 
     <script type="text/javascript">
+        let seccionActual = 1;
         $(document).ready(function() {
             function validateField(field, errorId, message) {
                 if (!field.val()) {
@@ -111,6 +166,57 @@
                 }
             });
         });
+
+        function mostrarSeccion(seccion) {
+            $(".form-seccion").addClass("oculto");
+            $("#seccion-" + seccion).removeClass("oculto");
+            $(".paso").removeClass("activo");
+            $(".paso").eq(seccion - 1).addClass("activo");
+        }
+
+        function siguienteSeccion() {
+            if (seccionActual < 3) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        function anteriorSeccion() {
+            if (seccionActual > 1) {
+                seccionActual--;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        $(document).ready(function() {
+            mostrarSeccion(seccionActual);
+        });
+
+        function mostrarImagen(input, previewId, inputId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+        
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgElement.src = e.target.result;
+                    preview.classList.remove("oculto"); // Muestra la imagen seleccionada
+                    input.classList.add("oculto"); // Oculta el input de selección
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function removerImagen(previewId, inputId) {
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+            imgElement.src = "";
+            preview.classList.add("oculto"); // Oculta la imagen
+            document.getElementById(inputId).value = ""; // Limpia el input
+            document.getElementById(inputId).classList.remove("oculto"); // Vuelve a mostrar el input
+        }
+        
     </script>
 </body>
 </html>
