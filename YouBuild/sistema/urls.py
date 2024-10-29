@@ -4,6 +4,7 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import registrar_usuario, CustomLoginView
 from django.contrib.auth.decorators import login_required
+from . import views
 from sistema.views import *
 
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
+    path('success/', views.success, name='success'),
+
 
     # Agrega la línea siguiente para crear la cuenta
     #path('crear-cuenta/', CrearCuentaView, name='crear_cuenta'),  # <-- Aquí

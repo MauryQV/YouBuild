@@ -188,6 +188,10 @@ def agregar_al_carrito(request, producto_id):
     return redirect('Carrito')
 
 
+def success(request):
+    return render(request, 'success.html')
+
+
 def get_cart_count(request):
     cart_count = request.session.get('cart_count', 0)
     return JsonResponse({'cart_count': cart_count})
