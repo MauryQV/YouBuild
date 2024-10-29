@@ -7,42 +7,61 @@
     <title>Registro de Usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'login.css' %}">
-    
+    <style>
+        .error {
+            color: red;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+        .invalid {
+            border-color: red;
+        }
+    </style>
 </head>
 <body>
     <div class="registro-container">
         <h2 class="registro-titulo">Registro de Usuario</h2>
-        <form method="post" class="registro-formulario" enctype="multipart/form-data">
+        <form id="registro-form" method="post" class="registro-formulario" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="registro-form-group">
                 {{ form.username.label_tag }} {{ form.username }}
+                <div class="error" id="error-username"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.email.label_tag }} {{ form.email }}
+                <div class="error" id="error-email"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.password1.label_tag }} {{ form.password1 }}
+                <div class="error" id="error-password1"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.password2.label_tag }} {{ form.password2 }}
+                <div class="error" id="error-password2"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.fecha_nacimiento.label_tag }} {{ form.fecha_nacimiento }}
+                <div class="error" id="error-fecha_nacimiento"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.departamento_fk.label_tag }} {{ form.departamento_fk }}
+                <div class="error" id="error-departamento_fk"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.provincia_fk.label_tag }} {{ form.provincia_fk }}
+                <div class="error" id="error-provincia_fk"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.municipio_fk.label_tag }} {{ form.municipio_fk }}
+                <div class="error" id="error-municipio_fk"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.direccion.label_tag }} {{ form.direccion }}
+                <div class="error" id="error-direccion"></div>
             </div>
             <div class="registro-form-group">
                 {{ form.imagen_perfil.label_tag }} {{ form.imagen_perfil }}
+                <div class="error" id="error-imagen_perfil"></div>
             </div>
             <button type="submit" class="registro-btn-submit">Registrar</button>
         </form>
@@ -50,43 +69,48 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            // Cargar provincias cuando se selecciona un departamento
-            $('#id_departamento_fk').change(function() {
-                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
-                var departamentoId = $(this).val();
-                $.ajax({
-                    url: url,
-                    data: {
-                        'departamento_id': departamentoId
-                    },
-                    success: function(data) {
-                        $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
-                        $.each(data, function(key, value) {
-                            $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
-                        });
-                    }
-                });
+            function validateField(field, errorId, message) {
+                if (!field.val()) {
+                    field.addClass('invalid');
+                    $(errorId).text(message);
+                    return false;
+                } else {
+                    field.removeClass('invalid');
+                    $(errorId).text('');
+                    return true;
+                }
+            }
+
+            $('#registro-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                let isValid = true;
+
+                // Validaciones para cada campo
+                isValid &= validateField($('#id_username'), '#error-username', 'Este campo es obligatorio.');
+                isValid &= validateField($('#id_email'), '#error-email', 'Este campo es obligatorio.');
+                isValid &= validateField($('#id_password1'), '#error-password1', 'Este campo es obligatorio.');
+                isValid &= validateField($('#id_password2'), '#error-password2', 'Este campo es obligatorio.');
+                isValid &= validateField($('#id_fecha_nacimiento'), '#error-fecha_nacimiento', 'Este campo es obligatorio.');
+                isValid &= validateField($('#id_departamento_fk'), '#error-departamento_fk', 'Seleccione un departamento.');
+                isValid &= validateField($('#id_provincia_fk'), '#error-provincia_fk', 'Seleccione una provincia.');
+                isValid &= validateField($('#id_municipio_fk'), '#error-municipio_fk', 'Seleccione un municipio.');
+                isValid &= validateField($('#id_direccion'), '#error-direccion', 'Este campo es obligatorio.');
+
+                if (isValid) {
+                    this.submit(); // Si todo es válido, enviar el formulario
+                }
             });
 
-            // Cargar municipios cuando se selecciona una provincia
-            $('#id_provincia_fk').change(function() {
-                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
-                var provinciaId = $(this).val();
-                $.ajax({
-                    url: url,
-                    data: {
-                        'provincia_id': provinciaId
-                    },
-                    success: function(data) {
-                        $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
-                        $.each(data, function(key, value) {
-                            $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
-                        });
-                    }
-                });
+            // Eliminar mensaje de error al escribir
+            $('input, select').on('input change', function() {
+                const errorId = '#error-' + this.id;
+                if ($(this).val()) {
+                    $(this).removeClass('invalid');
+                    $(errorId).text('');
+                }
             });
         });
     </script>
 </body>
 </html>
-
