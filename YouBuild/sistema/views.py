@@ -4,7 +4,7 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import RegistroUsuarioForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 import json
 from rest_framework import status
@@ -16,20 +16,26 @@ from .serializers import UsuarioDBSerializer
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 
-# Create your views here.
-class RegisterUserAPI(APIView):
-    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
+@login_required
+def home_view(request):
+    productos = ProductoDb.objects.all().order_by('-visitas')
+    carruseles = CarruselDB.objects.all().order_by("id")
+    # Obtenemos el perfil del usuario logueado
+    usuario = request.user.usuariodb
 
-    def post(self, request):
-        serializer = UsuarioDBSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-def registro_view(request):
-    return render(request, 'registrarse.html') 
+    return render(request, "home.html", {
+        "producto": productos,
+        "carrusel": carruseles,
+        "usuario": usuario  # Pasamos el perfil del usuario al contexto
+    })
 
+
+def perfil_view(request):
+    return render(request, "perfil.html")
+
+def custom_logout_view(request):
+    logout(request)  # Cierra la sesión
+    return redirect('index') 
 
 #CON FORMS.PY
 def registrar_usuario(request):
@@ -53,8 +59,13 @@ class CustomLoginView(LoginView):
         return super().dispatch(request, *args, **kwargs)
 
     
-def IndexView(request): 
-    productos = ProductoDb.objects.all().order_by('-visitas')  
+def index_view(request): 
+    # Redirigir a /home si el usuario ya está autenticado
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    # En caso contrario, mostrar la página de inicio para usuarios no autenticados
+    productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
@@ -89,6 +100,7 @@ def carrito_view(request):
     
     # Obtener o crear el carrito para el usuario
     carrito, created = CarritoDB.objects.get_or_create(usuario_fk=usuario)
+    usuario = request.user.usuariodb
 
     # Obtener los productos del carrito
     carrito_productos = carrito.carritoproductodb_set.select_related('producto_fk')
@@ -101,6 +113,7 @@ def carrito_view(request):
         'carrito_productos': carrito_productos,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': total,
+        "usuario": usuario  # Pasamos el perfil del usuario al contexto
     }
 
     return render(request, 'Carrito.html', context)
@@ -197,59 +210,18 @@ def cargar_municipios(request):
 def test(request):
     return render(request, "pagina.html")
 
-"""class RegistroUsuario(APIView):
-    parser_classes = [MultiPartParser, FormParser]  # Para manejar archivos
+
+def CrearCuentaView(request):
+    return render(request, 'CrearCuenta.html')
+
+# Create your views here.
+"""class RegisterUserAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
 
     def post(self, request):
-        # Validar y crear el usuario de Django usando el método create_user
-        user_data = {
-            'username': request.data.get('nombre_usuario'),
-            'password': request.data.get('contraseña'),  
-            'first_name': request.data.get('nombre_completo').split()[0],
-            'last_name': ' '.join(request.data.get('nombre_completo').split()[1:]),  # Manejo de nombres y apellidos
-        }
-
-        user = User.objects.create_user(
-            username=user_data['username'],
-            password=user_data['password'],
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name']
-        )
-
-        # Crear el perfil de UsuarioDB
-        usuario_data = {
-            'user': user.id,  # Le pasamos el ID del usuario creado
-            'fecha_nacimiento': request.data.get('fecha_nacimiento'),
-            'municipio_fk': request.data.get('municipio_fk'),
-            'direccion_1': request.data.get('direccion'),
-            'imagen_perfil': request.FILES.get('imagen_perfil'),  # Manejo de archivos desde request.FILES
-            'qr_imagen': request.FILES.get('qr_imagen')  # Si también deseas manejar la imagen QR
-        }
-
-        # Pasamos los datos al serializador de UsuarioDB
-        serializer = UsuarioSerializer(data=usuario_data)
-
-        # Validamos los datos del perfil
+        serializer = UsuarioDBSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  # Guardamos el perfil en la base de datos
-            return Response({"mensaje": "Usuario registrado exitosamente."}, status=status.HTTP_201_CREATED)
-<<<<<<< HEAD
-<<<<<<< HEAD
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from django.shortcuts import render
-
-def CrearCuentaView(request):
-    return render(request, 'CrearCuenta.html')
-=======
-=======
->>>>>>> 8204c0f9d53f4899550176cde6f19067de21e805
-
-        # En caso de error de validación
-        user.delete()  # Borramos el usuario si el perfil no es válido para evitar inconsistencias
+            serializer.save()
+            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
-def CrearCuentaView(request):
-    return render(request, 'CrearCuenta.html')
-
-
+    

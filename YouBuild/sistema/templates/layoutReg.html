@@ -1,0 +1,123 @@
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Mi Tienda
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'layoutReg.css' %}" />
+
+    {% block extra_styles %}
+
+    {% endblock %}
+  </head>
+
+  <body>
+    <header>
+      <div class="topbar-container">
+        <div class="topbar-left">
+          <a href="/home " class="logo"><img src="{% static 'logo.jpeg' %}" alt="Logo" width="125" /></a>
+        </div>
+        <div class="topbar-center">
+          <form action="{% url 'buscar' %}" method="GET">
+            <div class="search-box">
+              <input type="text" placeholder="Buscar" name="q" />
+              <button><i class="fa fa-search"></i></button>
+            </div>
+          </form>
+        </div>
+        <div class="topbar-right">
+          <!-- Icono de Corazón -->
+          <a href="#" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+          <!-- Carrito de Compras -->
+          <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span></a>
+          <!-- Icono de Foto de Perfil -->
+          <div class="profile-menu-container">
+            <a href="#" class="profile-icon" onclick="toggleMenu(event)">
+              {% if usuario.imagen_perfil %}
+                <img src="{{ usuario.imagen_perfil.url }}" alt="Foto de Perfil" class="profile-pic" />
+              {% else %}
+                <img src="{% static 'perfil/perfil.png' %}" alt="Foto de Perfil" class="profile-pic" />
+              {% endif %}
+            </a>
+            <!-- Menú desplegable -->
+            <div class="dropdown-menu hidden" id="profileDropdown">
+              <a href="{% url 'profile' %}">Mi Perfil</a>
+              <a href="{% url 'logout' %}">Cerrar Sesión</a>
+            </div>
+          </div>
+          <!-- Botón de Vender -->
+          <a href="/ " class="btn-sell"><i class="fas fa-plus"></i> Vender</a>
+        </div>
+      </div>
+    </header>
+    <div>
+      {% block content %}
+        <!-- COLOCAR SU CONTENIDO -->
+      {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <div class="footer-description">
+          <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Redes Sociales</h4>
+          <div class="social-buttons">
+            <a href="https://facebook.com" target="_blank" class="social-button facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank" class="social-button instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com" target="_blank" class="social-button twitter"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-contact">
+          <h4>Contacto</h4>
+          <p>
+            Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a>
+          </p>
+          <p>
+            Teléfono: <a href="tel:+591XXXXXXXX">+591 XXXXXXXX</a>
+          </p>
+        </div>
+        <div class="footer-legal">
+          <h4>Legal</h4>
+          <ul>
+            <li>
+              <a href="#terminos-condiciones">Términos y Condiciones</a>
+            </li>
+            <li>
+              <a href="#politica-privacidad">Política de Privacidad</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function toggleMenu(event) {
+        event.preventDefault()
+        var menu = document.getElementById('profileDropdown')
+        menu.classList.toggle('visible')
+      }
+      
+      // Cerrar el menú si se hace clic fuera de él
+      window.onclick = function (event) {
+        var menu = document.getElementById('profileDropdown')
+        if (!event.target.closest('.profile-menu-container') && menu.classList.contains('visible')) {
+          menu.classList.remove('visible')
+        }
+      }
+    </script>
+    {% block extra_scripts %}
+      <!-- COLOCAR SUS SCRIPTS AQUI -->
+      <script src="{% static 'script.js' %}"></script>
+    {% endblock %}
+  </body>
+</html>
