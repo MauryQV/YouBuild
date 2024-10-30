@@ -1,0 +1,184 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4; /* Un ligero color de fondo */
+}
+
+.perfil-wrapper {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.perfil-lado-izquierdo {
+    width: 250px;
+    padding: 20px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    background-color: #fff; /* Fondo blanco para el perfil */
+}
+
+.perfil-lado-derecho {
+    flex: 1;
+    padding: 20px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    background-color: #fff; /* Fondo blanco para el perfil */
+    position: relative;
+    padding-bottom: 80px; /* Espacio para el botón */
+    min-height: 500px;
+}
+
+h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 28px; /* Más grande */
+    font-weight: 900; /* Más negrita */
+    letter-spacing: 1px; /* Más ancho */
+}
+
+.foto-perfil {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.profile-icon {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: white;
+}
+
+.profile-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: white;
+}
+
+.icono-camara {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #ccc;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 24px; /* Increased from 20px */
+    height: 24px; /* Increased from 20px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.icono-camara svg {
+    width: 18px; /* Increased from 14px */
+    height: 18px; /* Increased from 14px */
+    stroke: black;
+    fill: none;
+    pointer-events: none; /* Important: prevents SVG from intercepting clicks */
+}
+
+#imagen_perfil {
+    display: none;
+}
+
+.nombre-usuario {
+    text-align: center;
+    margin: 15px 0;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+.info-contacto {
+    margin-top: 30px;
+}
+
+.info-contacto p {
+    margin: 15px 0;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group input.error {
+    border-color: #ff0000;
+}
+
+.error-message {
+    display: none;
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.error-message.visible {
+    display: block;
+}
+
+.password-group {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.password-container {
+    width: 250px;
+}
+
+.password-input {
+    width: 250px !important;
+}
+
+.btn-naranja {
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.form-actions {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    margin-top: 30px; /* Espacio adicional */
+}
+
+.btn-naranja:hover {
+    background-color: #e66000;
+}
+
+.btn-naranja:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.form-group:last-of-type {
+    margin-bottom: 40px;
+}

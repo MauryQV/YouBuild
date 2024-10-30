@@ -11,11 +11,13 @@ class LoginForm(AuthenticationForm):
 
 class RegistroUsuarioForm(UserCreationForm):
     nombre_completo = forms.CharField(max_length=255, required=True, label="Nombre completo")
+    nombre_usuario = forms.CharField(max_length=150, required=True, label="Nombre de usuario")
+    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección")
+    telefono = forms.CharField(max_length=15, required=True, label="Número de teléfono")
+    correo = forms.EmailField(required=True, label="Correo electrónico")
     departamento_fk = forms.ModelChoiceField(queryset=DepartamentoDB.objects.all(), required=True, label="Departamento")
     provincia_fk = forms.ModelChoiceField(queryset=ProvinciaDB.objects.none(), required=True, label="Provincia")
     municipio_fk = forms.ModelChoiceField(queryset=MunicipioDB.objects.none(), required=True, label="Municipio")
-    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección 1")
-    telefono = forms.CharField(max_length=15, required=True, label="Número de teléfono")
     imagen_perfil = forms.ImageField(required=False)
     qr_imagen = forms.ImageField(required=False, label="Código QR")
 
@@ -23,8 +25,8 @@ class RegistroUsuarioForm(UserCreationForm):
         model = User
         fields = [
             'username', 'email', 'password1', 'password2',
-            'nombre_completo', 'departamento_fk', 'provincia_fk', 'municipio_fk',
-            'direccion_1', 'telefono',
+            'nombre_completo', 'nombre_usuario', 'departamento_fk', 'provincia_fk', 
+            'municipio_fk', 'direccion_1', 'telefono', 'correo',
             'imagen_perfil', 'qr_imagen'
         ]
 
@@ -47,7 +49,6 @@ class RegistroUsuarioForm(UserCreationForm):
             except (ValueError, TypeError):
                 pass
 
-
     def clean_imagen_perfil(self):
         imagen = self.cleaned_data.get('imagen_perfil')
         if imagen and not imagen.name.lower().endswith(('.png', '.jpg', '.jpeg')):
@@ -69,10 +70,12 @@ class RegistroUsuarioForm(UserCreationForm):
                 UsuarioDB.objects.create(
                     user=user,
                     nombre_completo=self.cleaned_data['nombre_completo'],
+                    nombre_usuario=self.cleaned_data['nombre_usuario'],  # Asegúrate de que este campo exista en UsuarioDB
                     municipio_fk=self.cleaned_data['municipio_fk'],
                     direccion_1=self.cleaned_data['direccion_1'],
                     telefono=self.cleaned_data['telefono'],
-                     imagen_perfil=self.cleaned_data.get('imagen_perfil') or 'perfil/perfil.png',  # Imagen por defecto
+                    correo=self.cleaned_data['correo'],  # Asegúrate de que este campo exista en UsuarioDB
+                    imagen_perfil=self.cleaned_data.get('imagen_perfil') or 'perfil/perfil.png',  # Imagen por defecto
                     qr_imagen=self.cleaned_data.get('qr_imagen')
                 )
         except Exception as e:

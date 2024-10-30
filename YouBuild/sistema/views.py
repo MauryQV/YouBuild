@@ -230,3 +230,6 @@ def CrearCuentaView(request):
     return render(request, 'CrearCuenta.html')
 
 
+def GestionUsuarioView(request):
+    # Puedes añadir lógica aquí si necesitas cargar datos para el template
+    return render(request, 'GestionUsuario.html')

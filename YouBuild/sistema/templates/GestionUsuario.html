@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'perfil.css' %}">
+</head>
+<body>
+    <div class="perfil-wrapper">
+        <div class="perfil-lado-izquierdo">
+            <h3>Mi foto</h3>
+            <div class="foto-perfil">
+                <label for="imagen_perfil">
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#ff6b00" stroke-width="6">
+                            <circle cx="50" cy="50" r="46"/> <!-- Círculo exterior -->
+                            <circle cx="50" cy="42" r="20"/> <!-- Cabeza -->
+                            <path d="M12 80 Q 50 44, 88 80" stroke="#ff6b00" fill="none" stroke-width="6" />
+                        </svg>
+                    </div>
+                </label>
+                <input type="file" 
+                       id="imagen_perfil" 
+                       name="imagen_perfil" 
+                       accept="image/*" 
+                       required
+                       aria-label="Imagen de perfil">
+                <label for="imagen_perfil" class="icono-camara">
+                    <svg viewBox="0 0 30 30" fill="none" stroke="black" stroke-width="2">
+                        <rect x="3" y="5" width="24" height="20" rx="4"></rect>
+                        <circle cx="15" cy="15" r="5"></circle>
+                        <rect x="10" y="2" width="10" height="3" rx="1" fill="black"></rect>
+                    </svg>
+                </label>
+            </div>
+            <p class="nombre-usuario" id="display-nombre">{{ usuario.nombre_completo }}</p>
+            <div class="info-contacto">
+                <p><strong>Número de celular:</strong><br><span id="display-celular">{{ usuario.numero_celular }}</span></p>
+                <p><strong>Correo:</strong><br><span id="display-correo">{{ usuario.correo }}</span></p>
+            </div>
+        </div>
+        <div class="perfil-lado-derecho">
+            <h3>Mis datos personales</h3>
+            <form id="perfil-form" class="form-validation" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre completo:</label>
+                    <input type="text" 
+                           id="nombre_completo" 
+                           name="nombre_completo" 
+                           value="{{ usuario.nombre_completo }}"
+                           required
+                           maxlength="255"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="nombre_usuario">Nombre de usuario:</label>
+                    <input type="text" 
+                           id="nombre_usuario" 
+                           name="nombre_usuario" 
+                           value="{{ usuario.nombre_usuario }}"
+                           required
+                           maxlength="150"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="direccion_1">Dirección:</label>
+                    <input type="text" 
+                           id="direccion_1" 
+                           name="direccion_1" 
+                           value="{{ usuario.direccion_1 }}"
+                           required
+                           maxlength="255"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="numero_celular">Número de celular:</label>
+                    <input type="tel" 
+                           id="numero_celular" 
+                           name="numero_celular" 
+                           value="{{ usuario.numero_celular }}"
+                           required
+                           maxlength="15"
+                           data-validation="required|phone">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" 
+                           id="correo" 
+                           name="correo" 
+                           value="{{ usuario.correo }}"
+                           required
+                           data-validation="required|email">
+                    <span class="error-message"></span>
+                </div>
+
+                <h3>Cambiar contraseña</h3>
+                <div class="form-group">
+                    <label for="password_actual">Contraseña actual:</label>
+                    <input type="password" 
+                           id="password_actual" 
+                           name="password_actual"
+                           required
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group password-group">
+                    <div class="password-container">
+                        <label for="nueva_contrasena">Nueva contraseña:</label>
+                        <input type="password" 
+                               id="nueva_contrasena" 
+                               name="nueva_contrasena"
+                               required
+                               data-validation="required|password">
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="button" class="btn-naranja" id="btn-cambiar-password">Cambiar contraseña</button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-naranja guardar">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'perfil.js' %}"></script>
+</body>
+</html>

@@ -5,6 +5,7 @@ from django.contrib.auth.views import LogoutView
 from .views import registrar_usuario, CustomLoginView
 from django.contrib.auth.decorators import login_required
 from sistema.views import *
+from .views import GestionUsuarioView  # Asegúrate de que la función esté definida
 
 urlpatterns = [
     path('', IndexView, name='index'),
@@ -19,6 +20,7 @@ urlpatterns = [
 
     # Agrega la línea siguiente para crear la cuenta
     path('crear-cuenta/', CrearCuentaView, name='crear_cuenta'),  # <-- Aquí
+path('gestionar-usuario/', GestionUsuarioView, name='gestionar_usuario'),
 
     path('registro/', registrar_usuario, name='registro'),
     path('login/', CustomLoginView.as_view(), name='login'),
