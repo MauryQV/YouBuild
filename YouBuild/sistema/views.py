@@ -215,3 +215,32 @@ def registro_producto(request):
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
+
+@login_required
+def vender_view(request):
+    return redirect('registro_producto')
+
+@login_required
+def ver_lista_favoritos(request):
+    usuario = request.user.usuariodb  # Obtiene el perfil de usuario
+    lista_favoritos_items = ListaFavoritosDB.objects.filter(usuario=usuario)
+    
+    return render(request, 'listaFavoritos.html', {
+        'lista_favoritos_items': lista_favoritos_items,
+        'usuario': usuario  # Pasa el usuario al contexto de la plantilla
+    })
+
+@login_required
+def agregar_a_lista_favoritos(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
+    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
+    return redirect('listaFavoritos')
+
+@login_required
+def eliminar_de_lista_favoritos(request, producto_id):
+    usuario = request.user.usuariodb
+    producto = get_object_or_404(ProductoDb, id=producto_id)  # Obtén el producto para eliminarlo
+    favoritos = ListaFavoritosDB(usuario=usuario)  # Crea una instancia de ListaFavoritosDB
+    favoritos.eliminar_producto(producto)  # Utiliza el nuevo método para eliminar
+    return redirect('listaFavoritos')

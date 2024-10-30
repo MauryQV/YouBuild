@@ -202,3 +202,30 @@ class CarruselDB(models.Model):
     class Meta:
         verbose_name = "Carrusel"
         verbose_name_plural = "Carruseles"
+        
+class ListaFavoritosDB(models.Model):
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, related_name="wishlist")
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="favoritos")
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'producto')
+
+    def __str__(self):
+        return f"{self.usuario.user} - {self.producto.nombre}"
+
+    def agregar_producto(self, producto):
+        """ Agregar un producto a la lista de deseos """
+        _, created = ListaFavoritosDB.objects.get_or_create(
+            usuario=self.usuario, 
+            producto=producto
+        )
+        return created  # Retorna True si fue creado, False si ya existía
+
+    def eliminar_producto(self, producto):
+        """ Eliminar un producto de la lista de deseos """
+        ListaFavoritosDB.objects.filter(usuario=self.usuario, producto=producto).delete()
+
+    def contar_productos(self):
+        """ Contar la cantidad de productos en la lista de deseos """
+        return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
