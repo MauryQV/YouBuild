@@ -170,3 +170,7 @@ def registro_producto(request):
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
+
+
+def gestionar_usuario_view(request):
+    return render(request, 'GestionUsuario.html') 

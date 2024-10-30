@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import registrar_usuario, CustomLoginView, index_view, producto_view, buscar_view, carrito_view, eliminar_producto, update_cart_quantity, agregar_al_carrito, get_cart_count, test, home_view, perfil_view, registro_producto, custom_logout_view, cargar_provincias, cargar_municipios
+from .views import gestionar_usuario_view  # Asegúrate de importar tu vista
 
 urlpatterns = [
     path('', index_view, name='index'),
@@ -21,7 +22,8 @@ urlpatterns = [
     path('test/', test, name='testeo'),
     path('home/', home_view, name='home'),
     path('perfil/', perfil_view, name='profile'),
-    
+        path('gestionar-usuario/', gestionar_usuario_view, name='gestionar_usuario'),
+
     path('registro-producto/', registro_producto, name='registro_producto'),
 
 ]

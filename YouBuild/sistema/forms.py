@@ -61,8 +61,8 @@ class RegistroUsuarioForm(UserCreationForm):
         model = User
         fields = [
             'username', 'email', 'password1', 'password2',
-            'nombre_completo', 'nombre_usuario', 'departamento_fk', 'provincia_fk', 
-            'municipio_fk', 'direccion_1', 'telefono', 'correo',
+            'nombre_completo', 'departamento_fk', 'provincia_fk', 
+            'municipio_fk', 'direccion_1', 'telefono', 
             'imagen_perfil', 'qr_imagen'
         ]
 
