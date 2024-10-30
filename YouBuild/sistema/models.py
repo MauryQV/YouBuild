@@ -5,10 +5,11 @@ from django.db.models import Sum, F
 
 # Departamento
 class DepartamentoDB(models.Model):
-    nombre = models.CharField(max_length=60, verbose_name="Nombre del departamento")  # Convención de nombres
+    nombre = models.CharField(max_length=60, verbose_name="Nombre del departamento")
+
     class Meta:
         verbose_name = "Departamento"
-        verbose_name_plural = "Departamentos"  # Cambio de mayúscula para consistencia
+        verbose_name_plural = "Departamentos"
 
     def __str__(self):
         return self.nombre
@@ -18,9 +19,10 @@ class DepartamentoDB(models.Model):
 class ProvinciaDB(models.Model):
     nombre = models.CharField(max_length=60, verbose_name="Nombre de la provincia")
     departamento_fk = models.ForeignKey(DepartamentoDB, on_delete=models.CASCADE, null=True, blank=True)
+
     class Meta:
         verbose_name = "Provincia"
-        verbose_name_plural = "Provincias"  # Cambio a mayúscula para consistencia
+        verbose_name_plural = "Provincias"
 
     def __str__(self):
         return self.nombre
@@ -30,6 +32,7 @@ class ProvinciaDB(models.Model):
 class MunicipioDB(models.Model):
     nombre = models.CharField(max_length=60, verbose_name="Nombre del municipio")
     provincia_fk = models.ForeignKey(ProvinciaDB, on_delete=models.CASCADE, null=True, blank=True)
+
     class Meta:
         verbose_name = "Municipio"
         verbose_name_plural = "Municipios"
@@ -40,15 +43,14 @@ class MunicipioDB(models.Model):
 
 class UsuarioDB(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nombre_completo = models.CharField(max_length=50, verbose_name="Nombre completo",null=True)
+    nombre_completo = models.CharField(max_length=50, verbose_name="Nombre completo", null=True)
     municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
-    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1",null=True)
-    # Añadimos una validación para el teléfono
-    telefono = models.CharField(max_length=15, verbose_name="Número de teléfono",
-                                validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                                           message="El número debe estar en el formato: '+59199999999'. Hasta 15 dígitos.")])
-    
-    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True,default='perfil/perfil.png')
+    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True)
+    telefono = models.CharField(
+        max_length=15, verbose_name="Número de teléfono",
+        validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="El número debe estar en el formato: '+59199999999'. Hasta 15 dígitos.")]
+    )
+    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png')
     qr_imagen = models.ImageField(upload_to='qr/', null=True, blank=True, verbose_name="Código QR")
 
     class Meta:
@@ -63,23 +65,20 @@ class UsuarioDB(models.Model):
 class CarritoDB(models.Model):
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    
+
     def agregar_producto(self, producto, cantidad=1):
-        """Agrega un producto al carrito o actualiza su cantidad si ya está en el carrito."""
         carrito_producto, created = CarritoProductoDB.objects.get_or_create(
             carrito_fk=self, producto_fk=producto,
             defaults={'cantidad': cantidad}
         )
         if not created:
-            carrito_producto.cantidad = F('cantidad') + cantidad  # Usamos F() para evitar una lectura adicional
+            carrito_producto.cantidad = F('cantidad') + cantidad
             carrito_producto.save()
 
     def eliminar_producto(self, producto):
-        """Elimina un producto del carrito."""
         CarritoProductoDB.objects.filter(carrito_fk=self, producto_fk=producto).delete()
 
     def actualizar_cantidad(self, producto, cantidad):
-        """Actualiza la cantidad de un producto en el carrito o lo elimina si la cantidad es 0."""
         if cantidad <= 0:
             self.eliminar_producto(producto)
         else:
@@ -89,7 +88,6 @@ class CarritoDB(models.Model):
                 carrito_producto.save()
 
     def calcular_total(self):
-        """Calcula el total del carrito sumando los subtotales de cada producto."""
         return self.carritoproductodb_set.aggregate(
             total=Sum(F('cantidad') * F('producto_fk__precio'))
         )['total'] or 0
@@ -110,14 +108,29 @@ class CategoriaDb(models.Model):
         return self.nombre
 
 
-# Producto
+# Subcategoria
+class SubcategoriaDB(models.Model):
+    nombre = models.CharField(max_length=50, verbose_name="Nombre de la subcategoría")
+    categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Subcategoría"
+        verbose_name_plural = "Subcategorías"
+
+    def __str__(self):
+        return self.nombre
+
+
 class ProductoDb(models.Model):
     nombre = models.CharField(max_length=50, verbose_name="Nombre")
     detalle = models.TextField(max_length=200, verbose_name="Detalle")
     precio = models.FloatField(verbose_name="Precio", validators=[MinValueValidator(0.0), MaxValueValidator(99999.9)])
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
+    subcategoria_fk = models.ForeignKey(SubcategoriaDB, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Subcategoría")  # Nuevo campo
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
-    visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")  # Nuevo campo para visitas
+    municipio_fk = models.ForeignKey(MunicipioDB, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Municipio")
+    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
+    visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
 
     class Meta:
@@ -127,38 +140,49 @@ class ProductoDb(models.Model):
 
     def __str__(self):
         return self.nombre
-      
+
+
+
+
+# ImagenProducto
 class ImagenProductoDB(models.Model):
     producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="imagenes")
     imagen = models.ImageField(upload_to="productos", null=True)
-    
+
     class Meta:
         verbose_name = "Imagen"
         verbose_name_plural = "Imágenes"
-        
+
     def __str__(self):
         return self.producto_fk.nombre
-    
-class TipoPagoDB(models.Model):  
-    nombre = models.CharField(max_length=30,verbose_name="Nombre_tipo_de_pago")
+
+
+# TipoPago
+class TipoPagoDB(models.Model):
+    nombre = models.CharField(max_length=30, verbose_name="Nombre_tipo_de_pago")
+
     class Meta:
-        db_table = "tipo_de_pago"  # Convención de nombres en minúsculas para tablas
+        db_table = "tipo_de_pago"
         verbose_name = "TipoPago"
+
     def __str__(self):
         return self.nombre
-    
+
+
+# Pago
 class PagoDB(models.Model):
-    usuario_fk = models.ForeignKey(UsuarioDB,on_delete=models.CASCADE,null=True, blank=True)
-    carrito_fk = models.ForeignKey(CarritoDB,on_delete=models.CASCADE,null=True,blank=True)
-    tipo_pago_fk = models.ForeignKey(TipoPagoDB,on_delete=models.CASCADE,null=True,blank=True)
-    fecha = models.DateField(verbose_name="Fecha_de_pago", null=False, blank=False, db_index=True)  # Índice en fecha
+    usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
+    carrito_fk = models.ForeignKey(CarritoDB, on_delete=models.CASCADE, null=True, blank=True)
+    tipo_pago_fk = models.ForeignKey(TipoPagoDB, on_delete=models.CASCADE, null=True, blank=True)
+    fecha = models.DateField(verbose_name="Fecha_de_pago", null=False, blank=False, db_index=True)
     monto_pagado = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto Pagado")
-    
+
     class Meta:
-        db_table = "pago"  
+        db_table = "pago"
         verbose_name_plural = "pagos"
-    
-    
+
+
+# CarritoProducto
 class CarritoProductoDB(models.Model):
     carrito_fk = models.ForeignKey(CarritoDB, on_delete=models.CASCADE)
     producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE)
@@ -169,14 +193,12 @@ class CarritoProductoDB(models.Model):
 
     def __str__(self):
         return f"{self.producto_fk.nombre} (x{self.cantidad}) en el carrito"
-        
+
+
+# Carrusel
 class CarruselDB(models.Model):
-    imagen = models.ImageField(upload_to="carrusel",null=True)
-    
+    imagen = models.ImageField(upload_to="carrusel", null=True)
+
     class Meta:
-         verbose_name = "Carrusel"
-         verbose_name_plural = "Carruseles"
-        
-
-
-    
+        verbose_name = "Carrusel"
+        verbose_name_plural = "Carruseles"

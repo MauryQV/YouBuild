@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Producto</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Registrar Productos</h1>
+        
+        <form method="POST" enctype="multipart/form-data" class="product-form">
+            {% csrf_token %}
+            
+            <!-- Mensajes de error -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Información del Producto -->
+            <fieldset class="section">
+                <legend>Información del Producto</legend>
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
+                    {{ form.nombre }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.categoria_fk.id_for_label }}">Categoría y subcategoría</label>
+                    {{ form.categoria_fk }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.detalle.id_for_label }}">Descripción</label>
+                    {{ form.detalle }}
+                </div>
+                
+                <div class="two-columns">
+                    <div class="form-group">
+                        <label for="{{ form.precio.id_for_label }}">Precio</label>
+                        {{ form.precio }}
+                    </div>
+                    <div class="form-group cantidad-group">
+                        <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
+                        <div class="quantity-controls">
+                            <button type="button" id="decrement" class="quantity-button">-</button>
+                            {{ form.cantidad }}
+                            <button type="button" id="increment" class="quantity-button">+</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Fotos -->
+            <fieldset class="section">
+                <legend>Fotos</legend>
+                <p>Sube hasta cuatro fotos</p>
+                <div class="image-upload">
+                    <input type="file" name="imagenes" required>
+                    <input type="file" name="imagenes">
+                    <input type="file" name="imagenes">
+                    <input type="file" name="imagenes">
+
+                </div>
+            </fieldset>
+
+            <!-- Ubicación -->
+            <fieldset class="section">
+                <legend>Ubicación</legend>
+                <div class="form-group">
+                    <label for="{{ form.departamento_fk.id_for_label }}">Ciudad</label>
+                    {{ form.departamento_fk }}
+                </div>
+
+                <div class="two-columns">
+                    <div class="form-group">
+                        <label for="{{ form.provincia_fk.id_for_label }}">Provincia</label>
+                        {{ form.provincia_fk }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.municipio_fk.id_for_label }}">Municipio</label>
+                        {{ form.municipio_fk }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.direccion_1.id_for_label }}">Dirección específica</label>
+                    {{ form.direccion_1 }}
+                </div>
+            </fieldset>
+
+            <!-- Botones -->
+            <div class="form-buttons">
+                <button type="button" class="discard-button">Descartar</button>
+                <button type="submit" class="submit-button">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Incrementar y decrementar cantidad
+        document.getElementById('increment').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            cantidad.value = parseInt(cantidad.value) + 1;
+        });
+
+        document.getElementById('decrement').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            if (parseInt(cantidad.value) > 1) {
+                cantidad.value = parseInt(cantidad.value) - 1;
+            }
+        });
+
+        $(document).ready(function() {
+            // Cargar provincias cuando se selecciona un departamento
+            $('#id_departamento_fk').change(function() {
+                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
+                var departamentoId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'departamento_id': departamentoId
+                    },
+                    success: function(data) {
+                        $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
+            });
+
+            // Cargar municipios cuando se selecciona una provincia
+            $('#id_provincia_fk').change(function() {
+                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
+                var provinciaId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'provincia_id': provinciaId
+                    },
+                    success: function(data) {
+                        $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+
+        
+        
+    </script>
+</body>
+</html>
+
