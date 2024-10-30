@@ -1,0 +1,161 @@
+.topbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.topbar-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ef6605;
+}
+
+/* Íconos de la derecha */
+.topbar-right {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilo de los íconos con círculo */
+.icon-btn {
+    position: relative;
+    padding: 10px 15px;
+    background-color: white;
+    border: 2px solid #ef6605;
+    border-radius: 25px;
+    color: #ef6605;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.icon-btn i {
+    font-size: 18px;
+}
+
+/* Circulo del contador en el carrito */
+.cart-count {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: orange;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    border: 2px solid white;
+}
+
+/* Estilo de la imagen de perfil (sin círculo) */
+.profile-icon .profile-pic {
+    width: 50px;
+    height: 55px;
+    border-radius: 50%;
+}
+
+/* Estilo del botón de vender */
+.btn-sell {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ef6605;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-sell i {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 50%;
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.btn-sell:hover {
+    background-color: #ea580c;
+}
+
+.profile-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Menú desplegable (oculto por defecto) */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;  /* Coloca el menú justo debajo del ícono */
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 120px;
+    z-index: 10;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Clase para mostrar el menú */
+.dropdown-menu.visible {
+    display: block;
+}
+
+.search-box {
+    display: inline-flex;
+    background-color: #f8f7f5;
+    border: 2px solid #ef6605;
+    /* Añadido borde */
+    border-radius: 10px;
+    padding: 5px;
+    /* Ajustado el padding para tener espacio interior */
+    width: 800px;
+    /* Aumentar el ancho según lo necesites */
+}
+
+.search-box input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    flex-grow: 1;
+    /* Hace que el input ocupe todo el espacio disponible */
+    padding: 5px;
+    /* Espacio interior del input */
+}
+
+.search-box button {
+    background-color: transparent;
+    border: none;
+    color: #ED8C2B;
+    cursor: pointer;
+}
+
+.search-box button i {
+    font-size: 18px;
+}

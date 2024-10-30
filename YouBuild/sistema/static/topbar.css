@@ -42,7 +42,7 @@
     border-radius: 10px;
     padding: 5px;
     /* Ajustado el padding para tener espacio interior */
-    width: 400px;
+    width: 800px;
     /* Aumentar el ancho según lo necesites */
 }
 
@@ -146,7 +146,7 @@
     /* Color naranja */
     color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 25px;
     /* Bordes curvos */
     padding: 10px 20px;
     cursor: pointer;

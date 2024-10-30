@@ -6,97 +6,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="{% static 'login.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'registro.css' %}">
 </head>
 <body>
     <div class="registro-container">
         <h2 class="registro-titulo">Crear Cuenta</h2>
+
+        <!-- Barra de progreso de pasos -->
+        <div class="registro-progreso">
+            <div class="paso activo">1</div>
+            <div class="paso">2</div>
+            <div class="paso">3</div>
+        </div>
+
         <form method="post" class="registro-formulario" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <div class="registro-form-group">
-                {{ form.nombre_completo.label_tag }}
-                {{ form.nombre_completo }}
-                <div class="error">{{ form.nombre_completo.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                {{ form.username.label_tag }}
-                {{ form.username }}
-                <div class="error">{{ form.username.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                {{ form.password1.label_tag }}
-                {{ form.password1 }}
-                <div class="error">{{ form.password1.errors }}</div>
-            </div>
+            <!-- Mostramos errores no asociados a un campo específico -->
+            <div class="error">{{ form.non_field_errors }}</div>
             
-            <!-- Campo de confirmación de contraseña (password2) -->
-            <div class="registro-form-group">
-                {{ form.password2.label_tag }}
-                {{ form.password2 }}
-                <div class="error">{{ form.password2.errors }}</div> <!-- Error para este campo -->
+            <!-- Sección 1: Datos generales -->
+            <div class="form-seccion" id="seccion-1">
+                <div class="registro-form-group">
+                    {{ form.nombre_completo.label_tag }}
+                    {{ form.nombre_completo }}
+                    <div class="error">{{ form.nombre_completo.errors }}</div>
+                    <div class="error" id="error-nombre"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <div class="error">{{ form.username.errors }}</div>
+                    <div class="error" id="error-username"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                    <div class="error">{{ form.password1.errors }}</div>
+                    <div class="error" id="error-password1"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                    <div class="error">{{ form.password2.errors }}</div>
+                    <div class="error" id="error-password2"></div>
+                </div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.telefono.label_tag }}
+                        {{ form.telefono }}
+                        <div class="error">{{ form.telefono.errors }}</div>
+                        <div class="error" id="error-telefono"></div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        <div class="error">{{ form.email.errors }}</div>
+                        <div class="error" id="error-email"></div>
+                    </div>
+                </div>
+                <div class="registro-botones">
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
+                </div>
             </div>
 
-            <div class="registro-form-group">
-                {{ form.departamento_fk.label_tag }}
-                {{ form.departamento_fk }}
-                <div class="error">{{ form.departamento_fk.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group registro-inline">
-                <div class="registro-inline-item">
-                    {{ form.provincia_fk.label_tag }}
-                    {{ form.provincia_fk }}
-                    <div class="error">{{ form.provincia_fk.errors }}</div>
+            <!-- Sección 2: Dirección -->
+            <div class="form-seccion oculto" id="seccion-2">
+                <div class="registro-form-group">
+                    {{ form.departamento_fk.label_tag }}
+                    {{ form.departamento_fk }}
+                    <div class="error">{{ form.departamento_fk.errors }}</div>
+                    <div class="error" id="error-departamento">{{ form.departamento_fk.errors }}</div>
                 </div>
-                <div class="registro-inline-item">
-                    {{ form.municipio_fk.label_tag }}
-                    {{ form.municipio_fk }}
-                    <div class="error">{{ form.municipio_fk.errors }}</div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.provincia_fk.label_tag }}
+                        {{ form.provincia_fk }}
+                        <div class="error">{{ form.provincia_fk.errors }}</div>
+                        <div class="error" id="error-provincia">{{ form.provincia_fk.errors }}</div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.municipio_fk.label_tag }}
+                        {{ form.municipio_fk }}
+                        <div class="error">{{ form.municipio_fk.errors }}</div>
+                        <div class="error" id="error-municipio">{{ form.municipio_fk.errors }}</div>
+                    </div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.direccion_1.label_tag }}
+                    {{ form.direccion_1 }}
+                    <div class="error">{{ form.direccion_1.errors }}</div>
+                    <div class="error" id="error-direccion_1">{{ form.direccion_1.errors }}</div>
+                </div>
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atrás</button>
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
                 </div>
             </div>
-    
-            <div class="registro-form-group">
-                {{ form.direccion_1.label_tag }}
-                {{ form.direccion_1 }}
-                <div class="error">{{ form.direccion_1.errors }}</div>
-            </div>
-            <div class="registro-form-group">
-                {{ form.qr_imagen.label_tag }}
-                <label for="id_qr_imagen" class="custom-file-upload">Seleccionar imagen de QR</label>
-                {{ form.qr_imagen }} <!-- Input de carga oculto -->
-                <div class="error">{{ form.qr_imagen.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                {{ form.telefono.label_tag }}
-                {{ form.telefono }}
-                <div class="error">{{ form.telefono.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                {{ form.email.label_tag }}
-                {{ form.email }}
-                <div class="error">{{ form.email.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                {{ form.imagen_perfil.label_tag }}
-                <label for="id_imagen_perfil" class="custom-file-upload">Seleccionar imagen de perfil</label>
-                {{ form.imagen_perfil }} <!-- Input de carga oculto -->
-                <div class="error">{{ form.imagen_perfil.errors }}</div>
-            </div>
-    
-            <div class="registro-form-group">
-                <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+
+            <!-- Sección 3: Carga de Imágenes -->
+            <div class="form-seccion oculto" id="seccion-3">
+                <div class="registro-form-group">
+                    <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
+                    <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
+                    <div class="error">{{ form.imagen_perfil.errors }}</div>
+                    <div id="imagen-perfil-preview" class="imagen-preview oculto">
+                        <img id="imagen-perfil-img" src="" alt="Imagen de perfil" />
+                        <span class="remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
+                    </div>
+                </div>
+                <div class="registro-form-group">
+                    <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
+                    <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+                    <div class="error">{{ form.qr_imagen.errors }}</div>
+                    <div id="qr-imagen-preview" class="imagen-preview oculto">
+                        <img id="qr-imagen-img" src="" alt="Imagen QR" />
+                        <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+                    </div>
+                </div>
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
+                    <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+                </div>
             </div>
         </form>
     </div>
     <script type="text/javascript">
+        let seccionActual = 1;
         $(document).ready(function() {
+            configurarValidacionEnTiempoReal();
+            mostrarSeccion(seccionActual);        
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
                 var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
@@ -133,7 +172,239 @@
                 });
             });
         });
+
+        function mostrarSeccion(seccion) {
+            $(".form-seccion").addClass("oculto");
+            $("#seccion-" + seccion).removeClass("oculto");
+            $(".paso").removeClass("activo");
+            $(".paso").eq(seccion - 1).addClass("activo");
+        }
+
+        function configurarValidacionEnTiempoReal() {
+            $("#id_nombre_completo").on("input", validarNombre);
+            $("#id_username").on("input", validarUsername);
+            $("#id_password1").on("input", validarPassword1);
+            $("#id_password2").on("input", validarPassword2);
+            $("#id_telefono").on("input", validarTelefono);
+            $("#id_email").on("input", validarEmail);
+        }
+        function validarNombre() {
+            const nombre = $("#id_nombre_completo").val();
+            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                $("#error-nombre").text("Nombre inválido (solo letras y hasta 50 caracteres).");
+            } else {
+                $("#error-nombre").text("");
+            }
+        }
+        function validarUsername() {
+            const username = $("#id_username").val();
+            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                $("#error-username").text("El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.");
+            } else {
+                $("#error-username").text("");
+            }
+        }
+        function validarPassword1() {
+            const password1 = $("#id_password1").val();
+            if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                $("#error-password1").text("Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.");
+            } else {
+                $("#error-password1").text("");
+            }
+        }
+        function validarPassword2() {
+            const password1 = $("#id_password1").val();
+            const password2 = $("#id_password2").val();
+            if (password1 !== password2) {
+                $("#error-password2").text("Las contraseñas no coinciden.");
+            } else {
+                $("#error-password2").text("");
+            }
+        }
+        function validarTelefono() {
+            const telefono = $("#id_telefono").val();
+            if (!/^\d{9,15}$/.test(telefono)) {
+                $("#error-telefono").text("Número de teléfono inválido.");
+            } else {
+                $("#error-telefono").text("");
+            }
+        }
+        function validarEmail() {
+            const email = $("#id_email").val();
+            if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                $("#error-email").text("Formato de correo electrónico inválido.");
+            } else {
+                $("#error-email").text("");
+            }
+        }
+        function siguienteSeccion() {
+            if (seccionActual < 3) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        function anteriorSeccion() {
+            if (seccionActual > 1) {
+                seccionActual--;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        $(document).ready(function() {
+            mostrarSeccion(seccionActual);
+        });
+
+        function mostrarImagen(input, previewId, inputId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+        
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgElement.src = e.target.result;
+                    preview.classList.remove("oculto"); // Muestra la imagen seleccionada
+                    input.classList.add("oculto"); // Oculta el input de selección
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function removerImagen(previewId, inputId) {
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+            imgElement.src = "";
+            preview.classList.add("oculto"); // Oculta la imagen
+            document.getElementById(inputId).value = ""; // Limpia el input
+            document.getElementById(inputId).classList.remove("oculto"); // Vuelve a mostrar el input
+        }
+        
+        function mostrarSeccion(seccion) {
+    // Oculta todas las secciones
+    $(".form-seccion").addClass("oculto");
+
+    // Muestra solo la sección actual
+    $("#seccion-" + seccion).removeClass("oculto");
+
+    // Actualiza la barra de progreso
+    $(".paso").removeClass("activo");
+    $(".paso").eq(seccion - 1).addClass("activo");
+}
+function validarSeccion1() {
+    let nombre = document.getElementById("id_nombre_completo").value;
+    let username = document.getElementById("id_username").value;
+    let password1 = document.getElementById("id_password1").value;
+    let password2 = document.getElementById("id_password2").value;
+    let telefono = document.getElementById("id_telefono").value;
+    let email = document.getElementById("id_email").value;
+
+    let error = false;
+    // Validación de nombre completo
+    if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+        document.getElementById("error-nombre").innerText = "Nombre inválido (solo letras y hasta 50 caracteres).";
+        error = true;
+    } else {
+        document.getElementById("error-nombre").innerText = "";
+    }
+    // Validación de nombre de usuario
+    if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+        document.getElementById("error-username").innerText = "El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.";
+        error = true;
+    } else {
+        document.getElementById("error-username").innerText = "";
+    }
+    // Validación de contraseña
+    if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+        document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
+        error = true;
+    } else {
+        document.getElementById("error-password1").innerText = "";
+    }
+    // Coincidencia de contraseñas
+    if (password1 !== password2) {
+        document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
+        error = true;
+    } else {
+        document.getElementById("error-password2").innerText = "";
+    }
+    // Validación de teléfono
+    if (!/^\d{9,15}$/.test(telefono)) {
+        document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
+        error = true;
+    } else {
+        document.getElementById("error-telefono").innerText = "";
+    }
+    // Validación de correo electrónico
+    if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
+        error = true;
+    } else {
+        document.getElementById("error-email").innerText = "";
+    }
+    // Si no hay errores, avanza a la siguiente sección
+    if (!error) {
+        seccionActual++;
+        mostrarSeccion(seccionActual);
+    }
+}
+function validarSeccion2() {
+    let departamento = document.getElementById("id_departamento_fk").value;
+    let provincia = document.getElementById("id_provincia_fk").value;
+    let municipio = document.getElementById("id_municipio_fk").value;
+    let direccion1 = document.getElementById("id_direccion_1").value;
+
+    let error = false;
+    // Validación de departamento
+    if (!departamento) {
+        document.getElementById("error-departamento").innerText = "Selecciona un departamento.";
+        error = true;
+    } else {
+        document.getElementById("error-departamento").innerText = "";
+    }
+    // Validación de provincia
+    if (!provincia) {
+        document.getElementById("error-provincia").innerText = "Selecciona una provincia.";
+        error = true;
+    } else {
+        document.getElementById("error-provincia").innerText = "";
+    }
+    // Validación de municipio
+    if (!municipio) {
+        document.getElementById("error-municipio").innerText = "Selecciona un municipio.";
+        error = true;
+    } else {
+        document.getElementById("error-municipio").innerText = "";
+    }
+    // Validación de dirección
+    if (!direccion1) {
+        document.getElementById("error-direccion_1").innerText = "Introduce una dirección válida.";
+        error = true;
+    } else {
+        document.getElementById("error-direccion_1").innerText = "";
+    }
+    // Si no hay errores, avanza a la siguiente sección
+    if (!error) {
+        seccionActual++;
+        mostrarSeccion(seccionActual);
+    }
+}
+        function siguienteSeccion() {
+            if (seccionActual === 1) {
+            validarSeccion1();
+            } else if (seccionActual === 2) {
+            validarSeccion2();
+            } else if (seccionActual < 3) {
+            seccionActual++;
+            mostrarSeccion(seccionActual);
+            }
+        } 
+        function anteriorSeccion() {
+            if (seccionActual > 1) {
+                seccionActual--;
+                mostrarSeccion(seccionActual);
+            }
+        }
     </script>
 </body>
 </html>
-

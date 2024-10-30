@@ -1,25 +1,61 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import UsuarioDB, MunicipioDB, ProvinciaDB, DepartamentoDB
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 from django.db import transaction
+from .models import UsuarioDB, ProductoDb, CategoriaDb, DepartamentoDB, ProvinciaDB, MunicipioDB, ImagenProductoDB
+
 
 class LoginForm(AuthenticationForm):
     pass
 
+
 class RegistroUsuarioForm(UserCreationForm):
-    nombre_completo = forms.CharField(max_length=255, required=True, label="Nombre completo")
-    nombre_usuario = forms.CharField(max_length=150, required=True, label="Nombre de usuario")
-    direccion_1 = forms.CharField(max_length=255, required=True, label="Dirección")
-    telefono = forms.CharField(max_length=15, required=True, label="Número de teléfono")
-    correo = forms.EmailField(required=True, label="Correo electrónico")
-    departamento_fk = forms.ModelChoiceField(queryset=DepartamentoDB.objects.all(), required=True, label="Departamento")
-    provincia_fk = forms.ModelChoiceField(queryset=ProvinciaDB.objects.none(), required=True, label="Provincia")
-    municipio_fk = forms.ModelChoiceField(queryset=MunicipioDB.objects.none(), required=True, label="Municipio")
-    imagen_perfil = forms.ImageField(required=False)
-    qr_imagen = forms.ImageField(required=False, label="Código QR")
+    nombre_completo = forms.CharField(
+        max_length=255, 
+        required=True, 
+        label="Nombre completo",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu nombre completo'})
+    )
+    departamento_fk = forms.ModelChoiceField(
+        queryset=DepartamentoDB.objects.all(), 
+        required=True, 
+        label="Departamento",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu departamento'})
+    )
+    provincia_fk = forms.ModelChoiceField(
+        queryset=ProvinciaDB.objects.none(), 
+        required=True, 
+        label="Provincia",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu provincia'})
+    )
+    municipio_fk = forms.ModelChoiceField(
+        queryset=MunicipioDB.objects.none(), 
+        required=True, 
+        label="Municipio",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona tu municipio'})
+    )
+    direccion_1 = forms.CharField(
+        max_length=255, 
+        required=True, 
+        label="Dirección",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu dirección'})
+    )
+    telefono = forms.CharField(
+        max_length=15, 
+        required=True, 
+        label="Número de celular",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu número de celular'})
+    )
+    imagen_perfil = forms.ImageField(
+        required=False, 
+        widget=forms.FileInput(attrs={'placeholder': 'Selecciona tu foto de perfil'})
+    )
+    qr_imagen = forms.ImageField(
+        required=False, 
+        label="Código QR",
+        widget=forms.FileInput(attrs={'placeholder': 'Selecciona la imagen QR'})
+    )
 
     class Meta:
         model = User
@@ -32,20 +68,22 @@ class RegistroUsuarioForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Actualizar el queryset de Provincia basado en Departamento seleccionado
-        departamento_id = self.data.get('departamento_fk') or (self.instance.pk and self.instance.municipio_fk.provincia_fk.departamento_fk.id)
-        if departamento_id:
+        self.fields['username'].widget.attrs.update({'placeholder': 'Ingresa tu nombre de usuario'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Ingresa tu correo electrónico'})
+        self.fields['password1'].widget.attrs.update({'placeholder': 'Ingresa tu contraseña'})
+        self.fields['password2'].widget.attrs.update({'placeholder': 'Confirma tu contraseña'})
+
+        if 'departamento_fk' in self.data:
             try:
-                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=int(departamento_id)).order_by('nombre')
+                departamento_id = int(self.data.get('departamento_fk'))
+                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=departamento_id).order_by('nombre')
             except (ValueError, TypeError):
                 pass
 
-        # Actualizar el queryset de Municipio basado en Provincia seleccionada
-        provincia_id = self.data.get('provincia_fk') or (self.instance.pk and self.instance.municipio_fk.provincia_fk.id)
-        if provincia_id:
+        if 'provincia_fk' in self.data:
             try:
-                self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=int(provincia_id)).order_by('nombre')
+                provincia_id = int(self.data.get('provincia_fk'))
+                self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=provincia_id).order_by('nombre')
             except (ValueError, TypeError):
                 pass
 
@@ -64,20 +102,112 @@ class RegistroUsuarioForm(UserCreationForm):
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
-        try:
-            if commit:
-                user.save()
-                UsuarioDB.objects.create(
-                    user=user,
-                    nombre_completo=self.cleaned_data['nombre_completo'],
-                    nombre_usuario=self.cleaned_data['nombre_usuario'],  # Asegúrate de que este campo exista en UsuarioDB
-                    municipio_fk=self.cleaned_data['municipio_fk'],
-                    direccion_1=self.cleaned_data['direccion_1'],
-                    telefono=self.cleaned_data['telefono'],
-                    correo=self.cleaned_data['correo'],  # Asegúrate de que este campo exista en UsuarioDB
-                    imagen_perfil=self.cleaned_data.get('imagen_perfil') or 'perfil/perfil.png',  # Imagen por defecto
-                    qr_imagen=self.cleaned_data.get('qr_imagen')
-                )
-        except Exception as e:
-            raise ValidationError(f"Ocurrió un error al guardar los datos: {str(e)}")
+        if commit:
+            user.save()
+            UsuarioDB.objects.create(
+                user=user,
+                nombre_completo=self.cleaned_data['nombre_completo'],
+                municipio_fk=self.cleaned_data['municipio_fk'],
+                direccion_1=self.cleaned_data['direccion_1'],
+                telefono=self.cleaned_data['telefono'],
+                imagen_perfil=self.cleaned_data.get('imagen_perfil') or 'perfil/perfil.png',
+                qr_imagen=self.cleaned_data.get('qr_imagen')
+            )
         return user
+
+
+class RegistroProductoForm(forms.ModelForm):
+    nombre = forms.CharField(
+        max_length=50,
+        required=True,
+        label="Nombre del producto",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa el nombre del producto'})
+    )
+    detalle = forms.CharField(
+        max_length=200,
+        required=True,
+        label="Detalle",
+        widget=forms.Textarea(attrs={'placeholder': 'Ingresa el detalle del producto'})
+    )
+    precio = forms.FloatField(
+        required=True,
+        label="Precio",
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingresa el precio del producto'})
+    )
+    categoria_fk = forms.ModelChoiceField(
+        queryset=CategoriaDb.objects.all(),
+        required=True,
+        label="Categoría",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona una categoría'})
+    )
+    departamento_fk = forms.ModelChoiceField(
+        queryset=DepartamentoDB.objects.all(),
+        required=True,
+        label="Departamento",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona un departamento'})
+    )
+    provincia_fk = forms.ModelChoiceField(
+        queryset=ProvinciaDB.objects.none(),
+        required=True,
+        label="Provincia",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona una provincia'})
+    )
+    municipio_fk = forms.ModelChoiceField(
+        queryset=MunicipioDB.objects.all(),
+        required=True,
+        label="Municipio",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona un municipio'})
+    )
+    direccion_1 = forms.CharField(
+        max_length=255,
+        required=True,
+        label="Dirección",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa la dirección del producto'})
+    )
+    cantidad = forms.IntegerField(
+        required=True,
+        initial=1,
+        label="Cantidad",
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingresa la cantidad del producto'})
+    )
+    imagenes = forms.FileField(
+        required=True,
+        widget=forms.ClearableFileInput(),  # No uses multiple=True aquí
+        label="Imágenes"
+    )
+
+    class Meta:
+        model = ProductoDb
+        fields = [
+            'nombre', 'detalle', 'precio', 'categoria_fk',
+            'departamento_fk', 'provincia_fk', 'municipio_fk', 
+            'direccion_1', 'cantidad', 'imagenes'
+        ]
+
+    def clean_imagenes(self):
+        imagenes = self.files.getlist('imagenes')
+        if not (1 <= len(imagenes) <= 4):
+            raise forms.ValidationError("Debes subir entre 1 y 4 imágenes.")
+        if not all(img.name.lower().endswith(('.png', '.jpg', '.jpeg')) for img in imagenes):
+            raise forms.ValidationError("Solo se permiten archivos con formato .png, .jpg, o .jpeg.")
+        return imagenes
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'departamento_fk' in self.data:
+            try:
+                departamento_id = int(self.data.get('departamento_fk'))
+                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=departamento_id).order_by('nombre')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['provincia_fk'].queryset = self.instance.departamento_fk.provincia_set.order_by('nombre')
+
+    @transaction.atomic
+    def save(self, commit=True):
+        producto = super().save(commit=False)
+        if commit:
+            producto.save()
+            for imagen in self.cleaned_data.get('imagenes'):
+                ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+        return producto
