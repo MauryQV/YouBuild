@@ -215,3 +215,7 @@ def registro_producto(request):
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
+
+@login_required
+def vender_view(request):
+    return redirect('registro_producto')
