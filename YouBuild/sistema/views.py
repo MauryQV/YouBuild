@@ -19,6 +19,10 @@ from django.views.generic.edit import UpdateView
 # Vista principal
 @login_required
 def home_view(request):
+
+    print("Usuario autenticado:", request.user)  # Para verificar el usuario autenticado
+    print("Perfil de usuario:", request.user.usuariodb)
+
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     usuario = request.user.usuariodb
@@ -215,3 +219,24 @@ def registro_producto(request):
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
+
+@login_required
+def ver_lista_favoritos(request):
+    usuario = request.user.usuariodb
+    lista_favoritos_items = ListaFavoritosDB.objects.filter(usuario=usuario)
+    return render(request, 'listaFavoritos.html', {'lista_favoritos_items': lista_favoritos_items})
+
+@login_required
+def agregar_a_lista_favoritos(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
+    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
+    return redirect('listaFavoritos')
+
+@login_required
+def eliminar_de_lista_favoritos(request, producto_id):
+    usuario = request.user.usuariodb
+    producto = get_object_or_404(ProductoDb, id=producto_id)  # Obtén el producto para eliminarlo
+    favoritos = ListaFavoritosDB(usuario=usuario)  # Crea una instancia de ListaFavoritosDB
+    favoritos.eliminar_producto(producto)  # Utiliza el nuevo método para eliminar
+    return redirect('listaFavoritos')

@@ -107,6 +107,18 @@ class CategoriaDb(models.Model):
     def __str__(self):
         return self.nombre
 
+#Subcategoria    
+class SubcategoriaDB(models.Model):
+    nombre = models.CharField(max_length=50, verbose_name="Nombre de la subcategoría")
+    categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, related_name="subcategorias")
+
+    class Meta:
+        verbose_name = "Subcategoría"
+        verbose_name_plural = "Subcategorías"
+
+    def __str__(self):
+        return self.nombre
+
 
 # Subcategoria
 class SubcategoriaDB(models.Model):
@@ -132,6 +144,8 @@ class ProductoDb(models.Model):
     direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
+    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
+    direccion = models.CharField(max_length=255, null=True)  # Permitir nulos
 
     class Meta:
         db_table = "productos"
@@ -202,3 +216,30 @@ class CarruselDB(models.Model):
     class Meta:
         verbose_name = "Carrusel"
         verbose_name_plural = "Carruseles"
+
+class ListaFavoritosDB(models.Model):
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, related_name="wishlist")
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="favoritos")
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'producto')
+
+    def __str__(self):
+        return f"{self.usuario.user} - {self.producto.nombre}"
+
+    def agregar_producto(self, producto):
+        """ Agregar un producto a la lista de deseos """
+        _, created = ListaFavoritosDB.objects.get_or_create(
+            usuario=self.usuario, 
+            producto=producto
+        )
+        return created  # Retorna True si fue creado, False si ya existía
+
+    def eliminar_producto(self, producto):
+        """ Eliminar un producto de la lista de deseos """
+        ListaFavoritosDB.objects.filter(usuario=self.usuario, producto=producto).delete()
+
+    def contar_productos(self):
+        """ Contar la cantidad de productos en la lista de deseos """
+        return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()

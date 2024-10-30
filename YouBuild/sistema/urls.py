@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
-from .views import registrar_usuario, CustomLoginView, index_view, producto_view, buscar_view, carrito_view, eliminar_producto, update_cart_quantity, agregar_al_carrito, get_cart_count, test, home_view, perfil_view, registro_producto, custom_logout_view, cargar_provincias, cargar_municipios
+from .views import *
 
 urlpatterns = [
     path('', index_view, name='index'),
@@ -26,7 +26,10 @@ urlpatterns = [
     path('perfil/', perfil_view, name='profile'),
     
     path('registro-producto/', registro_producto, name='registro_producto'),
-
+    path('home/registro-producto/', registro_producto, name='registro_producto'),
+    path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),
+    path('lista-favoritos/agregar/<int:producto_id>/', agregar_a_lista_favoritos, name='agregarFavorito'),
+    path('lista-favoritos/eliminar/<int:producto_id>/', eliminar_de_lista_favoritos, name='eliminarFavorito'),
 ]
 
 if settings.DEBUG:
