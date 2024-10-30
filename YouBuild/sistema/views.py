@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from .forms import RegistroUsuarioForm
+from .forms import *
 from django.contrib.auth import login, logout
 from django.contrib import messages
 import json
@@ -15,9 +15,14 @@ from rest_framework.response import Response
 from .serializers import UsuarioDBSerializer
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+import logging
 
 @login_required
 def home_view(request):
+
+    print("Usuario autenticado:", request.user)  # Para verificar el usuario autenticado
+    print("Perfil de usuario:", request.user.usuariodb)
+
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     # Obtenemos el perfil del usuario logueado
@@ -224,4 +229,84 @@ def CrearCuentaView(request):
             serializer.save()
             return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
-    
+
+@login_required 
+def registrar_producto(request):
+
+    print("Usuario autenticado:", request.user)  # Para verificar el usuario autenticado
+    print("Perfil de usuario:", request.user.usuariodb)
+    userlocal = request.user.usuariodb
+    departamentos = DepartamentoDB.objects.all()
+    categorias = CategoriaDb.objects.all()
+
+    if request.method == 'POST':
+
+        datos_producto = {
+            'nombre': request.POST.get('nombre_producto'),
+            'categoria_fk': request.POST.get('categoria'),
+            'usuario_fk' : request.POST.get('usuario_fk'),
+            'detalle': request.POST.get('detalle'),
+            'precio': request.POST.get('precio'),
+            'cantidad': request.POST.get('cantidad'),
+            'municipio_fk': request.POST.get('municipio'),
+            'direccion': request.POST.get('direccion'),
+            # Excluir campos que no están en el modelo
+        }
+
+        producto_form = ProductoForm(datos_producto)
+        imagen_form = ImagenProductoForm(request.POST, request.FILES)  # Agregar request.FILES aquí
+
+        # Imprimir los datos del formulario antes de validar
+        print("estos datos llegaron")
+        print("Datos del formulario del producto:", datos_producto)
+        print("Datos del formulario de la imagen:", imagen_form.data)
+
+        if producto_form.is_valid() or imagen_form.is_valid():
+            producto = producto_form.save(commit=False)
+            logger = logging.getLogger(__name__)
+
+            print("Datos del formulario del producto:", datos_producto)
+
+            producto.usuario_fk = userlocal
+                
+            print('datos guardados' + str(producto))
+            producto.save()
+
+            # Guardar la imagen
+            imagen = imagen_form.save(commit=False)
+            imagen.producto_fk = producto
+            imagen.save()
+
+            return render(request, 'registrarProducto.html', {
+                'departamentos': departamentos,
+                'categorias': categorias,
+                'producto_form': producto_form,
+                'imagen_form': imagen_form,
+                'success': True  # Indicar que se ha guardado correctamente
+            })
+        else:
+            # Opcional: mostrar errores en caso de que el formulario no sea válido
+            messages.error(request, "Formulario inválido. Por favor, verifica los campos ingresados.")
+
+    else:
+        producto_form = ProductoForm()
+        imagen_form = ImagenProductoForm()
+
+    return render(request, 'registrarProducto.html', {
+        'departamentos': departamentos,
+        'categorias': categorias,
+        'producto_form': producto_form,
+        'imagen_form': imagen_form
+    })
+
+def obtener_provincias(request, departamento_id):
+    provincias = ProvinciaDB.objects.filter(departamento_fk_id=departamento_id).values('id', 'nombre')
+    return JsonResponse(list(provincias), safe=False)
+
+def obtener_municipios(request, provincia_id):
+    municipios = MunicipioDB.objects.filter(provincia_fk_id=provincia_id).values('id', 'nombre')
+    return JsonResponse(list(municipios), safe=False)
+
+def cargar_subcategorias(request, categoria_id):
+    subcategorias = SubcategoriaDB.objects.filter(categoria_fk_id=categoria_id).values('id', 'nombre')
+    return JsonResponse(list(subcategorias), safe=False)

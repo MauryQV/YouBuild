@@ -35,6 +35,12 @@ urlpatterns = [
     path('home/', home_view, name='home'),
     path('perfil/', perfil_view, name='profile'),
     # Asegúrate de que esta línea esté aquí solo una vez
+    
+    #urls usadas para registrar producto
+    path('registrar-producto/', registrar_producto, name='registrar_producto'),
+    path('subcategorias/<int:categoria_id>/', cargar_subcategorias, name='obtener_subcategorias'),
+    path('provincias/<int:departamento_id>/', obtener_provincias, name='obtener_provincias'),
+    path('municipios/<int:provincia_id>/', obtener_municipios, name='obtener_municipios'),
 ]
 
 if settings.DEBUG:

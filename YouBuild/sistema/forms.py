@@ -1,13 +1,11 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import UsuarioDB, MunicipioDB, ProvinciaDB, DepartamentoDB
+from .models import UsuarioDB, MunicipioDB, ProvinciaDB, DepartamentoDB, ProductoDb, ImagenProductoDB
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db import transaction
-
-class LoginForm(AuthenticationForm):
-    pass
+import re  # Para expresiones regulares
 
 class RegistroUsuarioForm(UserCreationForm):
     nombre_completo = forms.CharField(
@@ -122,3 +120,16 @@ class RegistroUsuarioForm(UserCreationForm):
         except Exception as e:
             raise ValidationError(f"Ocurrió un error al guardar los datos: {str(e)}")
         return user
+
+class ProductoForm(forms.ModelForm):
+    class Meta:
+        model = ProductoDb
+        fields = ['nombre', 'detalle', 'precio', 'categoria_fk', 'usuario_fk', 'cantidad']
+        widgets = {
+            'detalle': forms.Textarea(attrs={'rows': 4}),
+        }
+
+class ImagenProductoForm(forms.ModelForm):
+    class Meta:
+        model = ImagenProductoDB
+        fields = ['imagen']

@@ -11,16 +11,19 @@
 <body>
     <div class="registro-container">
         <h2 class="registro-titulo">Crear Cuenta</h2>
-        
+
         <!-- Barra de progreso de pasos -->
         <div class="registro-progreso">
             <div class="paso activo">1</div>
             <div class="paso">2</div>
             <div class="paso">3</div>
         </div>
-        
+
         <form method="post" class="registro-formulario" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            <!-- Mostramos errores no asociados a un campo específico -->
+            <div class="error">{{ form.non_field_errors }}</div>
             
             <!-- Sección 1: Datos generales -->
             <div class="form-seccion" id="seccion-1">
@@ -59,8 +62,6 @@
                 <div class="registro-botones">
                     <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
                 </div>
-                
-                
             </div>
 
             <!-- Sección 2: Dirección -->
@@ -94,78 +95,69 @@
             </div>
 
             <!-- Sección 3: Carga de Imágenes -->
-<div class="form-seccion oculto" id="seccion-3">
-    <div class="registro-form-group">
-        <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
-        <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
-        <div class="error">{{ form.imagen_perfil.errors }}</div>
-        <div id="imagen-perfil-preview" class="imagen-preview oculto">
-            <img id="imagen-perfil-img" src="" alt="Imagen de perfil" />
-            <span class="remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
-        </div>
-    </div>
-    <div class="registro-form-group">
-        <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
-        <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
-        <div class="error">{{ form.qr_imagen.errors }}</div>
-        <div id="qr-imagen-preview" class="imagen-preview oculto">
-            <img id="qr-imagen-img" src="" alt="Imagen QR" />
-            <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
-        </div>
-    </div>
-    <div class="registro-botones registro-inline">
-        <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
-        <button type="button" class="registro-btn-submit" onclick="redirectToSuccess()">Crear una cuenta</button>
-    </div>
-</div>
-
-
+            <div class="form-seccion oculto" id="seccion-3">
+                <div class="registro-form-group">
+                    <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
+                    <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
+                    <div class="error">{{ form.imagen_perfil.errors }}</div>
+                    <div id="imagen-perfil-preview" class="imagen-preview oculto">
+                        <img id="imagen-perfil-img" src="" alt="Imagen de perfil" />
+                        <span class="remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
+                    </div>
+                </div>
+                <div class="registro-form-group">
+                    <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
+                    <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+                    <div class="error">{{ form.qr_imagen.errors }}</div>
+                    <div id="qr-imagen-preview" class="imagen-preview oculto">
+                        <img id="qr-imagen-img" src="" alt="Imagen QR" />
+                        <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+                    </div>
+                </div>
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
+                    <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+                </div>
+            </div>
         </form>
     </div>
-
     <script type="text/javascript">
         let seccionActual = 1;
         $(document).ready(function() {
-            function validateField(field, errorId, message) {
-                if (!field.val()) {
-                    field.addClass('invalid');
-                    $(errorId).text(message);
-                    return false;
-                } else {
-                    field.removeClass('invalid');
-                    $(errorId).text('');
-                    return true;
-                }
-            }
-
-            $('#registro-form').on('submit', function(event) {
-                event.preventDefault();
-                
-                let isValid = true;
-
-                // Validaciones para cada campo
-                isValid &= validateField($('#id_username'), '#error-username', 'Este campo es obligatorio.');
-                isValid &= validateField($('#id_email'), '#error-email', 'Este campo es obligatorio.');
-                isValid &= validateField($('#id_password1'), '#error-password1', 'Este campo es obligatorio.');
-                isValid &= validateField($('#id_password2'), '#error-password2', 'Este campo es obligatorio.');
-                isValid &= validateField($('#id_fecha_nacimiento'), '#error-fecha_nacimiento', 'Este campo es obligatorio.');
-                isValid &= validateField($('#id_departamento_fk'), '#error-departamento_fk', 'Seleccione un departamento.');
-                isValid &= validateField($('#id_provincia_fk'), '#error-provincia_fk', 'Seleccione una provincia.');
-                isValid &= validateField($('#id_municipio_fk'), '#error-municipio_fk', 'Seleccione un municipio.');
-                isValid &= validateField($('#id_direccion'), '#error-direccion', 'Este campo es obligatorio.');
-
-                if (isValid) {
-                    this.submit(); // Si todo es válido, enviar el formulario
-                }
+            // Cargar provincias cuando se selecciona un departamento
+            $('#id_departamento_fk').change(function() {
+                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
+                var departamentoId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'departamento_id': departamentoId
+                    },
+                    success: function(data) {
+                        $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
             });
 
-            // Eliminar mensaje de error al escribir
-            $('input, select').on('input change', function() {
-                const errorId = '#error-' + this.id;
-                if ($(this).val()) {
-                    $(this).removeClass('invalid');
-                    $(errorId).text('');
-                }
+            // Cargar municipios cuando se selecciona una provincia
+            $('#id_provincia_fk').change(function() {
+                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
+                var provinciaId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'provincia_id': provinciaId
+                    },
+                    success: function(data) {
+                        $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+                        $.each(data, function(key, value) {
+                            $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                        });
+                    }
+                });
             });
         });
 
@@ -218,10 +210,7 @@
             document.getElementById(inputId).value = ""; // Limpia el input
             document.getElementById(inputId).classList.remove("oculto"); // Vuelve a mostrar el input
         }
-
-        function redirectToSuccess() {
-            window.location.href = "{% url 'success' %}"; // Make sure 'success' is defined in your Django URL configuration
-        }
+        
     </script>
 </body>
 </html>
