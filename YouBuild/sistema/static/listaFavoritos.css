@@ -1,51 +1,85 @@
-.container {
-    background-color: white; /* Fondo blanco */
-    border-radius: 8px;      /* Bordes redondeados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para destacar el cuadro */
-    padding: 20px;           /* Espaciado interno */
-    max-width: 800px;        /* Ancho máximo del cuadro */
-    margin: 30px auto;       /* Centrar el cuadro y margen superior */
+/* Wrapper - Contenedor general centrado */
+.lista_favoritos-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+    background-color: #f9f9f9;
 }
 
-h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
+/* Contenedor de la lista de deseos */
+.lista_favoritos-content {
+    width: 90%;
+    max-width: 900px;
+    background-color: transparent;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-p {
-    color: #666;
-    margin-bottom: 20px;
+/* Encabezados */
+h1, p, h2 {
+    text-align: left;
+    margin: 0 auto;
+    color: #333;
 }
 
-.wishlist-container {
+/* Tabla de Productos */
+.lista_favoritos-products table {
+    border: 2px solid #6b6969;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.lista_favoritos-products th, 
+.lista_favoritos-products td {
+    border-bottom: 2px solid #ff6600;
+    text-align: left;
+    padding: 15px;
+}
+
+.lista_favoritos-products th {
+    color: #333;
+    border-bottom: 2px solid transparent;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-info span {
+    font-size: 2em; /* Ajusta el tamaño del nombre del producto */
+    color: #333;
+}
+
+/* Imagen del Producto */
+.product-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Detalles del Producto */
+.product-details {
     display: flex;
     flex-direction: column;
 }
 
-.wishlist-products table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.wishlist-products th, .wishlist-products td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.wishlist-products .product-info {
+.product-buttons {
     display: flex;
-    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
 }
 
-.product-info .product-image {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    border-radius: 8px;
-    object-fit: cover;
-}
-
+/* Botones de Acción */
 .btn-eliminar {
     background: none;
     border: none;
@@ -54,15 +88,25 @@ p {
     font-size: 1.2em;
 }
 
-.btn-detalle, .btn-agregar, .btn-comprar {
+.btn-detalle, .btn-agregar {
     background-color: #fff;
     border: 1px solid #ff6600;
     color: #ff6600;
-    padding: 5px 10px;
-    margin: 0 5px;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 4px;
     font-size: 0.9em;
+    cursor: pointer;
+}
+
+.btn-comprar {
+    background-color: #fff;
+    border: 1px solid #ff6600;
+    color: #ff6600; /* Color del texto */
+    padding: 5px 10px; /* Espaciado */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 0.9em; /* Tamaño de fuente */
+    margin-left: 240px; /* Espacio entre "Comprar Ahora" y otros botones */
+    cursor: pointer; /* Cambio de cursor al pasar el mouse */
 }
 
 .btn-detalle:hover, .btn-agregar:hover, .btn-comprar:hover {
@@ -70,14 +114,22 @@ p {
     color: #fff;
 }
 
+/* Precio del Producto */
+.product-price {
+    text-align: right;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Botón de Volver */
 .btn-volver {
+    display: inline-block;
     background-color: #ff6600;
     color: #fff;
     padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
     text-align: center;
-    display: inline-block;
     margin-top: 20px;
 }
 

@@ -10,48 +10,94 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Lista de Deseos</h1>
-    <p>Estos son los productos de YouBuild que has marcado como favoritos.</p>
-    <div class="lista_favoritos-container">
-        <div class="lista_favoritos-products">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ELIMINAR</th>
-                        <th>PRODUCTO</th>
-                        <th>PRECIO / U</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in lista_favoritos_items %}
-                    <tr>
-                        <td>
-                            <form action="{% url 'eliminarFavorito' item.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
-                            </form>
-                        </td>
-                        <td>
-                            <div class="product-info">
-                                <img src="{{ item.producto.imagenes.first.imagen.url }}" alt="{{ item.producto.nombre }}" class="product-image">
-                                <span>{{ item.producto.nombre }}</span>
-                                <button class="btn-detalle">Ver Detalle</button>
-                                <button class="btn-agregar">Agregar a Carrito</button>
-                                <button class="btn-comprar">Comprar Ahora</button>
-                            </div>
-                        </td>
-                        <td>Bs {{ item.producto.precio }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">No tienes productos en tu lista de deseos.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="{% url 'index' %}" class="btn-volver">Volver</a>
+<div class="lista_favoritos-wrapper">
+    <div class="lista_favoritos-content">
+        <h1>Lista de Deseos</h1>
+        <p>Estos son los productos de YouBuild que has marcado como favoritos.</p>
+        <h2>Productos</h2>
+        
+        <div class="lista_favoritos-container">
+            <div class="lista_favoritos-products">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th style="text-align: right;">Precio / u</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in lista_favoritos_items %}
+                        <tr>
+                            <td>
+                                <form action="{% url 'eliminarFavorito' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
+                                </form>
+                            </td>
+                            <td>
+                                <div class="product-info">
+                                    <img src="{{ item.producto.imagenes.first.imagen.url }}" alt="{{ item.producto.nombre }}" class="product-image">
+                                    <div class="product-details">
+                                        <span>{{ item.producto.nombre }}</span>
+                                        <div class="product-buttons">
+                                            <button class="btn-detalle" onclick="verDetalles({{ item.producto.id }})">Ver Detalle</button>
+                                            <button class="btn-agregar" onclick="agregarAlCarrito({{ item.producto.id }})">Agregar a Carrito</button>
+                                            <button class="btn-comprar">Comprar Ahora</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="product-price">Bs {{ item.producto.precio }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">No tienes productos en tu lista de deseos.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <a href="{% url 'index' %}" class="btn-volver">Volver</a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'script.js' %}"></script>
+<script>
+    function agregarAlCarrito(productId) {
+        // Usamos fetch para enviar la solicitud POST al servidor
+        fetch(`/agregar-al-carrito/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Añadir el CSRF token para la protección
+            },
+            body: JSON.stringify({})  // Cuerpo vacío ya que no necesitamos pasar datos adicionales
+        })
+        .then(response => {
+            if (response.redirected) {
+                // Si la respuesta tiene redirección, el carrito fue actualizado correctamente
+                window.location.href = response.url;  // Redirigir a la página de carrito o la página original
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data && data.success) {
+                // Si la respuesta JSON indica éxito, mostrar un mensaje
+                alert(data.message || 'Producto agregado correctamente al carrito');
+            } else if (data && data.message) {
+                // En caso de error, mostrar el mensaje de error
+                alert(data.message || 'Error al agregar el producto al carrito');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al agregar al carrito');
+        });
+    }
+</script>
 {% endblock %}
