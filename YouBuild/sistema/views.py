@@ -4,17 +4,13 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import RegistroUsuarioForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout,update_session_auth_hash
 from django.contrib import messages
 import json
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.shortcuts import render
-from rest_framework.response import Response
-from .serializers import UsuarioDBSerializer
-from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import *
+from django.views.generic.edit import UpdateView
 
 @login_required
 def home_view(request):
@@ -220,4 +216,25 @@ def CrearCuentaView(request):
             serializer.save()
             return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
+@login_required     
+def perfil_view(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance= request.user.usuariodb)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request,f'Tu cuenta ha sido actualizada')
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.usuariodb)
     
+    context = {    
+        'u_form': u_form,
+        'p_form': p_form
+    }
+    
+    return render(request,'perfil.html',context)
