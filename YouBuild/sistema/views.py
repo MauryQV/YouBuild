@@ -159,15 +159,14 @@ def registro_producto(request):
     if request.method == 'POST':
         form = RegistroProductoForm(request.POST, request.FILES)
         if form.is_valid():
-            producto = form.save(commit=False)
-            producto.save()
-            imagenes = request.FILES.getlist('imagenes')  # Obtén la lista de imágenes
-            
+            producto = form.save(commit=False) 
+            producto.usuario_fk = request.user.usuariodb  
+            producto.save() 
+            imagenes = request.FILES.getlist('imagenes')  
             for imagen in imagenes:
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
             
-            return redirect('home')  # Cambia al nombre de tu redirección
+            return redirect('home') 
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
-

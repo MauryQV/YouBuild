@@ -21,8 +21,8 @@ urlpatterns = [
     path('test/', test, name='testeo'),
     path('home/', home_view, name='home'),
     path('perfil/', perfil_view, name='profile'),
+    
     path('registro-producto/', registro_producto, name='registro_producto'),
-    path('home/registro-producto/', registro_producto, name='registro_producto'),
 
 ]
 
