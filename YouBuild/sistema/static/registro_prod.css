@@ -1,0 +1,140 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box; /* Asegura que padding y borde se incluyan en el ancho y alto */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+h1.title {
+    color: #333; /* Naranja */
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Estilos de los campos del formulario */
+fieldset {
+    border: 2px solid #333; /* Naranja */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+legend {
+    color: #FF8C00; /* Naranja */
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Estilos para las dos columnas */
+.two-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Espacio entre columnas */
+}
+
+/* Estilos para el grupo de cantidad */
+.cantidad-group {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos en columna */
+    align-items: flex-start; /* Alinea a la izquierda */
+}
+
+.cantidad-group label {
+    margin-bottom: 5px; /* Espacio entre el label y el control */
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-button {
+    background-color: #FF8C00; /* Naranja */
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.quantity-button:hover {
+    opacity: 0.9;
+}
+
+/* Estilos para la selección de imágenes */
+.image-upload {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Permite que los botones de carga de imágenes se ajusten */
+}
+
+.image-upload input[type="file"] {
+    width: auto; /* Cambiado para que no ocupe el 100% */
+}
+
+/* Botones */
+.form-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los botones */
+    gap: 10px;
+}
+
+.discard-button {
+    background-color: #FF4500; /* Naranja oscuro */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button {
+    background-color: #FF8C00; /* Naranja */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.discard-button:hover,
+.submit-button:hover {
+    opacity: 0.9;
+}
