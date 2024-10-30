@@ -124,6 +124,16 @@
                         <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
                     </div>
                 </div>
+
+                <!-- Términos y Condiciones Checkbox -->
+                <div class="registro-form-group terminos">
+                    <input type="checkbox" id="aceptar-terminos" name="aceptar_terminos" required>
+                    <label for="aceptar-terminos">He leído y acepto los 
+                        <a href="{% url 'terms_and_conditions' %}" class="terminos-link">Términos y Condiciones</a> establecidos por YouBuild
+                    </label>
+                </div>
+
+                <!-- Button Container -->
                 <div class="registro-botones registro-inline">
                     <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
                     <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
@@ -131,6 +141,7 @@
             </div>
         </form>
     </div>
+
     <script type="text/javascript">
         let seccionActual = 1;
         $(document).ready(function() {

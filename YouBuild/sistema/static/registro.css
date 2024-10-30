@@ -215,4 +215,22 @@ h2.registro-titulo {
 }
 .oculto {
   display: none;
+
+/* Styles for the Terms and Conditions checkbox */
+.terminos {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.terminos input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.terminos a.terminos-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 }

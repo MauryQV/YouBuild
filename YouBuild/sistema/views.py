@@ -36,12 +36,18 @@ def registrar_usuario(request):
         form = RegistroUsuarioForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Cuenta creada exitosamente.")
-            return redirect('index')
+            login(request, user)  # Optionally logs in the user after registration
+            return redirect('success')  # Redirects to the success page after account creation
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro.html', {'form': form})
+
+def success(request):
+    usuario = request.user.usuariodb  # Assuming `usuariodb` is linked to `user`
+    return render(request, 'success.html', {'usuario': usuario})
+
+def terms_and_conditions(request):
+    return render(request, 'terms&conditions.html')
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
