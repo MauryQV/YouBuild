@@ -1,11 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hola</h1>
-</body>
-</html>
+{% extends "layoutReg.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %} Mi perfil {% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'perfil.css' %}" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+<div class="perfil-container">
+    <!-- Sidebar Izquierdo: Foto y Información -->
+    <div class="perfil-sidebar">
+        <h2>Mi foto</h2>
+        <div class="profile-image-container">
+            {% if user.usuariodb.imagen_perfil %}
+                <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+            {% else %}
+                <img src="{% static 'default_profile_image.jpg' %}" alt="Imagen de perfil predeterminada" class="profile-image">
+            {% endif %}
+        </div>
+        
+        <div class="profile-info">
+            <p><strong>{{ user.usuariodb.nombre_completo }}</strong></p>
+            <p>Número de celular: {{ user.usuariodb.telefono }}</p>
+            <p>Correo: {{ user.email }}</p>
+            
+        </div>
+    </div>
+    
+    <!-- Formulario a la derecha -->
+    <div class="perfil-main">
+        <h2>Editar Perfil</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+          
+            <div class="form-group">
+                {{ u_form|crispy }}
+            </div>
+            <div class="form-group">
+                {{ p_form|crispy }}
+            </div>
+            <button type="submit" class="btn btn-primario">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
