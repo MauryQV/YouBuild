@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from . import views
 from django.contrib.auth.views import LogoutView
 from .views import *
 
@@ -14,6 +15,8 @@ urlpatterns = [
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
     path('registro/', registrar_usuario, name='registro'),
+    path('success/', views.success, name='success'), 
+    path('terms-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', custom_logout_view, name='logout'),
     path('ajax/cargar-provincias/', cargar_provincias, name='ajax_cargar_provincias'),
@@ -21,6 +24,7 @@ urlpatterns = [
     path('test/', test, name='testeo'),
     path('home/', home_view, name='home'),
     path('perfil/', perfil_view, name='profile'),
+    
     path('registro-producto/', registro_producto, name='registro_producto'),
     path('home/registro-producto/', registro_producto, name='registro_producto'),
     path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),

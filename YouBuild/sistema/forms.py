@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,PasswordChangeForm, UserChangeForm
+from django import forms
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
@@ -114,6 +116,18 @@ class RegistroUsuarioForm(UserCreationForm):
                 qr_imagen=self.cleaned_data.get('qr_imagen')
             )
         return user
+    
+    
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = ['username','email']
+    
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UsuarioDB
+        fields = ['nombre_completo','direccion_1','imagen_perfil']
 
 
 class RegistroProductoForm(forms.ModelForm):
