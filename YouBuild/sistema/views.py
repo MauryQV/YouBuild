@@ -240,3 +240,7 @@ def eliminar_de_lista_favoritos(request, producto_id):
     favoritos = ListaFavoritosDB(usuario=usuario)  # Crea una instancia de ListaFavoritosDB
     favoritos.eliminar_producto(producto)  # Utiliza el nuevo método para eliminar
     return redirect('listaFavoritos')
+
+@login_required
+def vender_view(request):
+    return redirect('registro_producto')
