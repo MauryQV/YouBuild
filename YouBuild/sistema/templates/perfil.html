@@ -2,48 +2,55 @@
 {% extends "layoutReg.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
-{% block title %} Mi perfil {% endblock %}
+
+{% block title %}Mi perfil{% endblock %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{% static 'perfil.css' %}" />
+<link rel="stylesheet" href="{% static 'perfil.css' %}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 {% endblock %}
 
 {% block content %}
-<div class="perfil-container">
+<div class="profile-container">
     <!-- Sidebar Izquierdo: Foto y Información -->
-    <div class="perfil-sidebar">
-        <h2>Mi foto</h2>
-        <div class="profile-image-container">
-            {% if user.usuariodb.imagen_perfil %}
-                <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
-            {% else %}
-                <img src="{% static 'default_profile_image.jpg' %}" alt="Imagen de perfil predeterminada" class="profile-image">
-            {% endif %}
+    <div class="profile-sidebar">
+        <h3>Mi foto</h3>
+        <div class="profile-photo-container">
+            <label for="imagen_perfil">
+                <div class="profile-photo">
+                    {% if user.usuariodb.imagen_perfil %}
+                        <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+                    {% else %}
+                        <!-- Icono SVG si no hay imagen -->
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#ff6b00" stroke-width="6" class="default-photo">
+                            <circle cx="50" cy="50" r="46"/>
+                            <circle cx="50" cy="42" r="20"/>
+                            <path d="M12 80 Q 50 44, 88 80" stroke="#ff6b00" fill="none" stroke-width="6" />
+                        </svg>
+                    {% endif %}
+                </div>
+            </label>
+            <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" aria-label="Imagen de perfil" class="d-none">
         </div>
-        
-        <div class="profile-info">
-            <p><strong>{{ user.usuariodb.nombre_completo }}</strong></p>
-            <p>Número de celular: {{ user.usuariodb.telefono }}</p>
-            <p>Correo: {{ user.email }}</p>
-            
+        <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
+        <div class="profile-contact-info">
+            <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
+            <p><strong>Correo:</strong><br>{{ user.email }}</p>
         </div>
     </div>
-    
+
     <!-- Formulario a la derecha -->
-    <div class="perfil-main">
-        <h2>Editar Perfil</h2>
+    <div class="profile-main">
+        <h2>Mis datos personales</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-          
             <div class="form-group">
                 {{ u_form|crispy }}
             </div>
             <div class="form-group">
                 {{ p_form|crispy }}
             </div>
-            <button type="submit" class="btn btn-primario">Guardar Cambios</button>
+            <button type="submit" class="btn-save">Guardar cambios</button>
         </form>
     </div>
 </div>
