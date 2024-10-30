@@ -2,12 +2,19 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from .forms import RegistroUsuarioForm
+from django.contrib.auth import login, logout,update_session_auth_hash
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import *
 from .forms import RegistroUsuarioForm, RegistroProductoForm
 from .models import ImagenProductoDB
 import json
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import *
+from django.views.generic.edit import UpdateView
+
 
 # Vista principal
 @login_required
@@ -159,21 +166,52 @@ def test(request):
 def crear_cuenta_view(request):
     return render(request, 'CrearCuenta.html')
 
+# Create your views here.
+"""class RegisterUserAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
+
+    def post(self, request):
+        serializer = UsuarioDBSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
+@login_required     
+def perfil_view(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance= request.user.usuariodb)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request,f'Tu cuenta ha sido actualizada')
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.usuariodb)
+    
+    context = {    
+        'u_form': u_form,
+        'p_form': p_form
+    }
+    
+    return render(request,'perfil.html',context)
 # Registro de producto
 @login_required
 def registro_producto(request):
     if request.method == 'POST':
         form = RegistroProductoForm(request.POST, request.FILES)
         if form.is_valid():
-            producto = form.save(commit=False)
-            producto.save()
-            imagenes = request.FILES.getlist('imagenes')  # Obtén la lista de imágenes
-            
+            producto = form.save(commit=False) 
+            producto.usuario_fk = request.user.usuariodb  
+            producto.save() 
+            imagenes = request.FILES.getlist('imagenes')  
             for imagen in imagenes:
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
             
-            return redirect('home')  # Cambia al nombre de tu redirección
+            return redirect('home') 
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})
-
