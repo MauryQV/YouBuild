@@ -136,7 +136,7 @@
                 <!-- Button Container -->
                 <div class="registro-botones registro-inline">
                     <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
-                    <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+                    <button type="submit" class="registro-btn-submit" id="crear-cuenta" disabled>Crear una cuenta</button>
                 </div>
             </div>
         </form>
@@ -145,8 +145,22 @@
     <script type="text/javascript">
         let seccionActual = 1;
         $(document).ready(function() {
+            // Initialize the button to be disabled and styled as gray
+            $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
+    
+            // Enable or disable the button based on the checkbox state
+            $('#aceptar-terminos').change(function() {
+                if (this.checked) {
+                    $('#crear-cuenta').prop('disabled', false).removeClass('disabled').addClass('enabled'); // Enable and set to orange
+                } else {
+                    $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled'); // Disable and set to gray
+                }
+            });
+    
+            // Existing code for form validation and section navigation
             configurarValidacionEnTiempoReal();
-            mostrarSeccion(seccionActual);        
+            mostrarSeccion(seccionActual);
+    
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
                 var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
@@ -164,7 +178,7 @@
                     }
                 });
             });
-
+    
             // Cargar municipios cuando se selecciona una provincia
             $('#id_provincia_fk').change(function() {
                 var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
@@ -183,6 +197,7 @@
                 });
             });
         });
+    
 
         function mostrarSeccion(seccion) {
             $(".form-seccion").addClass("oculto");
