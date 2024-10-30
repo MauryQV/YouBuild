@@ -25,27 +25,38 @@ main {
     margin: 0;
     padding-top: 100px; 
 }
-
 footer {
     background-color: #1c1c0d;
     padding: 20px 0;
     width: 100%; 
     position: relative; 
-    color:#fff
+    color: #fff;
 }
 
 .footer-container {
     display: flex; 
     justify-content: space-around; 
     flex-wrap: wrap;
-    max-width: 960px;
+    width: 100%; 
     margin: 0 auto; 
     padding: 0 10px; 
-    
 }
 
-.footer-description,
-.footer-links,
+.footer-description {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
+
+.footer-links {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
 .footer-contact,
 .footer-legal {
     flex: 1; /* Cada sección toma un espacio igual */
@@ -69,6 +80,21 @@ footer {
 .footer-legal a:hover {
     text-decoration: underline; /* Subrayar al pasar el ratón */
 }
+
+.social-section {
+    display: flex;
+    flex-direction: column; /* Disposición vertical */
+    align-items: center; /* Centrar horizontalmente */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.social-title {
+    margin-bottom: 10px; /* Espacio inferior entre el título y los botones */
+    color: #ffffff; /* Color del texto */
+    font-size: 1.5rem; /* Tamaño del texto, ajusta según necesites */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
 .social-buttons {
     display: flex; /* Disposición en fila */
     justify-content: center; /* Centrar los botones */
@@ -95,7 +121,6 @@ footer {
     transform: scale(1.1); /* Aumentar el tamaño al pasar el ratón */
 }
 
-
 .title {
     font-size: 3rem; /* Ajusta el tamaño de la fuente si es necesario */
     text-align: center; /* Centra el texto horizontalmente */
@@ -107,7 +132,6 @@ footer {
     position: relative; /* Permite ajustar la posición sin afectar el flujo del documento */
 }
 
-
 .title span {
     display: inline-block; /* Hace que cada letra sea un bloque */
     transition: transform 0.5s ease; /* Transición suave para el efecto de ola */
@@ -117,6 +141,7 @@ footer {
 .footer-visible {
     display: block; /* Mostrar cuando la clase esté activa */
 }
+
 
 
 
