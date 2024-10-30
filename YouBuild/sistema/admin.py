@@ -30,17 +30,14 @@ class MunicipioAdmin(admin.ModelAdmin):
      fields = ["nombre","provincia_fk"]
      list_display = ["nombre"]
 
-@admin.register(SubcategoriaDB)
-class SubcategoriaAdmin(admin.ModelAdmin):
-     fields = ["nombre","categoria_fk"]
-     list_display = ["nombre"]
-
 admin.site.register(UsuarioDB)
 admin.site.register(CarritoDB)
 admin.site.register(TipoPagoDB)    
 admin.site.register(PagoDB)
 admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
+admin.site.register(SubcategoriaDB)
+
 
 # Finalmente, registra el modelo de imagen también
 

@@ -26,8 +26,9 @@ urlpatterns = [
     path('perfil/', perfil_view, name='profile'),
     
     path('registro-producto/', registro_producto, name='registro_producto'),
-    path('home/registro-producto/', registro_producto, name='registro_producto'),
-    path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),
+    path('vender/', vender_view, name='vender'),
+    
+   path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),
     path('lista-favoritos/agregar/<int:producto_id>/', agregar_a_lista_favoritos, name='agregarFavorito'),
     path('lista-favoritos/eliminar/<int:producto_id>/', eliminar_de_lista_favoritos, name='eliminarFavorito'),
 ]

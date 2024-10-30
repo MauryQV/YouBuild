@@ -45,12 +45,12 @@ class UsuarioDB(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre_completo = models.CharField(max_length=50, verbose_name="Nombre completo", null=True)
     municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
-    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección", null=True)
+    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True)
     telefono = models.CharField(
         max_length=15, verbose_name="Número de teléfono",
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="El número debe estar en el formato: '+59199999999'. Hasta 15 dígitos.")]
     )
-    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png',verbose_name="foto de perfil")
+    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png')
     qr_imagen = models.ImageField(upload_to='qr/', null=True, blank=True, verbose_name="Código QR")
 
     class Meta:
@@ -107,18 +107,6 @@ class CategoriaDb(models.Model):
     def __str__(self):
         return self.nombre
 
-#Subcategoria    
-class SubcategoriaDB(models.Model):
-    nombre = models.CharField(max_length=50, verbose_name="Nombre de la subcategoría")
-    categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, related_name="subcategorias")
-
-    class Meta:
-        verbose_name = "Subcategoría"
-        verbose_name_plural = "Subcategorías"
-
-    def __str__(self):
-        return self.nombre
-
 
 # Subcategoria
 class SubcategoriaDB(models.Model):
@@ -144,8 +132,6 @@ class ProductoDb(models.Model):
     direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
-    municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
-    direccion = models.CharField(max_length=255, null=True)  # Permitir nulos
 
     class Meta:
         db_table = "productos"
@@ -216,7 +202,7 @@ class CarruselDB(models.Model):
     class Meta:
         verbose_name = "Carrusel"
         verbose_name_plural = "Carruseles"
-
+        
 class ListaFavoritosDB(models.Model):
     usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, related_name="wishlist")
     producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="favoritos")

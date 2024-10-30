@@ -19,10 +19,6 @@ from django.views.generic.edit import UpdateView
 # Vista principal
 @login_required
 def home_view(request):
-
-    print("Usuario autenticado:", request.user)  # Para verificar el usuario autenticado
-    print("Perfil de usuario:", request.user.usuariodb)
-
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     usuario = request.user.usuariodb
@@ -221,10 +217,18 @@ def registro_producto(request):
     return render(request, 'registro_producto.html', {'form': form})
 
 @login_required
+def vender_view(request):
+    return redirect('registro_producto')
+
+@login_required
 def ver_lista_favoritos(request):
-    usuario = request.user.usuariodb
+    usuario = request.user.usuariodb  # Obtiene el perfil de usuario
     lista_favoritos_items = ListaFavoritosDB.objects.filter(usuario=usuario)
-    return render(request, 'listaFavoritos.html', {'lista_favoritos_items': lista_favoritos_items})
+    
+    return render(request, 'listaFavoritos.html', {
+        'lista_favoritos_items': lista_favoritos_items,
+        'usuario': usuario  # Pasa el usuario al contexto de la plantilla
+    })
 
 @login_required
 def agregar_a_lista_favoritos(request, producto_id):
@@ -240,7 +244,3 @@ def eliminar_de_lista_favoritos(request, producto_id):
     favoritos = ListaFavoritosDB(usuario=usuario)  # Crea una instancia de ListaFavoritosDB
     favoritos.eliminar_producto(producto)  # Utiliza el nuevo método para eliminar
     return redirect('listaFavoritos')
-
-@login_required
-def vender_view(request):
-    return redirect('registro_producto')
