@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Lista de Deseos{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'listaFavoritos.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Lista de Deseos</h1>
+    <p>Estos son los productos de YouBuild que has marcado como favoritos.</p>
+    <div class="lista_favoritos-container">
+        <div class="lista_favoritos-products">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ELIMINAR</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO / U</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lista_favoritos_items %}
+                    <tr>
+                        <td>
+                            <form action="{% url 'eliminarFavorito' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="product-info">
+                                <img src="{{ item.producto.imagenes.first.imagen.url }}" alt="{{ item.producto.nombre }}" class="product-image">
+                                <span>{{ item.producto.nombre }}</span>
+                                <button class="btn-detalle">Ver Detalle</button>
+                                <button class="btn-agregar">Agregar a Carrito</button>
+                                <button class="btn-comprar">Comprar Ahora</button>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.producto.precio }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No tienes productos en tu lista de deseos.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'index' %}" class="btn-volver">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+.container {
+    background-color: white; /* Fondo blanco */
+    border-radius: 8px;      /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para destacar el cuadro */
+    padding: 20px;           /* Espaciado interno */
+    max-width: 800px;        /* Ancho máximo del cuadro */
+    margin: 30px auto;       /* Centrar el cuadro y margen superior */
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.wishlist-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.wishlist-products table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wishlist-products th, .wishlist-products td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.wishlist-products .product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-info .product-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.btn-detalle, .btn-agregar, .btn-comprar {
+    background-color: #fff;
+    border: 1px solid #ff6600;
+    color: #ff6600;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-detalle:hover, .btn-agregar:hover, .btn-comprar:hover {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.btn-volver {
+    background-color: #ff6600;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.btn-volver:hover {
+    background-color: #e55b00;
+}

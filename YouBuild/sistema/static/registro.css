@@ -194,11 +194,32 @@ h2.registro-titulo {
   }
 }
 
+/* Barra de progreso de pasos */
+.registro-progreso {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.paso {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.paso.activo {
+  background-color: #4CAF50;
+  color: #fff;
+}
+/* Mensajes de error */
 .error {
   color: red;
   font-size: 0.9em;
+  margin-top: 5px;
 }
-
-.error-border {
-  border: 2px solid red;
+.oculto {
+  display: none;
 }
