@@ -85,20 +85,19 @@
 }
 
 /* Estilos del botón guardar */
-.btn-save {
-    background-color: #ff6b00;
-    color: #ffffff;
-    padding: 12px 25px;
+.btn-primario {
+    background-color: #ef6605; /* Color de fondo naranja */
+    color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn-save:hover {
-    background-color: #e65a00;
+.btn-primario:hover {
+    background-color: #e65a00; /* Color de fondo en hover */
 }
 
 /* Bordes curvos en los campos de formulario */
