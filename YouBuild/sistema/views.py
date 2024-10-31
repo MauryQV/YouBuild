@@ -75,12 +75,22 @@ def index_view(request):
     carruseles = CarruselDB.objects.all().order_by("id")
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
 
+
 # Vista de producto individual
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
-    return render(request, "detalle_producto.html", {"producto": producto})
+    
+    # Determina la plantilla base según si el usuario está autenticado
+    template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
+    
+    # Renderiza la vista con la plantilla seleccionada
+    return render(request, "detalle_producto.html", {
+        "producto": producto,
+        "template": template
+    })
+
 
 # Buscar productos
 def buscar_view(request):
