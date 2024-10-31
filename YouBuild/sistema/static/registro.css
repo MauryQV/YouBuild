@@ -6,7 +6,7 @@
 /* Estilos específicos para los elementos que estarán en la misma fila */
 .registro-inline {
   display: flex;
-  gap: 15px;
+  gap: 15px; /* Espacio entre los botones */
 }
 
 .registro-inline-item {
@@ -48,15 +48,15 @@ h2.registro-titulo {
 
 }
 
-/* Barra de progreso de pasos */
 .registro-progreso {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Ajuste del espacio entre los pasos */
+  align-items: center;
   margin-bottom: 20px;
+  gap: 8px;
 }
 
-.paso {
+.registro-progreso .paso {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -69,16 +69,21 @@ h2.registro-titulo {
   transition: background-color 0.3s ease;
 }
 
-.paso.activo {
-  background-color: #ef6605; /* Color de fondo para el paso activo */
+.registro-progreso .paso.activo {
+  background-color: #ef6605;
 }
 
-/* Línea de conexión entre pasos (oculta en este diseño) */
-.linea {
-  display: none;
+.registro-progreso .linea {
+  width: 40px;
+  height: 4px;
+  background-color: #ccc;
+  transition: background-color 0.3s ease;
 }
 
-/* Estilos de los campos del formulario */
+.registro-progreso .linea.activa {
+  background-color: #ef6605;
+}
+
 .registro-formulario {
   display: flex;
   flex-direction: column;
@@ -104,7 +109,7 @@ h2.registro-titulo {
   box-sizing: border-box;
 }
 
-/* Botones del formulario */
+/* Button Styles */
 .registro-btn-siguiente,
 .registro-btn-anterior,
 .registro-btn-submit {
@@ -124,6 +129,22 @@ h2.registro-titulo {
 .registro-btn-anterior:hover,
 .registro-btn-submit:hover {
   background-color: #d67a0b;
+}
+
+/* Styles for Disabled 'Crear una Cuenta' Button */
+.registro-btn-submit.disabled {
+  background-color: #e0e0e0; /* Gray color for disabled state */
+  color: #333;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
+}
+
+/* Styles for Enabled 'Crear una Cuenta' Button */
+.registro-btn-submit.enabled {
+  background-color: #ef6605; /* Orange color when enabled */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .registro-btn-anterior {
@@ -146,7 +167,10 @@ h2.registro-titulo {
   margin-right: 10px;
 }
 
-/* Vista previa de la imagen */
+.oculto {
+  display: none;
+}
+
 .imagen-preview {
   position: relative;
   margin-top: 10px;
@@ -155,7 +179,6 @@ h2.registro-titulo {
   overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 8px;
-  display: flex;
   justify-content: center;
   align-items: center;
   margin-left: auto;
@@ -188,13 +211,32 @@ h2.registro-titulo {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Barra de progreso de pasos */
+.registro-progreso {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.paso {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.paso.activo {
+  background-color: #4CAF50;
+  color: #fff;
+}
 /* Mensajes de error */
 .error {
   color: red;
   font-size: 0.9em;
   margin-top: 5px;
 }
-
 .oculto {
   display: none;
 }
