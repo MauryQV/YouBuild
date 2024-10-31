@@ -33,7 +33,10 @@ def home_view(request):
 
 # Perfil de usuario
 def perfil_view(request):
-    return render(request, "perfil.html")
+    usuario = request.user.usuariodb
+    return render(request, "perfil.html",{
+      "usuario": usuario,       
+    })
 
 # Cerrar sesión
 def custom_logout_view(request):
