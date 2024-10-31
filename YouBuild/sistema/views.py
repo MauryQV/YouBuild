@@ -11,11 +11,8 @@ from .forms import RegistroUsuarioForm, RegistroProductoForm
 from .models import ImagenProductoDB
 import json
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
-from django.views.generic.edit import UpdateView
-from django.http import HttpResponse
-from django.template.loader import render_to_string
+
 
 # Vista principal
 @login_required
@@ -85,7 +82,6 @@ def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
-    usuario = request.user.usuariodb
     
     # Determina la plantilla base según si el usuario está autenticado
     template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
@@ -94,7 +90,6 @@ def producto_view(request, id):
     return render(request, "detalle_producto.html", {
         "producto": producto,
         "template": template,
-        "usuario": usuario  
     })
 
 
