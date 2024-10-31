@@ -141,9 +141,6 @@ class ProductoDb(models.Model):
     def __str__(self):
         return self.nombre
 
-
-
-
 # ImagenProducto
 class ImagenProductoDB(models.Model):
     producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="imagenes")
@@ -215,7 +212,6 @@ class ListaFavoritosDB(models.Model):
         return f"{self.usuario.user} - {self.producto.nombre}"
 
     def agregar_producto(self, producto):
-        """ Agregar un producto a la lista de deseos """
         _, created = ListaFavoritosDB.objects.get_or_create(
             usuario=self.usuario, 
             producto=producto
@@ -223,9 +219,7 @@ class ListaFavoritosDB(models.Model):
         return created  # Retorna True si fue creado, False si ya existía
 
     def eliminar_producto(self, producto):
-        """ Eliminar un producto de la lista de deseos """
         ListaFavoritosDB.objects.filter(usuario=self.usuario, producto=producto).delete()
 
     def contar_productos(self):
-        """ Contar la cantidad de productos en la lista de deseos """
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
