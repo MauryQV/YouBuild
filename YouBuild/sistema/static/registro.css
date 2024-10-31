@@ -23,8 +23,15 @@ body {
   flex-direction: column; /* Asegura que el footer esté al final */
   justify-content: flex-start;
   align-items: center;
+<<<<<<< HEAD
   min-height: 100vh;
   overflow: auto; /* Controla el desbordamiento */
+=======
+  overflow: auto; /* Controla el desbordamiento */
+}
+footer {
+  margin-top: 50px; /* Aumenta este valor si es necesario */
+>>>>>>> develop
 }
 
 .registro-container {
@@ -55,6 +62,9 @@ h2.registro-titulo {
   max-width: 500px;
   width: 100%;
   margin: auto;
+  margin-bottom: 30px; /* Asegura que haya espacio entre el registro y el footer */
+  overflow: auto; /* Permite que el contenedor maneje su propio desbordamiento */
+
 }
 
 .registro-progreso {
@@ -248,9 +258,12 @@ h2.registro-titulo {
 }
 .oculto {
   display: none;
+<<<<<<< HEAD
 }
 
 
 footer {
   margin-top: 50px; /* Aumenta este valor si es necesario */
+=======
+>>>>>>> develop
 }

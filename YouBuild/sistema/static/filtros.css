@@ -1,0 +1,56 @@
+/* filtros.css */
+
+/* Estilos generales para la sección de filtros */
+.filtros {
+    display: flex; /* Usa flexbox para alinear los elementos en una fila */
+    justify-content: flex-start; /* Espaciado uniforme entre elementos */
+    align-items: center; /* Alinear verticalmente en el centro */
+    gap: 5px;
+    margin-bottom: 40px; /* Espacio debajo de los filtros */
+    padding: 10px; /* Espacio interno */
+    background-color: #f8f9fa; /* Color de fondo claro para la sección de filtros */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+  }
+
+.filtros label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 2px;
+}
+
+.filtros select {
+    background-color: #ff7b1a;
+    color: white;
+    padding: 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.filtros select option {
+    color: black;
+    font-size: 14px;
+}
+
+#aplicar-filtros,
+#reset-filtros {
+    background-color: transparent;
+    color: #ff7b1a;
+    border: 2px solid #ff7b1a;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#aplicar-filtros:hover,
+#reset-filtros:hover {
+    background-color: #ff7b1a;
+    color: white;
+}
+
+

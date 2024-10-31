@@ -23,7 +23,7 @@ main {
     flex: 1; 
     justify-content: flex-start; 
     margin: 0;
-    padding-top: 100px; 
+    padding-top: 10px; 
 }
 footer {
     background-color: #1c1c0d;
@@ -37,6 +37,7 @@ footer {
     display: flex; 
     justify-content: space-around; 
     flex-wrap: wrap;
+<<<<<<< HEAD
     width: 100%; 
     margin: 0 auto; 
     padding: 0 10px; 
@@ -57,12 +58,50 @@ footer {
     margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
 }
 
+=======
+    width: 100%;
+    margin: 0 auto; 
+    padding: 0 0px; 
+    
+}
+
+>>>>>>> develop
 .footer-contact,
 .footer-legal {
     flex: 1; /* Cada sección toma un espacio igual */
     min-width: 200px; /* Ancho mínimo para cada sección */
     margin: 10px; /* Margen entre secciones */
 }
+
+.footer-description {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
+
+.footer-links {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
+.social-section {
+    display: flex;
+    flex-direction: column; /* Disposición vertical */
+    align-items: center; /* Centrar horizontalmente */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.social-title {
+    margin-bottom: 10px; /* Espacio inferior entre el título y los botones */
+    color: #ffffff; /* Color del texto */
+    font-size: 1.5rem; /* Tamaño del texto, ajusta según necesites */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
 
 .footer-links ul,
 .footer-legal ul {
