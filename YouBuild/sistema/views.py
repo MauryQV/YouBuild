@@ -302,7 +302,7 @@ def registro_producto(request):
             return redirect('home') 
     else:
         form = RegistroProductoForm()
-    return render(request, 'registro_producto.html', {'form': form})
+    return render(request, 'registro_producto.html', {'form': form})    
 
 @login_required
 def vender_view(request):
