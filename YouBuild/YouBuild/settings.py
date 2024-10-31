@@ -17,6 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -27,6 +28,8 @@ SECRET_KEY = '39x_w7n_dfss8@hdqe#r%a+6_cnc&--a^w(4(%_^1*xi(u&r80'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
 
@@ -41,6 +44,8 @@ INSTALLED_APPS = [
     #mis apps
     'sistema.apps.SistemaConfig',
     'rest_framework',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 LOGIN_REDIRECT_URL = '/'
