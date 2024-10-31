@@ -127,6 +127,24 @@
     outline: none;
 }
 
+.profile-container {
+    display: flex;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    gap: 20px;
+    background-color: #f4f6f9;
+    border-radius: 10px;
+}
+
+/* Estilos para los contenedores con borde negro curvo */
+.profile-sidebar, .profile-main {
+    background: #ffffff;
+    padding: 25px;
+    border: 2px solid black; /* Borde negro */
+    border-radius: 15px; /* Esquinas redondeadas */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
 /* Responsividad para pantallas medianas y pequeñas */
 @media (max-width: 768px) {
     .profile-container {
