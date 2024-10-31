@@ -249,15 +249,15 @@
         }
         function validarTelefono() {
             const telefono = $("#id_telefono").val();
-            if (!/^\d{9,15}$/.test(telefono)) {
-                $("#error-telefono").text("Número de teléfono inválido.");
+            if (!/^\d{8}$/.test(telefono)) {  // Cambiado para solo permitir exactamente 8 dígitos
+                $("#error-telefono").text("Número de teléfono debe tener exactamente 8 dígitos.");
             } else {
                 $("#error-telefono").text("");
             }
         }
         function validarEmail() {
             const email = $("#id_email").val();
-            if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {  // Email ahora es opcional
                 $("#error-email").text("Formato de correo electrónico inválido.");
             } else {
                 $("#error-email").text("");
@@ -355,14 +355,14 @@ function validarSeccion1() {
         document.getElementById("error-password2").innerText = "";
     }
     // Validación de teléfono
-    if (!/^\d{9,15}$/.test(telefono)) {
+    if (!/^\d{8}$/.test(telefono)) {
         document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
         error = true;
     } else {
         document.getElementById("error-telefono").innerText = "";
     }
     // Validación de correo electrónico
-    if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
         document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
         error = true;
     } else {
