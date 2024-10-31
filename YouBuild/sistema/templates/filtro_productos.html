@@ -1,0 +1,10 @@
+{% for producto in productos %}
+    <div class="producto-item">
+        <img src="{{ producto.imagenes.first.imagen.url if producto.imagenes.exists else 'default-image.jpg' }}" alt="{{ producto.nombre }}">
+        <h3>{{ producto.nombre }}</h3>
+        <p>Precio: {{ producto.precio }} $</p>
+        <a href="{% url 'detalle_producto' producto.id %}">Ver Detalle</a>
+    </div>
+{% empty %}
+    <p>No hay productos que coincidan con los criterios de búsqueda.</p>
+{% endfor %}
