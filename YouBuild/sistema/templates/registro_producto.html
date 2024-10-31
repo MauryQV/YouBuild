@@ -3,39 +3,29 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Producto</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Registrar Productos</h1>
-        
+        <h1 class="title">Registrar Producto</h1>
+
         <form method="POST" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
-            
-            <!-- Mensajes de error -->
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <div class="alert alert-danger">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
 
             <!-- Información del Producto -->
             <fieldset class="section">
                 <legend>Información del Producto</legend>
+                <p class="section-subtitle">¿Qué vendes? Proporciona toda la información relevante</p>
+
                 <div class="form-group">
                     <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
                     {{ form.nombre }}
+                    <small>Ejemplos: cemento</small>
                 </div>
-
+                
                 <div class="form-group">
                     <label for="{{ form.categoria_fk.id_for_label }}">Categoría y subcategoría</label>
                     {{ form.categoria_fk }}
@@ -44,12 +34,16 @@
                 <div class="form-group">
                     <label for="{{ form.detalle.id_for_label }}">Descripción</label>
                     {{ form.detalle }}
+                    <small>Máximo 500 caracteres</small>
                 </div>
-                
+
                 <div class="two-columns">
                     <div class="form-group">
-                        <label for="{{ form.precio.id_for_label }}">Precio</label>
-                        {{ form.precio }}
+                        <label for="{{ form.precio.id_for_label }}">Precio c/u</label>
+                        <div class="price-container">
+                            {{ form.precio }}
+                            <span class="currency">Bolivianos</span>
+                        </div>
                     </div>
                     <div class="form-group cantidad-group">
                         <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
@@ -67,19 +61,36 @@
                 <legend>Fotos</legend>
                 <p>Sube hasta cuatro fotos</p>
                 <div class="image-upload">
-                    <input type="file" name="imagenes" required>
-                    <input type="file" name="imagenes">
-                    <input type="file" name="imagenes">
-                    <input type="file" name="imagenes">
-
+                    <label for="file1">
+                        <input type="file" id="file1" name="imagenes" required onchange="showPreview(event, 'preview1')">
+                        <span id="preview1">Foto principal</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file1', 'preview1')">x</button>
+                    </label>
+                    <label for="file2">
+                        <input type="file" id="file2" name="imagenes" onchange="showPreview(event, 'preview2')">
+                        <span id="preview2">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file2', 'preview2')">x</button>
+                    </label>
+                    <label for="file3">
+                        <input type="file" id="file3" name="imagenes" onchange="showPreview(event, 'preview3')">
+                        <span id="preview3">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file3', 'preview3')">x</button>
+                    </label>
+                    <label for="file4">
+                        <input type="file" id="file4" name="imagenes" onchange="showPreview(event, 'preview4')">
+                        <span id="preview4">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file4', 'preview4')">x</button>
+                    </label>
                 </div>
             </fieldset>
 
             <!-- Ubicación -->
             <fieldset class="section">
                 <legend>Ubicación</legend>
+                <p>Agrega la información para que los clientes sepan dónde vendes el producto</p>
+
                 <div class="form-group">
-                    <label for="{{ form.departamento_fk.id_for_label }}">Ciudad</label>
+                    <label for="{{ form.departamento_fk.id_for_label }}">Departamento</label>
                     {{ form.departamento_fk }}
                 </div>
 
@@ -97,6 +108,7 @@
                 <div class="form-group">
                     <label for="{{ form.direccion_1.id_for_label }}">Dirección específica</label>
                     {{ form.direccion_1 }}
+                    <small>Puntos de referencia, número de casa, etc.</small>
                 </div>
             </fieldset>
 
@@ -109,6 +121,33 @@
     </div>
 
     <script>
+        // Function to display image preview
+        function showPreview(event, previewId) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.style.backgroundImage = `url(${e.target.result})`;
+                    preview.style.backgroundSize = "cover";
+                    preview.style.backgroundPosition = "center";
+                    preview.innerHTML = "";  // Clear the '+' sign or any other text
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Function to remove selected image
+        function removeImage(inputId, previewId) {
+            const fileInput = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            fileInput.value = "";  // Clear the file input
+            preview.style.backgroundImage = "";  // Remove the background image
+            preview.innerHTML = inputId === 'file1' ? "Foto principal" : "+";  // Reset the placeholder text
+        }
+
         // Incrementar y decrementar cantidad
         document.getElementById('increment').addEventListener('click', function() {
             let cantidad = document.getElementById('id_cantidad');
@@ -125,7 +164,7 @@
         $(document).ready(function() {
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
-                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
+                var url = "{% url 'ajax_cargar_provincias' %}";
                 var departamentoId = $(this).val();
                 $.ajax({
                     url: url,
@@ -143,7 +182,7 @@
 
             // Cargar municipios cuando se selecciona una provincia
             $('#id_provincia_fk').change(function() {
-                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
+                var url = "{% url 'ajax_cargar_municipios' %}";
                 var provinciaId = $(this).val();
                 $.ajax({
                     url: url,
@@ -159,10 +198,6 @@
                 });
             });
         });
-
-        
-        
     </script>
 </body>
 </html>
-

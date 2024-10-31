@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from .models import UsuarioDB, ProductoDb, CategoriaDb, DepartamentoDB, ProvinciaDB, MunicipioDB, ImagenProductoDB
-
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column, Submit
 
 class LoginForm(AuthenticationForm):
     pass
@@ -119,15 +120,39 @@ class RegistroUsuarioForm(UserCreationForm):
     
     
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
+    email = forms.EmailField(label="Correo Electrónico", widget=forms.EmailInput(attrs={'placeholder': 'ejemplo@correo.com'}))
+
     class Meta:
         model = User
-        fields = ['username','email']
+        fields = ['username', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False  # Oculta etiquetas para tener un diseño más limpio
+        self.helper.layout = Layout(
+            Row(
+                Column('username', css_class='form-group col-md-6 mb-0'),
+                Column('email', css_class='form-group col-md-6 mb-0'),
+            ),
+            Submit('submit', 'Guardar Cambios', css_class='btn btn-primary')
+        )
     
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UsuarioDB
-        fields = ['nombre_completo','direccion_1','imagen_perfil']
+        fields = ['nombre_completo', 'direccion_1', 'imagen_perfil']
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            'nombre_completo',
+            'direccion_1',
+            'imagen_perfil',
+            Submit('submit', 'Actualizar Perfil', css_class='btn btn-primary')
+        )
 
 
 class RegistroProductoForm(forms.ModelForm):

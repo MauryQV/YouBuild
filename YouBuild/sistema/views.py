@@ -11,9 +11,7 @@ from .forms import RegistroUsuarioForm, RegistroProductoForm
 from .models import ImagenProductoDB
 import json
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
-from django.views.generic.edit import UpdateView
 
 
 # Vista principal
@@ -21,11 +19,13 @@ from django.views.generic.edit import UpdateView
 def home_view(request):
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
+    categorias = CategoriaDb.objects.all()
     usuario = request.user.usuariodb
     return render(request, "home.html", {
         "producto": productos,
         "carrusel": carruseles,
-        "usuario": usuario
+        "usuario": usuario,
+        'categorias': categorias,
     })
 
 # Perfil de usuario
@@ -73,7 +73,8 @@ def index_view(request):
         return redirect('home')
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
-    return render(request, "index.html", {"producto": productos, "carrusel": carruseles})
+    categorias = CategoriaDb.objects.all()
+    return render(request, "index.html", {"producto": productos, "carrusel": carruseles, 'categorias': categorias})
 
 
 # Vista de producto individual
@@ -88,7 +89,7 @@ def producto_view(request, id):
     # Renderiza la vista con la plantilla seleccionada
     return render(request, "detalle_producto.html", {
         "producto": producto,
-        "template": template
+        "template": template,
     })
 
 
@@ -97,6 +98,75 @@ def buscar_view(request):
     q = request.GET.get('q', '')
     productos = ProductoDb.objects.filter(nombre__icontains=q)
     return render(request, 'index.html', {'producto': productos})
+
+def filtro_productos_view(request):
+    # Obtener parámetros de búsqueda del POST
+    categoria = request.POST.get('categoria', '')
+    precio_min = request.POST.get('precio_min', None)
+    precio_max = request.POST.get('precio_max', None)
+    ordenar = request.POST.get('ordenar', 'asc')
+
+    # Imprimir los parámetros recibidos
+    print("Categoría recibida:", categoria)
+    print("Precio mínimo recibido:", precio_min)
+    print("Precio máximo recibido:", precio_max)
+    print("Ordenar por:", ordenar)
+
+    # Filtrar productos
+    productos = ProductoDb.objects.all()
+    categorias = CategoriaDb.objects.all()
+
+
+    # Filtrar por categoría si está presente
+    if categoria:
+        productos = productos.filter(categoria_fk=categoria)
+        print("Productos después de filtrar por categoría:", productos)
+
+    print("Valor de precio_min recibido:", precio_min)
+    print("Valor de precio_max recibido:", precio_max)
+
+    # Filtrar por rango de precio
+    if precio_min:
+        productos = productos.filter(precio__gte=float(precio_min))
+        print("Productos después de filtrar por precio mínimo:", productos)
+
+    if precio_max:
+        productos = productos.filter(precio__lte=float(precio_max))
+        print("Productos después de filtrar por precio máximo:", productos)
+
+    print("Ordenar recibido:", ordenar)
+
+    # Ordenar productos
+    if ordenar == 'mayor':
+        productos = productos.order_by('-precio')
+    elif ordenar == 'menor':
+        productos = productos.order_by('precio')
+    
+    # Imprimir los productos finales después de todos los filtros
+    print("Productos después de filtrar y ordenar:", productos)
+
+    # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        productos_data = [
+            {
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'precio': producto.precio,
+                'imagen': producto.imagenes.first().imagen.url if producto.imagenes.exists() else None,
+            }
+            for producto in productos
+        ]
+        
+        # Imprimir los datos de productos que se enviarán como respuesta JSON
+        print("Datos de productos para respuesta JSON:", productos_data)
+
+        return JsonResponse({'products': productos_data})
+
+    # Para solicitudes normales, renderizar toda la página
+    return render(request, 'filtro_productos.html', {
+        'productos': productos,
+        'categorias': categorias,
+    })
 
 # Carrito de compras
 @login_required
@@ -227,7 +297,7 @@ def registro_producto(request):
             return redirect('home') 
     else:
         form = RegistroProductoForm()
-    return render(request, 'registro_producto.html', {'form': form})
+    return render(request, 'registro_producto.html', {'form': form})    
 
 @login_required
 def vender_view(request):
@@ -252,8 +322,17 @@ def agregar_a_lista_favoritos(request, producto_id):
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):
+    # Obtener el usuario actual en sesión
     usuario = request.user.usuariodb
-    producto = get_object_or_404(ProductoDb, id=producto_id)  # Obtén el producto para eliminarlo
-    favoritos = ListaFavoritosDB(usuario=usuario)  # Crea una instancia de ListaFavoritosDB
-    favoritos.eliminar_producto(producto)  # Utiliza el nuevo método para eliminar
+    
+    # Buscar y eliminar el registro de la tabla ListaFavoritosDB que coincida con usuario y producto
+    eliminado = ListaFavoritosDB.objects.filter(usuario=usuario, producto_id=producto_id).delete()
+    
+    # Verificar si se eliminó alguna fila y mostrar mensaje adecuado
+    if eliminado[0] > 0:
+        messages.success(request, "Producto eliminado de la lista de favoritos.")
+    else:
+        messages.error(request, "El producto no se encontró en la lista de favoritos.")
+    
     return redirect('listaFavoritos')
+
