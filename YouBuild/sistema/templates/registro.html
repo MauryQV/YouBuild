@@ -7,10 +7,28 @@
     <title>Registro de Usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'registro.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
 </head>
 <body>
+    <header>
+        <div class="topbar-container">
+          <div class="topbar-left">
+            <a href="/ " class="logo">
+              <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
+            </a>
+          </div>
+          <div class="topbar-right">
+            <a href="{% url 'login' %}" class="btn-link">Iniciar Sesión</a>
+          </div>
+        </div>
+      </header>      
+   
+  <!-- Contenedor principal para centrar el formulario entre el topbar y el footer -->
+  <main class="main-container">
+    {% block content %}
     <div class="registro-container">
-        <h2 class="registro-titulo">Crear Cuenta</h2>
+        <h2 cl:ass="registro-titulo">Crear Cuenta</h2>
 
         <!-- Barra de progreso de pasos -->
         <div class="registro-progreso">
@@ -135,12 +153,53 @@
 
                 <!-- Button Container -->
                 <div class="registro-botones registro-inline">
-                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atras</button>
                     <button type="submit" class="registro-btn-submit" id="crear-cuenta" disabled>Crear una cuenta</button>
                 </div>
             </div>
         </form>
     </div>
+    {% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Descripción de la empresa -->
+        <div class="footer-description">
+            <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        
+        <!-- Redes Sociales -->
+        <div class="footer-social">
+            <h4>Síguenos en redes sociales</h4>
+            <div class="social-buttons">
+                <a href="https://facebook.com" target="_blank" class="social-button facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="social-button instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="social-button twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contacto -->
+        <div class="footer-contact">
+            <h4>Contáctanos</h4>
+            <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+5916457657X">+591 6457657X</a></p>
+        </div>
+        
+        <!-- Términos y condiciones -->
+        <div class="footer-links">
+            <h4>Sobre nosotros</h4>
+            <p><a href="#">Términos y Condiciones</a></p>
+            <p><a href="#">Política de Privacidad</a></p>
+        </div>
+    </div>
+</footer>
 
     <script type="text/javascript">
         let seccionActual = 1;

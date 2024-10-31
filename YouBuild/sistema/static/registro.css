@@ -20,9 +20,13 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Asegura que el footer esté al final */
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+  overflow: auto; /* Controla el desbordamiento */
+}
+footer {
+  margin-top: 50px; /* Aumenta este valor si es necesario */
 }
 
 h2.registro-titulo {
@@ -39,6 +43,9 @@ h2.registro-titulo {
   max-width: 500px;
   width: 100%;
   margin: auto;
+  margin-bottom: 30px; /* Asegura que haya espacio entre el registro y el footer */
+  overflow: auto; /* Permite que el contenedor maneje su propio desbordamiento */
+
 }
 
 /* Barra de progreso de pasos */
