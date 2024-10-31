@@ -1,12 +1,10 @@
-/* Barra superior */
 .topbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 20px 20px;
     background-color: #FFFFFF;
     position: relative;
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
 }
 
 .topbar-container::after {
@@ -23,59 +21,27 @@
 .topbar-right {
     display: flex;
     gap: 10px;
-    align-items: center;
-}
-
-/* Ajustes en el cuadro de búsqueda */
-.search-box {
-    display: flex;
-    align-items: center;
-    background-color: #f8f7f5;
-    border: 2px solid #ef6605;
-    border-radius: 10px;
-    padding: 5px;
-    flex-grow: 1; /* Hace que ocupe todo el espacio disponible */
-    max-width: 100%;
-    margin: 10px 0;
-}
-
-.search-box input {
-    border: none;
-    background-color: transparent;
-    outline: none;
-    flex-grow: 1;
-    padding: 5px;
-}
-
-.search-box button {
-    background-color: transparent;
-    border: none;
-    color: #ED8C2B;
-    cursor: pointer;
-}
-
-.search-box button i {
-    font-size: 18px;
 }
 
 /* Estilo de los íconos con círculo */
 .icon-btn {
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Ajusta el ancho del círculo */
+    height: 50px; /* Ajusta la altura del círculo */
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: white;
     border: 2px solid #ef6605;
-    border-radius: 50%;
+    border-radius: 50%; /* Mantiene el botón circular */
     color: #ef6605;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .icon-btn i {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 /* Circulo del contador en el carrito */
@@ -93,6 +59,13 @@
     align-items: center;
     font-size: 12px;
     border: 2px solid white;
+}
+
+/* Estilo de la imagen de perfil (sin círculo) */
+.profile-icon .profile-pic {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
 }
 
 /* Estilo del botón de vender */
@@ -122,44 +95,71 @@
     background-color: #ea580c;
 }
 
-/* Responsividad */
-@media (max-width: 768px) {
-    .topbar-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
-    }
-
-    .search-box {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .topbar-right {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .btn-sell {
-        width: 100%;
-        text-align: center;
-    }
+.profile-menu-container {
+    position: relative;
+    display: inline-block;
 }
 
-@media (max-width: 576px) {
-    .icon-btn {
-        width: 35px;
-        height: 35px;
-    }
+/* Menú desplegable (oculto por defecto) */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;  /* Coloca el menú justo debajo del ícono */
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 120px;
+    z-index: 10;
+}
 
-    .btn-sell {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
+.dropdown-menu a {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
 
-    .topbar-right {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
+.dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Clase para mostrar el menú */
+.dropdown-menu.visible {
+    display: block;
+}
+
+.search-box {
+    display: inline-flex;
+    background-color: #f8f7f5;
+    border: 2px solid #ef6605;
+    /* Añadido borde */
+    border-radius: 10px;
+    padding: 5px;
+    /* Ajustado el padding para tener espacio interior */
+    width: 800px;
+    /* Aumentar el ancho según lo necesites */
+}
+
+.search-box input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    flex-grow: 1;
+    /* Hace que el input ocupe todo el espacio disponible */
+    padding: 5px;
+    /* Espacio interior del input */
+}
+
+.search-box button {
+    background-color: transparent;
+    border: none;
+    color: #ED8C2B;
+    cursor: pointer;
+}
+
+.search-box button i {
+    font-size: 18px;
 }
