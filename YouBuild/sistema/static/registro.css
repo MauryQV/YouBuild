@@ -29,11 +29,13 @@ body {
 =======
   overflow: auto; /* Controla el desbordamiento */
 }
+
 footer {
   margin-top: 50px; /* Aumenta este valor si es necesario */
 >>>>>>> develop
 }
 
+<<<<<<< HEAD
 .registro-container {
   background-color: white;
   padding: 40px;
@@ -48,10 +50,14 @@ footer {
 }
 
 
+=======
+/* Estilos para centrar el título */
+>>>>>>> develop
 h2.registro-titulo {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+  width: 100%; /* Asegura que el título ocupe todo el ancho disponible */
 }
 
 .registro-container {
@@ -61,21 +67,20 @@ h2.registro-titulo {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   width: 100%;
-  margin: auto;
-  margin-bottom: 30px; /* Asegura que haya espacio entre el registro y el footer */
+  margin: 30px auto; /* Centra el contenedor */
   overflow: auto; /* Permite que el contenedor maneje su propio desbordamiento */
-
 }
 
+/* Barra de progreso de pasos */
 .registro-progreso {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0px; /* Sin espacio entre los botones */
   margin-bottom: 20px;
-  gap: 8px;
 }
 
-.registro-progreso .paso {
+.paso {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -88,12 +93,12 @@ h2.registro-titulo {
   transition: background-color 0.3s ease;
 }
 
-.registro-progreso .paso.activo {
+.paso.activo {
   background-color: #ef6605;
 }
 
 .registro-progreso .linea {
-  width: 40px;
+  width: 10px; /* Reduce el ancho de la línea entre pasos */
   height: 4px;
   background-color: #ccc;
   transition: background-color 0.3s ease;
@@ -230,32 +235,13 @@ h2.registro-titulo {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Barra de progreso de pasos */
-.registro-progreso {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.paso {
-  width: 30px;
-  height: 30px;
-  background-color: #ccc;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-.paso.activo {
-  background-color: #4CAF50;
-  color: #fff;
-}
 /* Mensajes de error */
 .error {
   color: red;
   font-size: 0.9em;
   margin-top: 5px;
 }
+<<<<<<< HEAD
 .oculto {
   display: none;
 <<<<<<< HEAD
@@ -267,3 +253,6 @@ footer {
 =======
 >>>>>>> develop
 }
+=======
+
+>>>>>>> develop
