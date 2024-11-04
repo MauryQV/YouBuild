@@ -1,5 +1,4 @@
 /* General Reset */
-/* General Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -232,3 +231,37 @@ small {
     justify-content: center;
     font-size: 12px;
 }
+
+#error-nombre {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+#error-categoria {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+#error-detalle {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+#error-precio {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+#error-cantidad {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+#error-foto {
+    color: red;
+    display: none; /* Oculto por defecto */
+}
+
+
+
+

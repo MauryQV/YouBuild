@@ -253,7 +253,7 @@
                             $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
                         });
                     }
-                });
+                }); 
             });
         });
     
@@ -273,47 +273,92 @@
             $("#id_telefono").on("input", validarTelefono);
             $("#id_email").on("input", validarEmail);
         }
+
         function validarNombre() {
             const nombre = $("#id_nombre_completo").val();
-            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-                $("#error-nombre").text("Nombre inválido (solo letras y hasta 50 caracteres).");
+            const spaceCount = (nombre.match(/\s/g) || []).length; // Counts the total spaces
+            const hasConsecutiveSpaces = /\s{2,}/.test(nombre); // Checks for consecutive spaces
+        
+            if (nombre.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-nombre").text("Campo Obligatorio");
+            } else if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                $("#error-nombre").text("El nombre solo puede contener letras.");
+            } else if (nombre.length < 4) {
+                $("#error-nombre").text("No se permite registrar un usuario con un nombre menor a 4 caracteres.");
+            } else if (spaceCount > 7) {
+                $("#error-nombre").text("El nombre incluye más de 7 espacios.");
+            } else if (hasConsecutiveSpaces) {
+                $("#error-nombre").text("No se permiten más de dos espacios consecutivos.");
             } else {
-                $("#error-nombre").text("");
+                $("#error-nombre").text(""); // Clear error if input is valid
             }
         }
+                
         function validarUsername() {
             const username = $("#id_username").val();
-            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-                $("#error-username").text("El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.");
+        
+            if (username.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-username").text("Campo Obligatorio");
+            } else if (/\s/.test(username)) { // Check if there is any whitespace in the username
+                $("#error-username").text("No se permiten espacios.");
+            } else if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                $("#error-username").text("El nombre de usuario solo puede contener letras y números.");
             } else {
-                $("#error-username").text("");
+                $("#error-username").text(""); // Clear error if input is valid
             }
         }
+                
         function validarPassword1() {
             const password1 = $("#id_password1").val();
-            if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+        
+            if (password1.trim() === "") { // Check if password1 is empty
+                $("#error-password1").text("Campo Obligatorio");
+            } else if (password1.length > 25) { // Check if password1 exceeds 25 characters
+                $("#error-password1").text("Límite de caracteres excedido (25)");
+            } else if (password1.length < 8) { // Check if password1 is less than 8 characters
+                $("#error-password1").text("Mínimo 8 caracteres");
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
                 $("#error-password1").text("Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.");
             } else {
-                $("#error-password1").text("");
+                $("#error-password1").text(""); // Clear error if input is valid
             }
         }
+        
         function validarPassword2() {
             const password1 = $("#id_password1").val();
             const password2 = $("#id_password2").val();
-            if (password1 !== password2) {
+        
+            if (password2.trim() === "") { // Check if password2 is empty
+                $("#error-password2").text("Campo Obligatorio");
+            } else if (password2.length > 25) { // Check if password2 exceeds 25 characters
+                $("#error-password2").text("Límite de caracteres excedido (25)");
+            } else if (password2.length < 8) { // Check if password2 is less than 8 characters
+                $("#error-password2").text("Mínimo 8 caracteres");
+            } else if (password1 !== password2) {
                 $("#error-password2").text("Las contraseñas no coinciden.");
             } else {
-                $("#error-password2").text("");
+                $("#error-password2").text(""); // Clear error if input is valid
             }
-        }
+        }        
+        
         function validarTelefono() {
             const telefono = $("#id_telefono").val();
-            if (!/^\d{8}$/.test(telefono)) {  // Cambiado para solo permitir exactamente 8 dígitos
-                $("#error-telefono").text("Número de teléfono debe tener exactamente 8 dígitos.");
+        
+            if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
+                $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
+            } else if (/\s/.test(telefono)) { // Checks for any whitespace character
+                $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
+            } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
+                $("#error-telefono").text("Solo se permiten caracteres numéricos.");
+            } else if (telefono.length > 8) { // Ensures no more than 8 digits
+                $("#error-telefono").text("Debe tener solo 8 dígitos.");
+            } else if (telefono.length !== 8) { // Ensures exactly 8 digits
+                $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
             } else {
-                $("#error-telefono").text("");
+                $("#error-telefono").text(""); // Clear error if input is valid
             }
-        }
+        }                        
+        
         function validarEmail() {
             const email = $("#id_email").val();
             if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {  // Email ahora es opcional
@@ -387,27 +432,34 @@ function validarSeccion1() {
     let error = false;
     // Validación de nombre completo
     if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-        document.getElementById("error-nombre").innerText = "Nombre inválido (solo letras y hasta 50 caracteres).";
+        document.getElementById("error-nombre").innerText = "Campo obligatorio.";
         error = true;
     } else {
         document.getElementById("error-nombre").innerText = "";
     }
     // Validación de nombre de usuario
     if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-        document.getElementById("error-username").innerText = "El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.";
+        document.getElementById("error-username").innerText = "Campo Obligatorio.";
         error = true;
     } else {
         document.getElementById("error-username").innerText = "";
     }
-    // Validación de contraseña
-    if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+    // Validación de contraseña (password1)
+    if (password1.trim() === "") {
+        document.getElementById("error-password1").innerText = "Campo Obligatorio";
+        error = true;
+    } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
         document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
         error = true;
     } else {
         document.getElementById("error-password1").innerText = "";
     }
-    // Coincidencia de contraseñas
-    if (password1 !== password2) {
+    
+    // Validación de coincidencia de contraseñas (password2)
+    if (password2.trim() === "") {
+        document.getElementById("error-password2").innerText = "Campo Obligatorio";
+        error = true;
+    } else if (password1 !== password2) {
         document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
         error = true;
     } else {
