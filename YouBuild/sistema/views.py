@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import RegistroUsuarioForm
-from django.contrib.auth import login, logout,update_session_auth_hash
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import *
@@ -28,32 +27,32 @@ def home_view(request):
         'categorias': categorias,
     })
 
-# Perfil de usuario
+
 def perfil_view(request):
     usuario = request.user.usuariodb
     return render(request, "perfil.html",{
       "usuario": usuario,       
     })
 
-# Cerrar sesión
+
 def custom_logout_view(request):
     logout(request)
     return redirect('index')
 
-# Registro de usuario con formulario
+
 def registrar_usuario(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Optionally logs in the user after registration
-            return redirect('success')  # Redirects to the success page after account creation
+            login(request, user)  
+            return redirect('success')  
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro.html', {'form': form})
 
 def success(request):
-    usuario = request.user.usuariodb  # Assuming `usuariodb` is linked to `user`
+    usuario = request.user.usuariodb  
     return render(request, 'success.html', {'usuario': usuario})
 
 def terms_and_conditions(request):
@@ -77,16 +76,12 @@ def index_view(request):
     return render(request, "index.html", {"producto": productos, "carrusel": carruseles, 'categorias': categorias})
 
 
-# Vista de producto individual
+
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
-    
-    # Determina la plantilla base según si el usuario está autenticado
     template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
-    
-    # Renderiza la vista con la plantilla seleccionada
     return render(request, "detalle_producto.html", {
         "producto": producto,
         "template": template,
@@ -105,19 +100,12 @@ def filtro_productos_view(request):
     precio_min = request.POST.get('precio_min', None)
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
-
-    # Imprimir los parámetros recibidos
-    print("Categoría recibida:", categoria)
-    print("Precio mínimo recibido:", precio_min)
-    print("Precio máximo recibido:", precio_max)
-    print("Ordenar por:", ordenar)
-
     # Filtrar productos
     productos = ProductoDb.objects.all()
     categorias = CategoriaDb.objects.all()
 
 
-    # Filtrar por categoría si está presente
+ 
     if categoria:
         productos = productos.filter(categoria_fk=categoria)
         print("Productos después de filtrar por categoría:", productos)
@@ -141,8 +129,6 @@ def filtro_productos_view(request):
         productos = productos.order_by('-precio')
     elif ordenar == 'menor':
         productos = productos.order_by('precio')
-    
-    # Imprimir los productos finales después de todos los filtros
     print("Productos después de filtrar y ordenar:", productos)
 
     # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
@@ -183,7 +169,7 @@ def carrito_view(request):
         "usuario": usuario
     })
 
-# Eliminar producto del carrito
+
 @login_required
 def eliminar_producto(request, item_id):
     carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
@@ -191,7 +177,7 @@ def eliminar_producto(request, item_id):
     messages.success(request, "Producto eliminado del carrito.")
     return redirect('Carrito')
 
-# Actualizar cantidad del carrito
+
 @login_required
 def update_cart_quantity(request):
     if request.method == 'POST':
@@ -214,7 +200,7 @@ def update_cart_quantity(request):
             return JsonResponse({'success': False, 'message': str(e)})
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
-# Agregar producto al carrito
+
 @login_required
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id)
@@ -224,24 +210,24 @@ def agregar_al_carrito(request, producto_id):
     messages.success(request, f"Producto {producto.nombre} agregado al carrito.")
     return redirect('Carrito')
 
-# Cantidad de productos en el carrito
+
 def get_cart_count(request):
     cart_count = request.session.get('cart_count', 0)
     return JsonResponse({'cart_count': cart_count})
 
-# Cargar provincias en AJAX
+
 def cargar_provincias(request):
     departamento_id = request.GET.get('departamento_id')
     provincias = ProvinciaDB.objects.filter(departamento_fk=departamento_id).order_by('nombre')
     return JsonResponse(list(provincias.values('id', 'nombre')), safe=False)
 
-# Cargar municipios en AJAX
+
 def cargar_municipios(request):
     provincia_id = request.GET.get('provincia_id')
     municipios = MunicipioDB.objects.filter(provincia_fk=provincia_id).order_by('nombre')
     return JsonResponse(list(municipios.values('id', 'nombre')), safe=False)
 
-# Vista de prueba
+
 def test(request):
     return render(request, "pagina.html")
 
@@ -249,16 +235,16 @@ def test(request):
 def crear_cuenta_view(request):
     return render(request, 'CrearCuenta.html')
 
-# Create your views here.
-"""class RegisterUserAPI(APIView):
-    parser_classes = [MultiPartParser, FormParser]  # Permitir archivos en la solicitud
+@login_required
+def update_profile_photo(request):
+    # Confirmar que es una solicitud POST y que `imagen_perfil` existe en los archivos
+    if request.method == 'POST' and 'imagen_perfil' in request.FILES:
+        usuario_db = request.user.usuariodb
+        usuario_db.imagen_perfil = request.FILES['imagen_perfil']
+        usuario_db.save()
+        return redirect('profile')  # Redirige a la página de perfil después de guardar
+    return redirect('profile')
 
-    def post(self, request):
-        serializer = UsuarioDBSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 @login_required     
 def perfil_view(request):
     if request.method == 'POST':
@@ -275,13 +261,13 @@ def perfil_view(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.usuariodb)
     
-    context = {    
+        context = {    
         'u_form': u_form,
         'p_form': p_form
     }
-    
-    return render(request,'perfil.html',context)
-# Registro de producto
+    return render(request,'perfil.html',context) 
+
+
 @login_required
 def registro_producto(request):
     if request.method == 'POST':
@@ -310,7 +296,7 @@ def ver_lista_favoritos(request):
     
     return render(request, 'listaFavoritos.html', {
         'lista_favoritos_items': lista_favoritos_items,
-        'usuario': usuario  # Pasa el usuario al contexto de la plantilla
+        'usuario': usuario  
     })
 
 @login_required
@@ -322,13 +308,8 @@ def agregar_a_lista_favoritos(request, producto_id):
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):
-    # Obtener el usuario actual en sesión
     usuario = request.user.usuariodb
-    
-    # Buscar y eliminar el registro de la tabla ListaFavoritosDB que coincida con usuario y producto
     eliminado = ListaFavoritosDB.objects.filter(usuario=usuario, producto_id=producto_id).delete()
-    
-    # Verificar si se eliminó alguna fila y mostrar mensaje adecuado
     if eliminado[0] > 0:
         messages.success(request, "Producto eliminado de la lista de favoritos.")
     else:

@@ -141,7 +141,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UsuarioDB
-        fields = ['nombre_completo', 'direccion_1', 'imagen_perfil']
+        fields = ['nombre_completo', 'direccion_1']
 
     def __init__(self, *args, **kwargs):
         super(ProfileUpdateForm, self).__init__(*args, **kwargs)
@@ -150,7 +150,6 @@ class ProfileUpdateForm(forms.ModelForm):
         self.helper.layout = Layout(
             'nombre_completo',
             'direccion_1',
-            'imagen_perfil',
             Submit('submit', 'Actualizar Perfil', css_class='btn btn-primary')
         )
 

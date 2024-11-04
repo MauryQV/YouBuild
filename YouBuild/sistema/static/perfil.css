@@ -1,4 +1,3 @@
-/* Contenedor principal */
 .profile-container {
     display: flex;
     max-width: 1000px;
@@ -24,31 +23,64 @@
 /* Contenedor de la foto de perfil */
 .profile-photo-container {
     position: relative;
-    margin-bottom: 20px;
+    display: inline-block; /* Mantiene el icono y la imagen juntos */
 }
 
+/* Contenedor de la foto de perfil (donde se coloca la imagen) */
+
+/* Estilo de la imagen de perfil */
 .profile-photo {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     overflow: hidden;
-    margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 2px solid #ff6b00;
 }
 
+/* Estilo de la imagen de perfil */
 .profile-photo .profile-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+
+/* Icono de cámara */
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(0%, 0%); /* Ajuste para sobresalir del borde */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+    padding: 8px;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 10; /* Asegura que esté sobre la imagen */
+}
+
+.camera-icon:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Tamaño del icono de cámara */
+.camera-icon svg {
+    fill: #ffffff;
+    width: 25px;
+    height: 20px;
+}
+
+/* Estilos para SVG de imagen de perfil predeterminada */
 .default-photo {
     width: 100%;
     height: 100%;
 }
+
 
 .profile-name {
     font-size: 20px;
