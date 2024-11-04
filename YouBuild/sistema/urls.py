@@ -32,6 +32,7 @@ urlpatterns = [
     path('lista-favoritos/agregar/<int:producto_id>/', agregar_a_lista_favoritos, name='agregarFavorito'),
     path('lista-favoritos/eliminar/<int:producto_id>/', eliminar_de_lista_favoritos, name='eliminarFavorito'),
     path('filtro-productos/', filtro_productos_view, name='filtro_productos'),
+    path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
 ]
 
 if settings.DEBUG:

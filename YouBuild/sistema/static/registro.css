@@ -218,7 +218,7 @@ h2.registro-titulo {
 
 /* Mensajes de error */
 .error {
-  color: red;
+  color: rgb(177, 0, 0);
   font-size: 0.9em;
   margin-top: 5px;
 }
