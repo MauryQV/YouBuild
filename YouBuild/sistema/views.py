@@ -259,6 +259,16 @@ def crear_cuenta_view(request):
             serializer.save()
             return Response({"message": "Usuario creado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
+@login_required
+def update_profile_photo(request):
+    # Confirmar que es una solicitud POST y que `imagen_perfil` existe en los archivos
+    if request.method == 'POST' and 'imagen_perfil' in request.FILES:
+        usuario_db = request.user.usuariodb
+        usuario_db.imagen_perfil = request.FILES['imagen_perfil']
+        usuario_db.save()
+        return redirect('profile')  # Redirige a la página de perfil después de guardar
+    return redirect('profile')
+
 @login_required     
 def perfil_view(request):
     if request.method == 'POST':
@@ -275,12 +285,12 @@ def perfil_view(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.usuariodb)
     
-    context = {    
+        context = {    
         'u_form': u_form,
         'p_form': p_form
     }
-    
-    return render(request,'perfil.html',context)
+    return render(request,'perfil.html',context) 
+
 # Registro de producto
 @login_required
 def registro_producto(request):

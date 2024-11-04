@@ -12,25 +12,22 @@
 
 {% block content %}
 <div class="profile-container">
-    <!-- Sidebar Izquierdo -->
     <div class="profile-sidebar">
         <h3>Mi Foto</h3>
-        <div class="profile-photo-container">
-            <label for="imagen_perfil">
-                <div class="profile-photo">
-                    {% if user.usuariodb.imagen_perfil %}
-                        <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
-                    {% else %}
-                        <svg viewBox="0 0 100 100" fill="none" stroke="#ff6b00" stroke-width="6" class="default-photo">
-                            <circle cx="50" cy="50" r="46"/>
-                            <circle cx="50" cy="42" r="20"/>
-                            <path d="M12 80 Q 50 44, 88 80" stroke="#ff6b00" fill="none" stroke-width="6" />
-                        </svg>
-                    {% endif %}
-                </div>
-            </label>
-            <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none">
-        </div>
+        <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
+            {% csrf_token %}
+            <div class="profile-photo-container">
+                <label for="imagen_perfil">
+                    <div class="profile-photo">
+                            <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+                    </div>
+                    <div class="camera-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </label>
+                <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none" onchange="document.getElementById('profile-photo-form').submit();">
+            </div>
+        </form>
         <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
         <div class="profile-contact-info">
             <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
@@ -38,7 +35,7 @@
         </div>
     </div>
 
-    <!-- Formulario de Actualización -->
+    <!-- Formulario de actualización de datos personales -->
     <div class="profile-main">
         <h2>Mis Datos Personales</h2>
         <form method="POST" enctype="multipart/form-data">
@@ -48,5 +45,7 @@
             <button type="submit" class="btn-primario">Guardar Cambios</button>
         </form>
     </div>
+</div>
+
 </div>
 {% endblock %}
