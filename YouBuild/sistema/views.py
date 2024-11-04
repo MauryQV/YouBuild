@@ -166,7 +166,6 @@ def carrito_view(request):
         'carrito_productos': carrito_productos,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': total,
-        "usuario": usuario
     })
 
 
@@ -232,9 +231,6 @@ def cargar_municipios(request):
 def test(request):
     return render(request, "pagina.html")
 
-# Vista de creación de cuenta (no se está usando, puede eliminarse)
-def crear_cuenta_view(request):
-    return render(request, 'CrearCuenta.html')
 
 @login_required
 def update_profile_photo(request):
@@ -267,7 +263,6 @@ def perfil_view(request):
         'p_form': p_form
     }
     return render(request,'perfil.html',context) 
-
 
 @login_required
 def registro_producto(request):
@@ -315,6 +310,5 @@ def eliminar_de_lista_favoritos(request, producto_id):
         messages.success(request, "Producto eliminado de la lista de favoritos.")
     else:
         messages.error(request, "El producto no se encontró en la lista de favoritos.")
-    
     return redirect('listaFavoritos')
 

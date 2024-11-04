@@ -40,11 +40,7 @@
           <!-- Icono de Foto de Perfil -->
           <div class="profile-menu-container">
             <a href="#" class="profile-icon" onclick="toggleMenu(event)">
-              {% if usuario.imagen_perfil %}
                 <img src="{{ usuario.imagen_perfil.url }}" alt="Foto de Perfil" class="profile-pic" />
-              {% else %}
-                <img src="{% static 'perfil/perfil.png' %}" alt="Foto de Perfil" class="profile-pic" />
-              {% endif %}
             </a>
             <!-- Menú desplegable -->
             <div class="dropdown-menu hidden" id="profileDropdown">

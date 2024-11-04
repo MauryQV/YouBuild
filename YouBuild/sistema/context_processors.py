@@ -15,3 +15,8 @@ def cart_count(request):
     else:
         cart_count = 0
     return {'cart_count': cart_count}
+
+def user_profile(request):
+    if request.user.is_authenticated:
+        return {"usuario": request.user.usuariodb}
+    return {}
