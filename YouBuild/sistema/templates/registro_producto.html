@@ -248,7 +248,19 @@
                     }
                 });
             });
-        });        
+        });  
+        // Incrementar y decrementar cantidad
+        document.getElementById('increment').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            cantidad.value = parseInt(cantidad.value) + 1;
+        });
+
+        document.getElementById('decrement').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            if (parseInt(cantidad.value) > 1) {
+                cantidad.value = parseInt(cantidad.value) - 1;
+            }
+        });      
     </script>
 </body>
 </html>
