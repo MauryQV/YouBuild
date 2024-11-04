@@ -2,55 +2,67 @@
 
 /* Estilos generales para la sección de filtros */
 .filtros {
-    display: flex; /* Usa flexbox para alinear los elementos en una fila */
-    justify-content: flex-start; /* Espaciado uniforme entre elementos */
-    align-items: center; /* Alinear verticalmente en el centro */
-    gap: 5px;
-    margin-bottom: 40px; /* Espacio debajo de los filtros */
-    padding: 10px; /* Espacio interno */
-    background-color: #f8f9fa; /* Color de fondo claro para la sección de filtros */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px; /* Aumentar el espacio entre los elementos */
+    margin-bottom: 30px; /* Aumentar el espacio para que no choque con el carrusel */
+    padding: 10px;
+    background-color: #ffffff; /* Fondo blanco limpio */
     border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
-  }
-
-.filtros label {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-right: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilo de las etiquetas */
+.filtros label {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin-right: 5px;
+}
+
+/* Estilo de los selectores (dropdowns) */
 .filtros select {
-    background-color: #ff7b1a;
-    color: white;
-    padding: 10px;
-    border: none;
-    font-size: 16px;
-    border-radius: 5px;
+    background-color: white; /* Fondo blanco */
+    color: #333; /* Texto gris oscuro */
+    padding: 8px;
+    border: 1px solid #ddd; /* Borde gris claro */
+    font-size: 14px;
+    border-radius: 4px;
     cursor: pointer;
     outline: none;
 }
 
+/* Opciones dentro de los selectores */
 .filtros select option {
-    color: black;
+    color: #333;
     font-size: 14px;
+    padding: 8px;
 }
 
+/* Botones para aplicar o restablecer filtros */
 #aplicar-filtros,
 #reset-filtros {
-    background-color: transparent;
-    color: #ff7b1a;
-    border: 2px solid #ff7b1a;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    background-color: white; /* Fondo blanco */
+    color: #ef6605; /* Naranja en el texto */
+    border: 1px solid #ef6605; /* Borde delgado naranja */
+    padding: 8px 20px;
+    font-size: 14px;
+    border-radius: 4px;
     cursor: pointer;
 }
 
+/* Efecto hover en los botones */
 #aplicar-filtros:hover,
 #reset-filtros:hover {
-    background-color: #ff7b1a;
-    color: white;
+    background-color: #ef6605; /* Fondo naranja */
+    color: white; /* Texto blanco */
 }
+
+/* Evitar choque con el carrusel */
+.carousel {
+    margin-top: 20px; /* Aumentar el margen superior del carrusel */
+}
+
 
 

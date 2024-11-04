@@ -17,17 +17,17 @@
   <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
     <div class="filtros">
-        <label for="categoria">Categoría:</label>
+        <label for="categoria"></label>
         <select id="categoria" name="categoria">
-            <option value="">Todas las categorías</option>
+            <option value="">Categoria</option>
             {% for categoria in categorias %}
                 <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
             {% endfor %}
         </select>
     
-        <label for="precio">Precio:</label>
+        <label for="precio"></label>
         <select id="precio" name="precio" onchange="updatePrices()">
-            <option value="">Seleccionar Rango de Precio</option>
+            <option value="">Precio</option>
             <option value="0-50">Bs 0 - Bs 50</option>
             <option value="51-100">Bs 51 - Bs 100</option>
             <option value="101-200">Bs 101 - Bs 200</option>
@@ -37,9 +37,9 @@
         <input type="hidden" id="precio_min" name="precio_min">
         <input type="hidden" id="precio_max" name="precio_max">
     
-        <label for="ordenar">Ordenar por:</label>
+        <label for="ordenar"></label>
         <select id="ordenar" name="ordenar">
-            <option value="">Seleccionar Orden</option>
+            <option value="">Ordenar</option>
             <option value="menor">Menor a mayor Precio</option>
             <option value="mayor">Mayor a menor Precio</option>
         </select>
