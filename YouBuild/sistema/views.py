@@ -226,7 +226,8 @@ def agregar_al_carrito(request, producto_id):
 
 # Cantidad de productos en el carrito
 def get_cart_count(request):
-    cart_count = request.session.get('cart_count', 0)
+    usuario = request.user.usuariodb
+    cart_count = CarritoProductoDB.objects.filter(carrito_fk__usuario_fk=usuario).aggregate(total_quantity=Sum('cantidad'))['total_quantity'] or 0
     return JsonResponse({'cart_count': cart_count})
 
 # Cargar provincias en AJAX
