@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Producto</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
     <div class="container">
         <h1 class="title">Registrar Producto</h1>
 
-        <form method="POST" enctype="multipart/form-data" class="product-form">
+        <form id="formulario-producto" method="POST" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
 
             <!-- Información del Producto -->
@@ -24,17 +25,20 @@
                     <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
                     {{ form.nombre }}
                     <small>Ejemplos: cemento</small>
+                    <div id="error-nombre" class="error-message"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="{{ form.categoria_fk.id_for_label }}">Categoría y subcategoría</label>
                     {{ form.categoria_fk }}
+                    <div id="error-categoria" class="error-message"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.detalle.id_for_label }}">Descripción</label>
                     {{ form.detalle }}
                     <small>Máximo 500 caracteres</small>
+                    <div id="error-detalle" class="error-message"></div>
                 </div>
 
                 <div class="two-columns">
@@ -43,6 +47,7 @@
                         <div class="price-container">
                             {{ form.precio }}
                             <span class="currency">Bolivianos</span>
+                            <div id="error-precio" class="error-message"></div>
                         </div>
                     </div>
                     <div class="form-group cantidad-group">
@@ -51,6 +56,7 @@
                             <button type="button" id="decrement" class="quantity-button">-</button>
                             {{ form.cantidad }}
                             <button type="button" id="increment" class="quantity-button">+</button>
+                            <div id="error-cantidad" class="error-message"></div>
                         </div>
                     </div>
                 </div>
@@ -82,6 +88,7 @@
                         <button type="button" class="remove-btn" onclick="removeImage('file4', 'preview4')">x</button>
                     </label>
                 </div>
+                <div id="error-foto" class="error-message"></div>
             </fieldset>
 
             <!-- Ubicación -->
@@ -121,7 +128,6 @@
     </div>
 
     <script>
-        // Function to display image preview
         function showPreview(event, previewId) {
             const file = event.target.files[0];
             const preview = document.getElementById(previewId);
@@ -132,35 +138,80 @@
                     preview.style.backgroundImage = `url(${e.target.result})`;
                     preview.style.backgroundSize = "cover";
                     preview.style.backgroundPosition = "center";
-                    preview.innerHTML = "";  // Clear the '+' sign or any other text
+                    preview.innerHTML = "";
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // Function to remove selected image
         function removeImage(inputId, previewId) {
             const fileInput = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
 
-            fileInput.value = "";  // Clear the file input
-            preview.style.backgroundImage = "";  // Remove the background image
-            preview.innerHTML = inputId === 'file1' ? "Foto principal" : "+";  // Reset the placeholder text
+            fileInput.value = "";
+            preview.style.backgroundImage = "";
+            preview.innerHTML = inputId === 'file1' ? "Foto principal" : "+";
         }
 
-        // Incrementar y decrementar cantidad
-        document.getElementById('increment').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            cantidad.value = parseInt(cantidad.value) + 1;
+        $(document).ready(function() {
+            $('#id_nombre').on('input', function() {
+                const nombre = $(this).val().trim();
+                const nombreRegex = /^[a-zA-Z0-9\s]+$/;
+                if (nombre === "" || !nombreRegex.test(nombre) || nombre.length > 50) {
+                    $('#error-nombre').text("Por favor, introduce un nombre válido.").css("color", "red").show();
+                } else {
+                    $('#error-nombre').hide();
+                }
+            });
+        
+            $('#id_categoria_fk').on('change', function() {
+                if ($(this).val() === "") {
+                    $('#error-categoria').text("Selecciona una categoría.").css("color", "red").show();
+                } else {
+                    $('#error-categoria').hide();
+                }
+            });
+        
+            $('#id_detalle').on('input', function() {
+                const detalle = $(this).val().trim();
+                if (detalle.length > 500) {
+                    $('#error-detalle').text("El detalle no puede exceder los 500 caracteres.").css("color", "red").show();
+                } else {
+                    $('#error-detalle').hide();
+                }
+            });
+        
+            $('#id_precio').on('input', function() {
+                const precio = parseFloat($(this).val());
+                if (isNaN(precio) || precio <= 0) {
+                    $('#error-precio').text("Por favor, introduce un precio válido.").css("color", "red").show();
+                } else {
+                    $('#error-precio').hide();
+                }
+            });
+        
+            $('#id_cantidad').on('input', function() {
+                const cantidad = parseInt($(this).val());
+                if (isNaN(cantidad) || cantidad < 1) {
+                    $('#error-cantidad').text("La cantidad debe ser al menos 1.").css("color", "red").show();
+                } else {
+                    $('#error-cantidad').hide();
+                }
+            });
+        
+            $('#formulario-producto input[type="file"]').on('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const fileType = file.type;
+                    const fileSize = file.size / (1024 * 1024); // Tamaño en MB
+                    if (!['image/png', 'image/jpeg'].includes(fileType) || fileSize > 5) {
+                        $('#error-foto').text("Las fotos deben ser en formato PNG o JPG y no exceder 5 MB.").css("color", "red").show();
+                    } else {
+                        $('#error-foto').hide();
+                    }
+                }
+            });
         });
-
-        document.getElementById('decrement').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            if (parseInt(cantidad.value) > 1) {
-                cantidad.value = parseInt(cantidad.value) - 1;
-            }
-        });
-
         $(document).ready(function() {
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
@@ -197,7 +248,8 @@
                     }
                 });
             });
-        });
+        });        
     </script>
 </body>
 </html>
+
