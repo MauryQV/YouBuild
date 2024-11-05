@@ -34,17 +34,13 @@
         </div>
         <div class="topbar-right">
           <!-- Icono de Corazón -->
-          <a href="#" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+          <a href="{% url 'listaFavoritos' %}" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
           <!-- Carrito de Compras -->
           <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span></a>
           <!-- Icono de Foto de Perfil -->
           <div class="profile-menu-container">
             <a href="#" class="profile-icon" onclick="toggleMenu(event)">
-              {% if usuario.imagen_perfil %}
                 <img src="{{ usuario.imagen_perfil.url }}" alt="Foto de Perfil" class="profile-pic" />
-              {% else %}
-                <img src="{% static 'perfil/perfil.png' %}" alt="Foto de Perfil" class="profile-pic" />
-              {% endif %}
             </a>
             <!-- Menú desplegable -->
             <div class="dropdown-menu hidden" id="profileDropdown">
@@ -53,7 +49,9 @@
             </div>
           </div>
           <!-- Botón de Vender -->
-          <a href="/ " class="btn-sell"><i class="fas fa-plus"></i> Vender</a>
+          <a href="{% url 'vender' %}" class="btn-sell">
+            <i class="fas fa-plus"></i> Vender
+          </a>
         </div>
       </div>
     </header>
@@ -106,7 +104,6 @@
         var menu = document.getElementById('profileDropdown')
         menu.classList.toggle('visible')
       }
-      
       // Cerrar el menú si se hace clic fuera de él
       window.onclick = function (event) {
         var menu = document.getElementById('profileDropdown')

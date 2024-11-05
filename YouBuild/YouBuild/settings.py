@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
 
@@ -42,6 +43,8 @@ INSTALLED_APPS = [
     #mis apps
     'sistema.apps.SistemaConfig',
     'rest_framework',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 LOGIN_REDIRECT_URL = '/'
@@ -70,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'sistema.context_processors.cart_count',
+                'sistema.context_processors.user_profile',
                 
             ],
         },

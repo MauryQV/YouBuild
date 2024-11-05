@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hola</h1>
-</body>
-</html>
+{% extends "layoutReg.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'perfil.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-sidebar">
+        <h3>Mi Foto</h3>
+        <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
+            {% csrf_token %}
+            <div class="profile-photo-container">
+                <label for="imagen_perfil">
+                    <div class="profile-photo">
+                            <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+                    </div>
+                    <div class="camera-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </label>
+                <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none" onchange="document.getElementById('profile-photo-form').submit();">
+            </div>
+        </form>
+        <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
+        <div class="profile-contact-info">
+            <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
+            <p><strong>Correo:</strong><br>{{ user.email }}</p>
+        </div>
+    </div>
+
+    <!-- Formulario de actualización de datos personales -->
+    <div class="profile-main">
+        <h2>Mis Datos Personales</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ u_form|crispy }}
+            {{ p_form|crispy }}
+            <button type="submit" class="btn-primario">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
+</div>
+{% endblock %}

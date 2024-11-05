@@ -25,15 +25,19 @@
 
 /* Estilo de los íconos con círculo */
 .icon-btn {
-    position: relative;
-    padding: 10px 15px;
+    width: 50px; /* Ajusta el ancho del círculo */
+    height: 50px; /* Ajusta la altura del círculo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: white;
     border: 2px solid #ef6605;
-    border-radius: 25px;
+    border-radius: 50%; /* Mantiene el botón circular */
     color: #ef6605;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .icon-btn i {
@@ -59,7 +63,7 @@
 
 /* Estilo de la imagen de perfil (sin círculo) */
 .profile-icon .profile-pic {
-    width: 50px;
+    width: 55px;
     height: 55px;
     border-radius: 50%;
 }

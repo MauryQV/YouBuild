@@ -18,14 +18,15 @@ body {
     margin-left: 20px;
 }
 
-/* Estilos de productos */
 .products-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    margin: 10px;
-    z-index: 0;
+    justify-content: center; /* Centrar los productos */
+    gap: 10px; /* Espacio entre productos */
+    padding: 20px; /* Espacio alrededor del contenedor */
+    box-sizing: border-box; /* Incluir padding en el ancho total */
 }
+
 
 .product {
     background-color: white;

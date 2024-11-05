@@ -36,6 +36,8 @@ admin.site.register(TipoPagoDB)
 admin.site.register(PagoDB)
 admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
+admin.site.register(SubcategoriaDB)
+
 
 # Finalmente, registra el modelo de imagen también
 

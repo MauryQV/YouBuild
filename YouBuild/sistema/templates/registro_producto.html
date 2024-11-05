@@ -3,53 +3,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Producto</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Registrar Productos</h1>
-        
-        <form method="POST" enctype="multipart/form-data" class="product-form">
+        <h1 class="title">Registrar Producto</h1>
+
+        <form id="formulario-producto" method="POST" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
-            
-            <!-- Mensajes de error -->
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <div class="alert alert-danger">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
 
             <!-- Información del Producto -->
             <fieldset class="section">
                 <legend>Información del Producto</legend>
+                <p class="section-subtitle">¿Qué vendes? Proporciona toda la información relevante</p>
+
                 <div class="form-group">
                     <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
                     {{ form.nombre }}
+                    <small>Ejemplos: cemento</small>
+                    <div id="error-nombre" class="error-message"></div>
                 </div>
-
+                
                 <div class="form-group">
                     <label for="{{ form.categoria_fk.id_for_label }}">Categoría y subcategoría</label>
                     {{ form.categoria_fk }}
+                    <div id="error-categoria" class="error-message"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.detalle.id_for_label }}">Descripción</label>
                     {{ form.detalle }}
+                    <small>Máximo 500 caracteres</small>
+                    <div id="error-detalle" class="error-message"></div>
                 </div>
-                
+
                 <div class="two-columns">
                     <div class="form-group">
-                        <label for="{{ form.precio.id_for_label }}">Precio</label>
-                        {{ form.precio }}
+                        <label for="{{ form.precio.id_for_label }}">Precio c/u</label>
+                        <div class="price-container">
+                            {{ form.precio }}
+                            <span class="currency">Bolivianos</span>
+                            <div id="error-precio" class="error-message"></div>
+                        </div>
                     </div>
                     <div class="form-group cantidad-group">
                         <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
@@ -57,6 +56,7 @@
                             <button type="button" id="decrement" class="quantity-button">-</button>
                             {{ form.cantidad }}
                             <button type="button" id="increment" class="quantity-button">+</button>
+                            <div id="error-cantidad" class="error-message"></div>
                         </div>
                     </div>
                 </div>
@@ -67,19 +67,37 @@
                 <legend>Fotos</legend>
                 <p>Sube hasta cuatro fotos</p>
                 <div class="image-upload">
-                    <input type="file" name="imagenes" required>
-                    <input type="file" name="imagenes">
-                    <input type="file" name="imagenes">
-                    <input type="file" name="imagenes">
-
+                    <label for="file1">
+                        <input type="file" id="file1" name="imagenes" required onchange="showPreview(event, 'preview1')">
+                        <span id="preview1">Foto principal</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file1', 'preview1')">x</button>
+                    </label>
+                    <label for="file2">
+                        <input type="file" id="file2" name="imagenes" onchange="showPreview(event, 'preview2')">
+                        <span id="preview2">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file2', 'preview2')">x</button>
+                    </label>
+                    <label for="file3">
+                        <input type="file" id="file3" name="imagenes" onchange="showPreview(event, 'preview3')">
+                        <span id="preview3">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file3', 'preview3')">x</button>
+                    </label>
+                    <label for="file4">
+                        <input type="file" id="file4" name="imagenes" onchange="showPreview(event, 'preview4')">
+                        <span id="preview4">+</span>
+                        <button type="button" class="remove-btn" onclick="removeImage('file4', 'preview4')">x</button>
+                    </label>
                 </div>
+                <div id="error-foto" class="error-message"></div>
             </fieldset>
 
             <!-- Ubicación -->
             <fieldset class="section">
                 <legend>Ubicación</legend>
+                <p>Agrega la información para que los clientes sepan dónde vendes el producto</p>
+
                 <div class="form-group">
-                    <label for="{{ form.departamento_fk.id_for_label }}">Ciudad</label>
+                    <label for="{{ form.departamento_fk.id_for_label }}">Departamento</label>
                     {{ form.departamento_fk }}
                 </div>
 
@@ -97,35 +115,107 @@
                 <div class="form-group">
                     <label for="{{ form.direccion_1.id_for_label }}">Dirección específica</label>
                     {{ form.direccion_1 }}
+                    <small>Puntos de referencia, número de casa, etc.</small>
                 </div>
             </fieldset>
 
             <!-- Botones -->
             <div class="form-buttons">
-                <button type="button" class="discard-button">Descartar</button>
+                <button type="button" class="discard-button" onclick="window.location.href='{% url 'index' %}'">Descartar</button>
                 <button type="submit" class="submit-button">Guardar</button>
             </div>
         </form>
     </div>
 
     <script>
-        // Incrementar y decrementar cantidad
-        document.getElementById('increment').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            cantidad.value = parseInt(cantidad.value) + 1;
-        });
+        function showPreview(event, previewId) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
 
-        document.getElementById('decrement').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            if (parseInt(cantidad.value) > 1) {
-                cantidad.value = parseInt(cantidad.value) - 1;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.style.backgroundImage = `url(${e.target.result})`;
+                    preview.style.backgroundSize = "cover";
+                    preview.style.backgroundPosition = "center";
+                    preview.innerHTML = "";
+                };
+                reader.readAsDataURL(file);
             }
-        });
+        }
 
+        function removeImage(inputId, previewId) {
+            const fileInput = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            fileInput.value = "";
+            preview.style.backgroundImage = "";
+            preview.innerHTML = inputId === 'file1' ? "Foto principal" : "+";
+        }
+
+        $(document).ready(function() {
+            $('#id_nombre').on('input', function() {
+                const nombre = $(this).val().trim();
+                const nombreRegex = /^[a-zA-Z0-9\s]+$/;
+                if (nombre === "" || !nombreRegex.test(nombre) || nombre.length > 50) {
+                    $('#error-nombre').text("Por favor, introduce un nombre válido.").css("color", "red").show();
+                } else {
+                    $('#error-nombre').hide();
+                }
+            });
+        
+            $('#id_categoria_fk').on('change', function() {
+                if ($(this).val() === "") {
+                    $('#error-categoria').text("Selecciona una categoría.").css("color", "red").show();
+                } else {
+                    $('#error-categoria').hide();
+                }
+            });
+        
+            $('#id_detalle').on('input', function() {
+                const detalle = $(this).val().trim();
+                if (detalle.length > 500) {
+                    $('#error-detalle').text("El detalle no puede exceder los 500 caracteres.").css("color", "red").show();
+                } else {
+                    $('#error-detalle').hide();
+                }
+            });
+        
+            $('#id_precio').on('input', function() {
+                const precio = parseFloat($(this).val());
+                if (isNaN(precio) || precio <= 0) {
+                    $('#error-precio').text("Por favor, introduce un precio válido.").css("color", "red").show();
+                } else {
+                    $('#error-precio').hide();
+                }
+            });
+        
+            $('#id_cantidad').on('input', function() {
+                const cantidad = parseInt($(this).val());
+                if (isNaN(cantidad) || cantidad < 1) {
+                    $('#error-cantidad').text("La cantidad debe ser al menos 1.").css("color", "red").show();
+                } else {
+                    $('#error-cantidad').hide();
+                }
+            });
+        
+            $('#formulario-producto input[type="file"]').on('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const fileType = file.type;
+                    const fileSize = file.size / (1024 * 1024); // Tamaño en MB
+                    if (!['image/png', 'image/jpeg'].includes(fileType) || fileSize > 5) {
+                        $('#error-foto').text("Las fotos deben ser en formato PNG o JPG y no exceder 5 MB.").css("color", "red").show();
+                    } else {
+                        $('#error-foto').hide();
+                    }
+                }
+            });
+        });
         $(document).ready(function() {
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
-                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
+                var url = "{% url 'ajax_cargar_provincias' %}";
                 var departamentoId = $(this).val();
                 $.ajax({
                     url: url,
@@ -143,7 +233,7 @@
 
             // Cargar municipios cuando se selecciona una provincia
             $('#id_provincia_fk').change(function() {
-                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
+                var url = "{% url 'ajax_cargar_municipios' %}";
                 var provinciaId = $(this).val();
                 $.ajax({
                     url: url,
@@ -158,10 +248,19 @@
                     }
                 });
             });
+        });  
+        // Incrementar y decrementar cantidad
+        document.getElementById('increment').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            cantidad.value = parseInt(cantidad.value) + 1;
         });
 
-        
-        
+        document.getElementById('decrement').addEventListener('click', function() {
+            let cantidad = document.getElementById('id_cantidad');
+            if (parseInt(cantidad.value) > 1) {
+                cantidad.value = parseInt(cantidad.value) - 1;
+            }
+        });      
     </script>
 </body>
 </html>

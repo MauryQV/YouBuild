@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -182,3 +183,211 @@ h3 {
 .form-group:last-of-type {
     margin-bottom: 40px;
 }
+=======
+.profile-container {
+    display: flex;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    gap: 20px;
+    background-color: #f4f6f9;
+    border-radius: 10px;
+    flex-wrap: wrap; /* Permite que el contenido se ajuste automáticamente */
+}
+
+/* Estilos del sidebar izquierdo */
+.profile-sidebar {
+    flex: 1;
+    background: #ffffff;
+    padding: 25px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Contenedor de la foto de perfil */
+.profile-photo-container {
+    position: relative;
+    display: inline-block; /* Mantiene el icono y la imagen juntos */
+}
+
+/* Contenedor de la foto de perfil (donde se coloca la imagen) */
+
+/* Estilo de la imagen de perfil */
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ff6b00;
+}
+
+/* Estilo de la imagen de perfil */
+.profile-photo .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Icono de cámara */
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(0%, 0%); /* Ajuste para sobresalir del borde */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+    padding: 8px;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 10; /* Asegura que esté sobre la imagen */
+}
+
+.camera-icon:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Tamaño del icono de cámara */
+.camera-icon svg {
+    fill: #ffffff;
+    width: 25px;
+    height: 20px;
+}
+
+/* Estilos para SVG de imagen de perfil predeterminada */
+.default-photo {
+    width: 100%;
+    height: 100%;
+}
+
+
+.profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 15px;
+}
+
+.profile-contact-info p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Estilos de la sección principal derecha */
+.profile-main {
+    flex: 2;
+    background: #ffffff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.profile-main h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Estilos del botón guardar */
+.btn-primario {
+    background-color: #ef6605; /* Color de fondo naranja */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primario:hover {
+    background-color: #e65a00; /* Color de fondo en hover */
+}
+
+/* Bordes curvos en los campos de formulario */
+.profile-main input[type="text"],
+.profile-main input[type="email"],
+.profile-main input[type="file"],
+.profile-main select,
+.profile-main textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.profile-main input[type="text"]:focus,
+.profile-main input[type="email"]:focus,
+.profile-main input[type="file"]:focus,
+.profile-main select:focus,
+.profile-main textarea:focus {
+    border-color: #ff6b00;
+    outline: none;
+}
+
+.profile-container {
+    display: flex;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    gap: 20px;
+    background-color: #f4f6f9;
+    border-radius: 10px;
+}
+
+/* Estilos para los contenedores con borde negro curvo */
+.profile-sidebar, .profile-main {
+    background: #ffffff;
+    padding: 25px;
+    border: 2px solid black; /* Borde negro */
+    border-radius: 15px; /* Esquinas redondeadas */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+/* Responsividad para pantallas medianas y pequeñas */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+    
+    .profile-sidebar, .profile-main {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-main h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .profile-name {
+        font-size: 18px;
+    }
+
+    .btn-save {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+>>>>>>> origin/develop

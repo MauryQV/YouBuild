@@ -7,8 +7,26 @@
     <title>Registro de Usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'registro.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
 </head>
 <body>
+    <header>
+        <div class="topbar-container">
+          <div class="topbar-left">
+            <a href="/ " class="logo">
+              <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
+            </a>
+          </div>
+          <div class="topbar-right">
+            <a href="{% url 'login' %}" class="btn-link">Iniciar Sesión</a>
+          </div>
+        </div>
+      </header>      
+   
+  <!-- Contenedor principal para centrar el formulario entre el topbar y el footer -->
+  <main class="main-container">
+    {% block content %}
     <div class="registro-container">
         <h2 class="registro-titulo">Crear Cuenta</h2>
 
@@ -124,18 +142,84 @@
                         <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
                     </div>
                 </div>
+
+                <!-- Términos y Condiciones Checkbox -->
+                <div class="registro-form-group terminos">
+                    <input type="checkbox" id="aceptar-terminos" name="aceptar_terminos" required>
+                    <label for="aceptar-terminos">Al crear una cuenta, acepta los 
+                        <a href="{% url 'terms_and_conditions' %}" class="terminos-link">Términos de servicio y Política de privacidad</a> establecidos por YouBuild
+                    </label>
+                </div>
+
+                <!-- Button Container -->
                 <div class="registro-botones registro-inline">
-                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Anterior</button>
-                    <button type="submit" class="registro-btn-submit">Crear una cuenta</button>
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atras</button>
+                    <button type="submit" class="registro-btn-submit" id="crear-cuenta" disabled>Crear una cuenta</button>
                 </div>
             </div>
         </form>
     </div>
+    {% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Descripción de la empresa -->
+        <div class="footer-description">
+            <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        
+        <!-- Redes Sociales -->
+        <div class="footer-social">
+            <h4>Síguenos en redes sociales</h4>
+            <div class="social-buttons">
+                <a href="https://facebook.com" target="_blank" class="social-button facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="social-button instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="social-button twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contacto -->
+        <div class="footer-contact">
+            <h4>Contáctanos</h4>
+            <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+5916457657X">+591 6457657X</a></p>
+        </div>
+        
+        <!-- Términos y condiciones -->
+        <div class="footer-links">
+            <h4>Sobre nosotros</h4>
+            <p><a href="#">Términos y Condiciones</a></p>
+            <p><a href="#">Política de Privacidad</a></p>
+        </div>
+    </div>
+</footer>
+
     <script type="text/javascript">
         let seccionActual = 1;
         $(document).ready(function() {
+            // Initialize the button to be disabled and styled as gray
+            $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
+    
+            // Enable or disable the button based on the checkbox state
+            $('#aceptar-terminos').change(function() {
+                if (this.checked) {
+                    $('#crear-cuenta').prop('disabled', false).removeClass('disabled').addClass('enabled'); // Enable and set to orange
+                } else {
+                    $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled'); // Disable and set to gray
+                }
+            });
+    
+            // Existing code for form validation and section navigation
             configurarValidacionEnTiempoReal();
-            mostrarSeccion(seccionActual);        
+            mostrarSeccion(seccionActual);
+    
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
                 var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
@@ -153,7 +237,7 @@
                     }
                 });
             });
-
+    
             // Cargar municipios cuando se selecciona una provincia
             $('#id_provincia_fk').change(function() {
                 var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
@@ -169,9 +253,10 @@
                             $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
                         });
                     }
-                });
+                }); 
             });
         });
+    
 
         function mostrarSeccion(seccion) {
             $(".form-seccion").addClass("oculto");
@@ -188,50 +273,95 @@
             $("#id_telefono").on("input", validarTelefono);
             $("#id_email").on("input", validarEmail);
         }
+
         function validarNombre() {
             const nombre = $("#id_nombre_completo").val();
-            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-                $("#error-nombre").text("Nombre inválido (solo letras y hasta 50 caracteres).");
+            const spaceCount = (nombre.match(/\s/g) || []).length; // Counts the total spaces
+            const hasConsecutiveSpaces = /\s{2,}/.test(nombre); // Checks for consecutive spaces
+        
+            if (nombre.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-nombre").text("Campo Obligatorio");
+            } else if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                $("#error-nombre").text("El nombre solo puede contener letras.");
+            } else if (nombre.length < 4) {
+                $("#error-nombre").text("No se permite registrar un usuario con un nombre menor a 4 caracteres.");
+            } else if (spaceCount > 7) {
+                $("#error-nombre").text("El nombre incluye más de 7 espacios.");
+            } else if (hasConsecutiveSpaces) {
+                $("#error-nombre").text("No se permiten más de dos espacios consecutivos.");
             } else {
-                $("#error-nombre").text("");
+                $("#error-nombre").text(""); // Clear error if input is valid
             }
         }
+                
         function validarUsername() {
             const username = $("#id_username").val();
-            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-                $("#error-username").text("El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.");
+        
+            if (username.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-username").text("Campo Obligatorio");
+            } else if (/\s/.test(username)) { // Check if there is any whitespace in the username
+                $("#error-username").text("No se permiten espacios.");
+            } else if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                $("#error-username").text("El nombre de usuario solo puede contener letras y números.");
             } else {
-                $("#error-username").text("");
+                $("#error-username").text(""); // Clear error if input is valid
             }
         }
+                
         function validarPassword1() {
             const password1 = $("#id_password1").val();
-            if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+        
+            if (password1.trim() === "") { // Check if password1 is empty
+                $("#error-password1").text("Campo Obligatorio");
+            } else if (password1.length > 25) { // Check if password1 exceeds 25 characters
+                $("#error-password1").text("Límite de caracteres excedido (25)");
+            } else if (password1.length < 8) { // Check if password1 is less than 8 characters
+                $("#error-password1").text("Mínimo 8 caracteres");
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
                 $("#error-password1").text("Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.");
             } else {
-                $("#error-password1").text("");
+                $("#error-password1").text(""); // Clear error if input is valid
             }
         }
+        
         function validarPassword2() {
             const password1 = $("#id_password1").val();
             const password2 = $("#id_password2").val();
-            if (password1 !== password2) {
+        
+            if (password2.trim() === "") { // Check if password2 is empty
+                $("#error-password2").text("Campo Obligatorio");
+            } else if (password2.length > 25) { // Check if password2 exceeds 25 characters
+                $("#error-password2").text("Límite de caracteres excedido (25)");
+            } else if (password2.length < 8) { // Check if password2 is less than 8 characters
+                $("#error-password2").text("Mínimo 8 caracteres");
+            } else if (password1 !== password2) {
                 $("#error-password2").text("Las contraseñas no coinciden.");
             } else {
-                $("#error-password2").text("");
+                $("#error-password2").text(""); // Clear error if input is valid
             }
-        }
+        }        
+        
         function validarTelefono() {
             const telefono = $("#id_telefono").val();
-            if (!/^\d{9,15}$/.test(telefono)) {
-                $("#error-telefono").text("Número de teléfono inválido.");
+        
+            if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
+                $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
+            } else if (/\s/.test(telefono)) { // Checks for any whitespace character
+                $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
+            } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
+                $("#error-telefono").text("Solo se permiten caracteres numéricos.");
+            } else if (telefono.length > 8) { // Ensures no more than 8 digits
+                $("#error-telefono").text("Debe tener solo 8 dígitos.");
+            } else if (telefono.length !== 8) { // Ensures exactly 8 digits
+                $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
             } else {
-                $("#error-telefono").text("");
+                $("#error-telefono").text(""); // Clear error if input is valid
             }
-        }
+        }                        
+        
         function validarEmail() {
             const email = $("#id_email").val();
-            if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {  // Email ahora es opcional
                 $("#error-email").text("Formato de correo electrónico inválido.");
             } else {
                 $("#error-email").text("");
@@ -302,41 +432,48 @@ function validarSeccion1() {
     let error = false;
     // Validación de nombre completo
     if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-        document.getElementById("error-nombre").innerText = "Nombre inválido (solo letras y hasta 50 caracteres).";
+        document.getElementById("error-nombre").innerText = "Campo obligatorio.";
         error = true;
     } else {
         document.getElementById("error-nombre").innerText = "";
     }
     // Validación de nombre de usuario
     if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-        document.getElementById("error-username").innerText = "El nombre de usuario debe tener entre 5 y 15 caracteres alfanuméricos.";
+        document.getElementById("error-username").innerText = "Campo Obligatorio.";
         error = true;
     } else {
         document.getElementById("error-username").innerText = "";
     }
-    // Validación de contraseña
-    if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+    // Validación de contraseña (password1)
+    if (password1.trim() === "") {
+        document.getElementById("error-password1").innerText = "Campo Obligatorio";
+        error = true;
+    } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
         document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
         error = true;
     } else {
         document.getElementById("error-password1").innerText = "";
     }
-    // Coincidencia de contraseñas
-    if (password1 !== password2) {
+    
+    // Validación de coincidencia de contraseñas (password2)
+    if (password2.trim() === "") {
+        document.getElementById("error-password2").innerText = "Campo Obligatorio";
+        error = true;
+    } else if (password1 !== password2) {
         document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
         error = true;
     } else {
         document.getElementById("error-password2").innerText = "";
     }
     // Validación de teléfono
-    if (!/^\d{9,15}$/.test(telefono)) {
+    if (!/^\d{8}$/.test(telefono)) {
         document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
         error = true;
     } else {
         document.getElementById("error-telefono").innerText = "";
     }
     // Validación de correo electrónico
-    if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
         document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
         error = true;
     } else {

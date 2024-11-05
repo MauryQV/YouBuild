@@ -45,12 +45,12 @@ class UsuarioDB(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre_completo = models.CharField(max_length=50, verbose_name="Nombre completo", null=True)
     municipio_fk = models.ForeignKey('MunicipioDB', on_delete=models.CASCADE, null=True, blank=True)
-    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True)
+    direccion_1 = models.CharField(max_length=255, verbose_name="Dirección", null=True)
     telefono = models.CharField(
-        max_length=15, verbose_name="Número de teléfono",
+        max_length=15, verbose_name="Número de celular",
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="El número debe estar en el formato: '+59199999999'. Hasta 15 dígitos.")]
     )
-    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png')
+    imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png',verbose_name="Foto de perfil")
     qr_imagen = models.ImageField(upload_to='qr/', null=True, blank=True, verbose_name="Código QR")
 
     class Meta:
@@ -141,9 +141,6 @@ class ProductoDb(models.Model):
     def __str__(self):
         return self.nombre
 
-
-
-
 # ImagenProducto
 class ImagenProductoDB(models.Model):
     producto_fk = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="imagenes")
@@ -202,3 +199,27 @@ class CarruselDB(models.Model):
     class Meta:
         verbose_name = "Carrusel"
         verbose_name_plural = "Carruseles"
+        
+class ListaFavoritosDB(models.Model):
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, related_name="wishlist")
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="favoritos")
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'producto')
+
+    def __str__(self):
+        return f"{self.usuario.user} - {self.producto.nombre}"
+
+    def agregar_producto(self, producto):
+        _, created = ListaFavoritosDB.objects.get_or_create(
+            usuario=self.usuario, 
+            producto=producto
+        )
+        return created  # Retorna True si fue creado, False si ya existía
+
+    def eliminar_producto(self, producto):
+        ListaFavoritosDB.objects.filter(usuario=self.usuario, producto=producto).delete()
+
+    def contar_productos(self):
+        return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
