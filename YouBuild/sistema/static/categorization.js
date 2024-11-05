@@ -64,6 +64,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Toggle filter dropdown visibility
+    function toggleDropdown(dropdown) {
+        dropdown.classList.toggle('active');
+        const isActive = dropdown.classList.contains('active');
+        const allDropdowns = document.querySelectorAll('.filter-dropdown');
+
+        // Close other dropdowns if one is opened
+        allDropdowns.forEach(d => {
+            if (d !== dropdown) {
+                d.classList.remove('active');
+            }
+        });
+    }
+
+    // Event listeners for filter buttons
+    document.querySelectorAll('.filter-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const dropdownId = event.currentTarget.id.replace('Btn', 'Dropdown');
+            const dropdown = document.getElementById(dropdownId);
+            toggleDropdown(dropdown);
+        });
+    });
+
     // Update the applyFilters function to include pagination
     function applyFilters() {
         const products = document.querySelectorAll('.product');
