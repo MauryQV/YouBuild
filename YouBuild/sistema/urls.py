@@ -3,12 +3,9 @@ from django.conf.urls.static import static
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
-<<<<<<< HEAD
 from .views import registrar_usuario, CustomLoginView, index_view, producto_view, buscar_view, carrito_view, eliminar_producto, update_cart_quantity, agregar_al_carrito, get_cart_count, test, home_view, perfil_view, registro_producto, custom_logout_view, cargar_provincias, cargar_municipios
 from .views import gestionar_usuario_view  # Asegúrate de importar tu vista
-=======
 from .views import *
->>>>>>> origin/develop
 
 urlpatterns = [
     path('', index_view, name='index'),

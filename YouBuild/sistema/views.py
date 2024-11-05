@@ -283,13 +283,11 @@ def registro_producto(request):
             return redirect('home') 
     else:
         form = RegistroProductoForm()
-<<<<<<< HEAD
     return render(request, 'registro_producto.html', {'form': form})
 
 
 def gestionar_usuario_view(request):
     return render(request, 'GestionUsuario.html') 
-=======
     return render(request, 'registro_producto.html', {'form': form})    
 
 @login_required
@@ -328,4 +326,3 @@ def eliminar_de_lista_favoritos(request, producto_id):
     return redirect('listaFavoritos')
 
 
->>>>>>> origin/develop
