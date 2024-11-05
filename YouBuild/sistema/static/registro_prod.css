@@ -163,7 +163,7 @@ small {
 
 .discard-button,
 .submit-button {
-    background-color: #FF8C00;
+    background-color: #ef6605;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -176,7 +176,7 @@ small {
 }
 
 .discard-button {
-    background-color: #FF4500;
+    background-color: #ef6605;
 }
 
 .discard-button:hover,

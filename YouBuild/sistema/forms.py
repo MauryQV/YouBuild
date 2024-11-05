@@ -159,18 +159,18 @@ class RegistroProductoForm(forms.ModelForm):
         max_length=50,
         required=True,
         label="Nombre del producto",
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa el nombre del producto'})
+        widget=forms.TextInput(attrs={'placeholder': '--Agrega el nombre del producto--'})
     )
     detalle = forms.CharField(
         max_length=200,
         required=True,
         label="Detalle",
-        widget=forms.Textarea(attrs={'placeholder': 'Ingresa el detalle del producto'})
+        widget=forms.Textarea(attrs={'placeholder': '--Agrega mas detalles del producto--'})
     )
     precio = forms.FloatField(
         required=True,
         label="Precio",
-        widget=forms.NumberInput(attrs={'placeholder': 'Ingresa el precio del producto'})
+        widget=forms.NumberInput(attrs={'placeholder': '00.00'})
     )
     categoria_fk = forms.ModelChoiceField(
         queryset=CategoriaDb.objects.all(),
@@ -200,7 +200,7 @@ class RegistroProductoForm(forms.ModelForm):
         max_length=255,
         required=True,
         label="Dirección",
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa la dirección del producto'})
+        widget=forms.TextInput(attrs={'placeholder': '--Agrega mas detalles de la ubicacion, puntos de referencia, nro de casa,etc.--'})
     )
     cantidad = forms.IntegerField(
         required=True,
