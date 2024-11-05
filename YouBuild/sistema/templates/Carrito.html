@@ -90,6 +90,19 @@
 {% block extra_scripts %}
 <script>
 
+    // Function to update the cart icon count
+    function updateCartIconCount() {
+        fetch('/get_cart_count/')
+            .then(response => response.json())
+            .then(data => {
+                const cartCountElement = document.querySelector('.cart-count');
+                if (cartCountElement) {
+                    cartCountElement.textContent = data.cart_count;
+                }
+            })
+            .catch(error => console.error('Error fetching cart count:', error));
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
     
         const updateCart = (itemId, quantity, callback) => {
@@ -104,7 +117,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.reload()
+                    window.location.reload();
+                    updateCartIconCount();  // Update the cart icon count after modifying the cart
                 } else {
                     alert(data.message);
                 }
@@ -161,6 +175,7 @@
                             itemRow.remove();
                             // Recargar el total del carrito
                             location.reload(); // En este caso, recargamos para actualizar el carrito
+                            updateCartIconCount(); // Update the cart icon count after removal
                         });
                     }
                 }

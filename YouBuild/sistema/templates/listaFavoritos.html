@@ -12,7 +12,7 @@
 {% block content %}
 <div class="lista_favoritos-wrapper">
     <div class="lista_favoritos-content">
-        <h1>Lista de Deseos</h1>
+        <h1>Tus Favoritos</h1>
         <p>Estos son los productos de YouBuild que has marcado como favoritos.</p>
         <h2>Productos</h2>
         
@@ -30,7 +30,7 @@
                         {% for item in lista_favoritos_items %}
                         <tr>
                             <td>
-                                <form action="{% url 'eliminarFavorito' item.id %}" method="post">
+                                <form action="{% url 'eliminarFavorito' item.producto.id %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
                                 </form>
@@ -41,7 +41,7 @@
                                     <div class="product-details">
                                         <span>{{ item.producto.nombre }}</span>
                                         <div class="product-buttons">
-                                            <button class="btn-detalle" onclick="verDetalles({{ item.producto.id }})">Ver Detalle</button>
+                                            <button class="btn-detalle" onclick="verDetalles({{ item.producto.id }})">Ver Detalles</button>
                                             <button class="btn-agregar" onclick="agregarAlCarrito({{ item.producto.id }})">Agregar a Carrito</button>
                                             <button class="btn-comprar">Comprar Ahora</button>
                                         </div>
@@ -52,7 +52,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="3">No tienes productos en tu lista de deseos.</td>
+                            <td colspan="3">No tienes productos en tu lista de favoritos.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
