@@ -120,7 +120,10 @@ class RegistroUsuarioForm(UserCreationForm):
     
     
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField(label="Correo Electrónico", widget=forms.EmailInput(attrs={'placeholder': 'ejemplo@correo.com'}))
+    email = forms.EmailField(
+        label="Correo Electrónico",
+        widget=forms.EmailInput(attrs={'placeholder': 'ejemplo@correo.com'})
+    )
 
     class Meta:
         model = User
@@ -137,6 +140,12 @@ class UserUpdateForm(forms.ModelForm):
             ),
             Submit('submit', 'Guardar Cambios', css_class='btn btn-primary')
         )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError("Correo electronico ya registrado.")
+        return email
     
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:

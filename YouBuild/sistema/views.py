@@ -238,35 +238,53 @@ def test(request):
 
 @login_required
 def update_profile_photo(request):
-    # Confirmar que es una solicitud POST y que `imagen_perfil` existe en los archivos
     if request.method == 'POST' and 'imagen_perfil' in request.FILES:
+        # Obtener la imagen del request
+        imagen = request.FILES['imagen_perfil']
+        
+        # Obtener la extensión del archivo
+        extension = imagen.name.split('.')[-1].lower()
+        allowed_extensions = ['png', 'jpg', 'jpeg']
+        
+        # Verificar si la extensión es válida
+        if extension not in allowed_extensions:
+            # Mostrar un mensaje de error si el formato no es permitido
+            messages.error(request, "Formato de imagen no soportado. Solo se permiten archivos PNG, JPG o JPEG.")
+            return redirect('profile')  # Redirigir a la página de perfil sin guardar la imagen
+
+        # Si la extensión es válida, guardar la imagen en el perfil del usuario
         usuario_db = request.user.usuariodb
-        usuario_db.imagen_perfil = request.FILES['imagen_perfil']
+        usuario_db.imagen_perfil = imagen
         usuario_db.save()
-        return redirect('profile')  # Redirige a la página de perfil después de guardar
+
+        # Mensaje de éxito y redirección
+        messages.success(request, "Tu foto de perfil ha sido actualizada con éxito.")
+        return redirect('profile')
+    
+    # Redirigir a la página de perfil si no es una solicitud POST
     return redirect('profile')
 
-@login_required     
+@login_required
 def perfil_view(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,
-                                   request.FILES,
-                                   instance= request.user.usuariodb)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.usuariodb)
+        
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request,f'Tu cuenta ha sido actualizada')
+            messages.success(request, '¡Tu cuenta ha sido actualizada!')
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.usuariodb)
-    
-        context = {    
+
+    # `context` se define fuera del bloque if-else para asegurar que siempre esté disponible
+    context = {    
         'u_form': u_form,
         'p_form': p_form
     }
-    return render(request,'perfil.html',context) 
+    return render(request, 'perfil.html', context)
 
 @login_required
 def registro_producto(request):
