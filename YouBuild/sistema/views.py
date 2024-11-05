@@ -308,11 +308,16 @@ def agregar_a_lista_favoritos(request, producto_id):
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):
-    usuario = request.user.usuariodb
-    eliminado = ListaFavoritosDB.objects.filter(usuario=usuario, producto_id=producto_id).delete()
-    if eliminado[0] > 0:
-        messages.success(request, "Producto eliminado de la lista de favoritos.")
-    else:
-        messages.error(request, "El producto no se encontró en la lista de favoritos.")
+    usuario = get_object_or_404(UsuarioDB, id=request.user.id)
+    try:
+        # Intenta obtener el objeto ListaFavoritosDB que coincida con usuario y producto_id
+        favorito = ListaFavoritosDB.objects.get(usuario=usuario, producto_id=producto_id)
+        favorito.delete()  # Elimina el objeto si existe
+        messages.success(request, "Producto eliminado de tu lista de favoritos.")
+    except ListaFavoritosDB.DoesNotExist:
+        # Si no se encuentra el favorito, muestra un mensaje de error
+        messages.error(request, "El producto no está en tu lista de favoritos.")
+
     return redirect('listaFavoritos')
+
 
