@@ -1,58 +1,70 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtener todos los elementos necesarios
-    const filterButtons = document.querySelectorAll('.filter-button');
-    const resetButton = document.getElementById('resetFilters');
-    const dropdowns = document.querySelectorAll('.filter-dropdown');
-    
-    // Función para cerrar todos los dropdowns y remover la clase 'expanded'
-    function closeAllDropdowns() {
-        dropdowns.forEach(dropdown => {
-            dropdown.classList.remove('active');
-        });
-        filterButtons.forEach(button => {
-            button.classList.remove('expanded'); // Quita la clase 'expanded' de todos los botones
-        });
+    // ... (previous code remains unchanged) ...
+
+    // New variables for pagination and grid view
+    const productsPerPage = 12;
+    let currentPage = 1;
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    const pageNumberSpan = document.getElementById('pageNumber');
+    const viewButtons = document.querySelectorAll('.view-button');
+    const productsContainer = document.querySelector('.products-container');
+
+    // Function to update pagination buttons
+    function updatePaginationButtons() {
+        const totalProducts = document.querySelectorAll('.product:not([style*="display: none"])').length;
+        const totalPages = Math.ceil(totalProducts / productsPerPage);
+        
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage === totalPages;
+        pageNumberSpan.textContent = currentPage;
     }
 
-    // Manejador para los botones de filtro
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.nextElementSibling;
-            
-            // Cerrar otros dropdowns
-            dropdowns.forEach(d => {
-                if (d !== dropdown) {
-                    d.classList.remove('active');
-                }
-            });
-            filterButtons.forEach(b => {
-                if (b !== this) {
-                    b.classList.remove('expanded');
-                }
-            });
-            
-            // Alterna el dropdown y la clase 'expanded' en el botón actual
-            dropdown.classList.toggle('active');
-            button.classList.toggle('expanded');
-        });
-    });
+    // Function to show products for current page
+    function showProductsForPage(page) {
+        const products = document.querySelectorAll('.product:not([style*="display: none"])');
+        const startIndex = (page - 1) * productsPerPage;
+        const endIndex = startIndex + productsPerPage;
 
-    // Cerrar dropdowns cuando se hace click fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.filter-group')) {
-            closeAllDropdowns();
+        products.forEach((product, index) => {
+            if (index >= startIndex && index < endIndex) {
+                product.style.display = '';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+
+        updatePaginationButtons();
+    }
+
+    // Event listeners for pagination buttons
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showProductsForPage(currentPage);
         }
     });
 
-    // Prevenir que los clicks en el dropdown cierren el menú
-    dropdowns.forEach(dropdown => {
-        dropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
+    nextPageBtn.addEventListener('click', () => {
+        const totalProducts = document.querySelectorAll('.product:not([style*="display: none"])').length;
+        const totalPages = Math.ceil(totalProducts / productsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            showProductsForPage(currentPage);
+        }
+    });
+
+    // Event listeners for view buttons
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const view = button.dataset.view;
+            productsContainer.className = `products-container ${view}-view`;
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         });
     });
 
-    // Función para aplicar filtros
+    // Update the applyFilters function to include pagination
     function applyFilters() {
         const products = document.querySelectorAll('.product');
         const selectedCategories = Array.from(document.querySelectorAll('#categoryDropdown input:checked'))
@@ -61,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedSort = document.querySelector('input[name="sort"]:checked')?.value;
 
         products.forEach(product => {
-            // Aquí implementarías la lógica de filtrado según tus necesidades
             let shouldShow = true;
             
             // Filtrar por categoría
@@ -89,22 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 return selectedSort === 'price-asc' ? priceA - priceB : priceB - priceA;
             });
 
-            const container = document.querySelector('.products-container');
-            productsArray.forEach(product => container.appendChild(product));
+            productsArray.forEach(product => productsContainer.appendChild(product));
         }
+
+        // Reset to first page and update pagination
+        currentPage = 1;
+        showProductsForPage(currentPage);
     }
 
-    // Agregar event listeners para los cambios en los filtros
-    document.querySelectorAll('.filter-dropdown input').forEach(input => {
-        input.addEventListener('change', applyFilters);
-    });
+    // ... (previous event listeners remain unchanged) ...
 
-    // Restablecer filtros
-    resetButton.addEventListener('click', function() {
-        document.querySelectorAll('.filter-dropdown input').forEach(input => {
-            input.checked = false;
-        });
-        closeAllDropdowns();
-        applyFilters();
-    });
+    // Initial setup
+    showProductsForPage(currentPage);
 });

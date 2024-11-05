@@ -62,6 +62,19 @@
     </button>
   </div>
 
+  <!-- Opciones de vista y paginación -->
+  <div class="view-options">
+    <div class="grid-options">
+      <button class="view-button" data-view="grid"><i class="fas fa-th"></i> Cuadrícula</button>
+      <button class="view-button" data-view="list"><i class="fas fa-list"></i> Lista</button>
+    </div>
+    <div class="pagination">
+      <button id="prevPage" class="page-button"><i class="fas fa-chevron-left"></i> Anterior</button>
+      <span id="currentPage">Página <span id="pageNumber">1</span></span>
+      <button id="nextPage" class="page-button">Siguiente <i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+
   <!-- Carrusel de productos -->
   <div class="carousel-container">
     <div class="carousel">
@@ -83,9 +96,9 @@
 
   <!-- Lista de productos disponibles -->
   <h2 class="products-title">Productos Disponibles</h2>
-  <div class="products-container">
+  <div class="products-container grid-view">
     {% for producto in producto %}
-    <div class="product">
+    <div class="product" data-category="{{ producto.categoria }}" data-price="{{ producto.precio }}">
       <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />
       <h3>{{ producto.nombre }}</h3>
       <p>Bs {{ producto.precio }}</p>
@@ -118,6 +131,7 @@
   </div>
 </main>
 {% endblock %}
+
 
 {% block extra_scripts %}
 <script src="{% static 'script.js' %}"></script>
