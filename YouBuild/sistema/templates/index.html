@@ -9,10 +9,60 @@
 <link rel="stylesheet" href="{% static 'style.css' %}" /> 
 <link rel="stylesheet" href="{% static 'listaProduct.css' %}" /> 
 <link rel="stylesheet" href="{% static 'topbar.css' %}" /> 
+<link rel="stylesheet" href="{% static 'categorization.css' %}" /> <!-- Agregado: CSS de categorization -->
 {% endblock %}
+
 
 {% block content %}
 <main>
+  <!-- Filtros de productos -->
+  <div class="filter-container">
+    <!-- Categorías -->
+    <div class="filter-group">
+      <button class="filter-button" id="categoryBtn">
+        Categorías <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="filter-dropdown" id="categoryDropdown">
+        <label><input type="checkbox" value="madera"> Madera</label>
+        <label><input type="checkbox" value="arena"> Arena</label>
+        <label><input type="checkbox" value="cemento"> Cemento</label>
+        <label><input type="checkbox" value="otros"> Otros</label>
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="filter-group">
+      <button class="filter-button" id="priceBtn">
+        Precio <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="filter-dropdown" id="priceDropdown">
+        <label><input type="radio" name="price" value="0-100"> Bs 0 - 100</label>
+        <label><input type="radio" name="price" value="101-500"> Bs 101 - 500</label>
+        <label><input type="radio" name="price" value="501-1000"> Bs 501 - 1000</label>
+        <label><input type="radio" name="price" value="1001+"> Bs 1001+</label>
+      </div>
+    </div>
+
+    <!-- Ordenar -->
+    <div class="filter-group">
+      <button class="filter-button" id="sortBtn">
+        Ordenar <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="filter-dropdown" id="sortDropdown">
+        <label><input type="radio" name="sort" value="price-asc"> Precio: Menor a Mayor</label>
+        <label><input type="radio" name="sort" value="price-desc"> Precio: Mayor a Menor</label>
+        <label><input type="radio" name="sort" value="name-asc"> Nombre: A-Z</label>
+        <label><input type="radio" name="sort" value="name-desc"> Nombre: Z-A</label>
+      </div>
+    </div>
+
+    <!-- Restablecer Filtros -->
+    <button class="reset-button" id="resetFilters">
+      Restablecer Filtros
+    </button>
+  </div>
+
+  <!-- Carrusel de productos -->
   <div class="carousel-container">
     <div class="carousel">
       {% for carrusel_item in carrusel %}
@@ -28,7 +78,6 @@
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>
-
 
   <div class="carousel-dots"></div>
 
@@ -72,31 +121,28 @@
 
 {% block extra_scripts %}
 <script src="{% static 'script.js' %}"></script>
+<script src="{% static 'categorization.js' %}"></script> <!-- Agregado: JS de categorization -->
 <script>
   function agregarAlCarrito(productId) {
-    // Usamos fetch para enviar la solicitud POST al servidor
     fetch(`/agregar-al-carrito/${productId}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'  // Añadir el CSRF token para la protección
+            'X-CSRFToken': '{{ csrf_token }}'
         },
-        body: JSON.stringify({})  // Cuerpo vacío ya que no necesitamos pasar datos adicionales
+        body: JSON.stringify({})
     })
     .then(response => {
         if (response.redirected) {
-            // Si la respuesta tiene redirección, el carrito fue actualizado correctamente
-            window.location.href = response.url;  // Redirigir a la página de carrito o la página original
+            window.location.href = response.url;
         } else {
             return response.json();
         }
     })
     .then(data => {
         if (data && data.success) {
-            // Si la respuesta JSON indica éxito, mostrar un mensaje
             alert(data.message || 'Producto agregado correctamente al carrito');
         } else if (data && data.message) {
-            // En caso de error, mostrar el mensaje de error
             alert(data.message || 'Error al agregar el producto al carrito');
         }
     })
