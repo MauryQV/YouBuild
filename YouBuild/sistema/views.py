@@ -92,7 +92,8 @@ def producto_view(request, id):
 def buscar_view(request):
     q = request.GET.get('q', '')
     productos = ProductoDb.objects.filter(nombre__icontains=q)
-    return render(request, 'index.html', {'producto': productos})
+    categorias = CategoriaDb.objects.all()
+    return render(request, 'index.html', {'producto': productos, 'categorias': categorias})
 
 def filtro_productos_view(request):
     # Obtener parámetros de búsqueda del POST
@@ -101,7 +102,7 @@ def filtro_productos_view(request):
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
     # Filtrar productos
-    productos = ProductoDb.objects.all()
+    productos = ProductoDb.objects.all().order_by('-visitas')
     categorias = CategoriaDb.objects.all()
 
 
@@ -130,6 +131,9 @@ def filtro_productos_view(request):
     elif ordenar == 'menor':
         productos = productos.order_by('precio')
     print("Productos después de filtrar y ordenar:", productos)
+
+    if categoria==None and precio_min==None and precio_max and ordenar==None:
+        productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -166,7 +170,6 @@ def carrito_view(request):
         'carrito_productos': carrito_productos,
         'carrito_subtotal': carrito_subtotal,
         'carrito_total': total,
-        "usuario": usuario
     })
 
 
@@ -212,7 +215,8 @@ def agregar_al_carrito(request, producto_id):
 
 
 def get_cart_count(request):
-    cart_count = request.session.get('cart_count', 0)
+    usuario = request.user.usuariodb
+    cart_count = CarritoProductoDB.objects.filter(carrito_fk__usuario_fk=usuario).aggregate(total_quantity=Sum('cantidad'))['total_quantity'] or 0
     return JsonResponse({'cart_count': cart_count})
 
 
@@ -231,9 +235,6 @@ def cargar_municipios(request):
 def test(request):
     return render(request, "pagina.html")
 
-# Vista de creación de cuenta (no se está usando, puede eliminarse)
-def crear_cuenta_view(request):
-    return render(request, 'CrearCuenta.html')
 
 @login_required
 def update_profile_photo(request):
@@ -266,7 +267,6 @@ def perfil_view(request):
         'p_form': p_form
     }
     return render(request,'perfil.html',context) 
-
 
 @login_required
 def registro_producto(request):
@@ -308,12 +308,16 @@ def agregar_a_lista_favoritos(request, producto_id):
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):
-    usuario = request.user.usuariodb
-    eliminado = ListaFavoritosDB.objects.filter(usuario=usuario, producto_id=producto_id).delete()
-    if eliminado[0] > 0:
-        messages.success(request, "Producto eliminado de la lista de favoritos.")
-    else:
-        messages.error(request, "El producto no se encontró en la lista de favoritos.")
-    
+    usuario = get_object_or_404(UsuarioDB, id=request.user.id)
+    try:
+        # Intenta obtener el objeto ListaFavoritosDB que coincida con usuario y producto_id
+        favorito = ListaFavoritosDB.objects.get(usuario=usuario, producto_id=producto_id)
+        favorito.delete()  # Elimina el objeto si existe
+        messages.success(request, "Producto eliminado de tu lista de favoritos.")
+    except ListaFavoritosDB.DoesNotExist:
+        # Si no se encuentra el favorito, muestra un mensaje de error
+        messages.error(request, "El producto no está en tu lista de favoritos.")
+
     return redirect('listaFavoritos')
+
 
