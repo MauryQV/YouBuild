@@ -92,7 +92,8 @@ def producto_view(request, id):
 def buscar_view(request):
     q = request.GET.get('q', '')
     productos = ProductoDb.objects.filter(nombre__icontains=q)
-    return render(request, 'index.html', {'producto': productos})
+    categorias = CategoriaDb.objects.all()
+    return render(request, 'index.html', {'producto': productos, 'categorias': categorias})
 
 def filtro_productos_view(request):
     # Obtener parámetros de búsqueda del POST
@@ -101,7 +102,7 @@ def filtro_productos_view(request):
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
     # Filtrar productos
-    productos = ProductoDb.objects.all()
+    productos = ProductoDb.objects.all().order_by('-visitas')
     categorias = CategoriaDb.objects.all()
 
 
@@ -130,6 +131,9 @@ def filtro_productos_view(request):
     elif ordenar == 'menor':
         productos = productos.order_by('precio')
     print("Productos después de filtrar y ordenar:", productos)
+
+    if categoria==None and precio_min==None and precio_max and ordenar==None:
+        productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
