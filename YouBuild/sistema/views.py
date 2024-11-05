@@ -249,7 +249,7 @@ def update_profile_photo(request):
         # Verificar si la extensión es válida
         if extension not in allowed_extensions:
             # Mostrar un mensaje de error si el formato no es permitido
-            messages.error(request, "Formato de imagen no soportado. Solo se permiten archivos PNG, JPG o JPEG.")
+            messages.error(request, "Formato no permitido")
             return redirect('profile')  # Redirigir a la página de perfil sin guardar la imagen
 
         # Si la extensión es válida, guardar la imagen en el perfil del usuario
