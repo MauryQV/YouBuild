@@ -1,4 +1,7 @@
+{% extends 'layoutReg.html' %}
 {% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +10,6 @@
     <title>Registrar Producto</title>
     <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 </head>
 <body>
     <div class="container">
@@ -23,6 +25,7 @@
 
                 <div class="form-group">
                     <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
+                    <p class="section-subtitle">Escribe el nombre de tu producto</p>
                     {{ form.nombre }}
                     <small>Ejemplos: cemento</small>
                     <div id="error-nombre" class="error-message"></div>
@@ -37,7 +40,7 @@
                 <div class="form-group">
                     <label for="{{ form.detalle.id_for_label }}">Descripción</label>
                     {{ form.detalle }}
-                    <small>Máximo 500 caracteres</small>
+                    <small>0/500</small>
                     <div id="error-detalle" class="error-message"></div>
                 </div>
 
@@ -65,7 +68,7 @@
             <!-- Fotos -->
             <fieldset class="section">
                 <legend>Fotos</legend>
-                <p>Sube hasta cuatro fotos</p>
+                <p>Sube al menos una foto</p>
                 <div class="image-upload">
                     <label for="file1">
                         <input type="file" id="file1" name="imagenes" required onchange="showPreview(event, 'preview1')">
@@ -131,7 +134,7 @@
         function showPreview(event, previewId) {
             const file = event.target.files[0];
             const preview = document.getElementById(previewId);
-
+    
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -143,76 +146,106 @@
                 reader.readAsDataURL(file);
             }
         }
-
+    
         function removeImage(inputId, previewId) {
             const fileInput = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
-
+    
             fileInput.value = "";
             preview.style.backgroundImage = "";
             preview.innerHTML = inputId === 'file1' ? "Foto principal" : "+";
+    
+            // Validar en tiempo real después de eliminar
+            validateImageUpload();
         }
-
+    
+        function validateImageUpload() {
+            const fileInputs = [document.getElementById('file1'), document.getElementById('file2'), document.getElementById('file3'), document.getElementById('file4')];
+            const errorMessage = $('#error-foto');
+            errorMessage.text(''); // Limpiar mensaje de error
+    
+            // Verificar si al menos uno de los inputs tiene un archivo
+            const hasFile = fileInputs.some(input => input.files.length > 0);
+            if (!hasFile) {
+                errorMessage.text("Campo Obligatorio: sube al menos una imagen.").css("color", "red").show();
+                return false; // No se permite el envío del formulario
+            }
+    
+            // Validar el tipo y tamaño de cada archivo
+            for (let input of fileInputs) {
+                if (input.files.length > 0) {
+                    const file = input.files[0];
+                    const fileType = file.type;
+                    const fileSize = file.size / (1024 * 1024); // Tamaño en MB
+                    if (!['image/png', 'image/jpeg'].includes(fileType) || fileSize > 5) {
+                        errorMessage.text("Las fotos deben ser en formato PNG o JPG y no exceder 5 MB.").css("color", "red").show();
+                        return false; // No se permite el envío del formulario
+                    }
+                }
+            }
+    
+            errorMessage.hide(); // Ocultar mensaje de error si todo es válido
+            return true; // Todo es válido
+        }
+    
         $(document).ready(function() {
             $('#id_nombre').on('input', function() {
                 const nombre = $(this).val().trim();
                 const nombreRegex = /^[a-zA-Z0-9\s]+$/;
-                if (nombre === "" || !nombreRegex.test(nombre) || nombre.length > 50) {
+                if (nombre === "") {
+                    $('#error-nombre').text("Campo Obligatorio").css("color", "red").show();
+                } else if (!nombreRegex.test(nombre) || nombre.length > 50) {
                     $('#error-nombre').text("Por favor, introduce un nombre válido.").css("color", "red").show();
                 } else {
                     $('#error-nombre').hide();
                 }
             });
-        
+    
             $('#id_categoria_fk').on('change', function() {
                 if ($(this).val() === "") {
-                    $('#error-categoria').text("Selecciona una categoría.").css("color", "red").show();
+                    $('#error-categoria').text("Campo Obligatorio").css("color", "red").show();
                 } else {
                     $('#error-categoria').hide();
                 }
             });
-        
+    
             $('#id_detalle').on('input', function() {
                 const detalle = $(this).val().trim();
-                if (detalle.length > 500) {
+                if (detalle === "") {
+                    $('#error-detalle').text("Campo Obligatorio").css("color", "red").show();
+                } else if (detalle.length > 500) {
                     $('#error-detalle').text("El detalle no puede exceder los 500 caracteres.").css("color", "red").show();
                 } else {
                     $('#error-detalle').hide();
                 }
             });
-        
+    
             $('#id_precio').on('input', function() {
                 const precio = parseFloat($(this).val());
-                if (isNaN(precio) || precio <= 0) {
+                if ($(this).val() === "") {
+                    $('#error-precio').text("Campo Obligatorio").css("color", "red").show();
+                } else if (isNaN(precio) || precio <= 0) {
                     $('#error-precio').text("Por favor, introduce un precio válido.").css("color", "red").show();
                 } else {
                     $('#error-precio').hide();
                 }
             });
-        
+    
             $('#id_cantidad').on('input', function() {
                 const cantidad = parseInt($(this).val());
-                if (isNaN(cantidad) || cantidad < 1) {
+                if ($(this).val() === "") {
+                    $('#error-cantidad').text("Campo Obligatorio").css("color", "red").show();
+                } else if (isNaN(cantidad) || cantidad < 1) {
                     $('#error-cantidad').text("La cantidad debe ser al menos 1.").css("color", "red").show();
                 } else {
                     $('#error-cantidad').hide();
                 }
             });
-        
+    
             $('#formulario-producto input[type="file"]').on('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const fileType = file.type;
-                    const fileSize = file.size / (1024 * 1024); // Tamaño en MB
-                    if (!['image/png', 'image/jpeg'].includes(fileType) || fileSize > 5) {
-                        $('#error-foto').text("Las fotos deben ser en formato PNG o JPG y no exceder 5 MB.").css("color", "red").show();
-                    } else {
-                        $('#error-foto').hide();
-                    }
-                }
+                validateImageUpload(); // Validar en tiempo real al cambiar el archivo
             });
-        });
-        $(document).ready(function() {
+    
             // Cargar provincias cuando se selecciona un departamento
             $('#id_departamento_fk').change(function() {
                 var url = "{% url 'ajax_cargar_provincias' %}";
@@ -230,7 +263,7 @@
                     }
                 });
             });
-
+    
             // Cargar municipios cuando se selecciona una provincia
             $('#id_provincia_fk').change(function() {
                 var url = "{% url 'ajax_cargar_municipios' %}";
@@ -248,20 +281,84 @@
                     }
                 });
             });
-        });  
-        // Incrementar y decrementar cantidad
-        document.getElementById('increment').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            cantidad.value = parseInt(cantidad.value) + 1;
+    
+            // Incrementar y decrementar cantidad
+            document.getElementById('increment').addEventListener('click', function() {
+                let cantidad = document.getElementById('id_cantidad');
+                cantidad.value = parseInt(cantidad.value) + 1;
+            });
+    
+            document.getElementById('decrement').addEventListener('click', function() {
+                let cantidad = document.getElementById('id_cantidad');
+                if (parseInt(cantidad.value) > 1) {
+                    cantidad.value = parseInt(cantidad.value) - 1;
+                }
+            });
+    
+            // Validación del formulario al hacer clic en el botón "Guardar"
+            $('.submit-button').on('click', function(event) {
+                event.preventDefault(); // Evitar el envío del formulario para realizar la validación
+    
+                let valid = true; // Variable para determinar si el formulario es válido
+                // Limpiar mensajes de error
+                $('#error-nombre').hide();
+                $('#error-categoria').hide();
+                $('#error-detalle').hide();
+                $('#error-precio').hide();
+                $('#error-cantidad').hide();
+                $('#error-foto').hide();
+    
+                // Validar nombre
+                const nombre = $('#id_nombre').val().trim();
+                if (nombre === "") {
+                    $('#error-nombre').text("Campo Obligatorio").css("color", "red").show();
+                    valid = false;
+                }
+    
+                // Validar categoría
+                if ($('#id_categoria_fk').val() === "") {
+                    $('#error-categoria').text("Campo Obligatorio").css("color", "red").show();
+                    valid = false;
+                }
+    
+                // Validar detalle
+                const detalle = $('#id_detalle').val().trim();
+                if (detalle === "") {
+                    $('#error-detalle').text("Campo Obligatorio").css("color", "red").show();
+                    valid = false;
+                }
+    
+                // Validar precio
+                const precio = parseFloat($('#id_precio').val());
+                if (isNaN(precio) || precio <= 0) {
+                    $('#error-precio').text("Campo Obligatorio").css("color", "red").show();
+                    valid = false;
+                }
+    
+                // Validar cantidad
+                const cantidad = parseInt($('#id_cantidad').val());
+                if (isNaN(cantidad) || cantidad < 1) {
+                    $('#error-cantidad').text("Campo Obligatorio").css("color", "red").show();
+                    valid = false;
+                }
+    
+                // Validar imagenes
+                if (!validateImageUpload()) {
+                    valid = false;
+                }
+    
+                // Si el formulario es válido, se puede enviar
+                if (valid) {
+                    // Aquí se puede enviar el formulario (ej. $('#formulario-producto').submit())
+                    $('#formulario-producto').submit(); // Comentado si quieres realizar otras acciones antes de enviar
+                }
+            });
         });
-
-        document.getElementById('decrement').addEventListener('click', function() {
-            let cantidad = document.getElementById('id_cantidad');
-            if (parseInt(cantidad.value) > 1) {
-                cantidad.value = parseInt(cantidad.value) - 1;
-            }
-        });      
     </script>
+    
+    
+        
 </body>
 </html>
+{% endblock %}
 
