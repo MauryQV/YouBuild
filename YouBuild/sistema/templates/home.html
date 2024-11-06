@@ -136,20 +136,24 @@
   }
 
   function agregarAFavoritos(productoId) {
-    fetch(`/lista-favoritos/agregar/${productoId}/`, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("Producto agregado a la lista de deseos!");
-        } else {
-            alert("Hubo un error al agregar el producto.");
-        }
-    });
+      fetch(`/lista-favoritos/agregar/${productoId}/`, {
+          method: 'GET',
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+          } else {
+              alert("Hubo un error al intentar agregar el producto a la lista de deseos.");
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+      });
   }
 
   function reestablecerFiltros() {

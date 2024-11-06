@@ -213,6 +213,13 @@ def agregar_al_carrito(request, producto_id):
     messages.success(request, f"Producto {producto.nombre} agregado al carrito.")
     return redirect('Carrito')
 
+@login_required
+def agregar_a_lista_favoritos(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
+    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
+    messages.success(request, f"Producto {producto.nombre} agregado a favoritos.")    
+    return redirect('listaFavoritos')
 
 def get_cart_count(request):
     usuario = request.user.usuariodb
@@ -316,13 +323,6 @@ def ver_lista_favoritos(request):
         'lista_favoritos_items': lista_favoritos_items,
         'usuario': usuario  
     })
-
-@login_required
-def agregar_a_lista_favoritos(request, producto_id):
-    producto = get_object_or_404(ProductoDb, id=producto_id)
-    favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
-    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
-    return redirect('listaFavoritos')
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):
