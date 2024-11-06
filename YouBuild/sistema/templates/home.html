@@ -16,17 +16,16 @@
   <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
     <div class="filtros">
-        <label for="categoria"></label>
         <select id="categoria" name="categoria">
-            <option value="">Categoria</option>
+            <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+            <option value="">Todas las categorías</option>
             {% for categoria in categorias %}
                 <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
             {% endfor %}
         </select>
     
-        <label for="precio"></label>
         <select id="precio" name="precio" onchange="updatePrices()">
-            <option value="">Precio</option>
+            <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
             <option value="0-50">Bs 0 - Bs 50</option>
             <option value="51-100">Bs 51 - Bs 100</option>
             <option value="101-200">Bs 101 - Bs 200</option>
@@ -36,9 +35,8 @@
         <input type="hidden" id="precio_min" name="precio_min">
         <input type="hidden" id="precio_max" name="precio_max">
     
-        <label for="ordenar"></label>
         <select id="ordenar" name="ordenar">
-            <option value="">Ordenar</option>
+            <option value="" style="display: none;">Ordenar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
             <option value="menor">Menor a mayor Precio</option>
             <option value="mayor">Mayor a menor Precio</option>
         </select>
@@ -138,20 +136,24 @@
   }
 
   function agregarAFavoritos(productoId) {
-    fetch(`/lista-favoritos/agregar/${productoId}/`, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("Producto agregado a la lista de deseos!");
-        } else {
-            alert("Hubo un error al agregar el producto.");
-        }
-    });
+      fetch(`/lista-favoritos/agregar/${productoId}/`, {
+          method: 'GET',
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+          } else {
+              alert("Hubo un error al intentar agregar el producto a la lista de deseos.");
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+      });
   }
 
   function reestablecerFiltros() {

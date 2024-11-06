@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import RegistroUsuarioForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib import messages
 from .models import *
 from .forms import RegistroUsuarioForm, RegistroProductoForm
@@ -177,7 +177,6 @@ def carrito_view(request):
 def eliminar_producto(request, item_id):
     carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
     carrito_producto.delete()
-    messages.success(request, "Producto eliminado del carrito.")
     return redirect('Carrito')
 
 
@@ -238,35 +237,68 @@ def test(request):
 
 @login_required
 def update_profile_photo(request):
-    # Confirmar que es una solicitud POST y que `imagen_perfil` existe en los archivos
     if request.method == 'POST' and 'imagen_perfil' in request.FILES:
+        imagen = request.FILES['imagen_perfil']
+        extension = imagen.name.split('.')[-1].lower()
+        allowed_extensions = ['png', 'jpg', 'jpeg']
+        if extension not in allowed_extensions:
+            messages.error(request, "Formato no permitido")
+            return redirect('profile')  # Redirigir a la página de perfil sin guardar la imagen
         usuario_db = request.user.usuariodb
-        usuario_db.imagen_perfil = request.FILES['imagen_perfil']
+        usuario_db.imagen_perfil = imagen
         usuario_db.save()
-        return redirect('profile')  # Redirige a la página de perfil después de guardar
+        messages.success(request, "Tu foto de perfil ha sido actualizada con éxito.")
+        return redirect('profile')
+    
+    # Redirigir a la página de perfil si no es una solicitud POST
     return redirect('profile')
 
-@login_required     
+
+
+@login_required
 def perfil_view(request):
+    # Initialize forms with instances, so they are accessible throughout the function
+    u_form = UserUpdateForm(instance=request.user)
+    p_form = ProfileUpdateForm(instance=request.user.usuariodb)
+    password_form = PasswordChangeForm(user=request.user)
+
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,
-                                   request.FILES,
-                                   instance= request.user.usuariodb)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request,f'Tu cuenta ha sido actualizada')
-            return redirect('profile')
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.usuariodb)
-    
-        context = {    
+        # Check which form is being submitted
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'profile_update':
+            u_form = UserUpdateForm(request.POST, instance=request.user)
+            p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.usuariodb)
+            
+            # Validate and save profile update forms
+            if u_form.is_valid() and p_form.is_valid():
+                u_form.save()
+                p_form.save()
+                messages.success(request, '¡Tus datos personales han sido actualizados!')
+                return redirect('profile')
+            else:
+                # Print errors for debugging
+                print("User form errors:", u_form.errors)
+                print("Profile form errors:", p_form.errors)
+
+        elif form_type == 'password_change':
+            password_form = PasswordChangeForm(user=request.user, data=request.POST)
+            
+            # Validate and save password change form
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, password_form.user)  # Keep the user logged in after password change
+                messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+                return redirect('profile')
+
+    # Render the forms whether POST or GET
+    context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'password_form': password_form
     }
-    return render(request,'perfil.html',context) 
+    return render(request, 'perfil.html', context)
+
 
 @login_required
 def registro_producto(request):
@@ -303,7 +335,7 @@ def ver_lista_favoritos(request):
 def agregar_a_lista_favoritos(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id)
     favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
-    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
+    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar   
     return redirect('listaFavoritos')
 
 @login_required

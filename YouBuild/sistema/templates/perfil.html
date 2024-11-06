@@ -12,14 +12,15 @@
 
 {% block content %}
 <div class="profile-container">
+    <!-- Bloque para mostrar mensajes de éxito o error -->
     <div class="profile-sidebar">
-        <h3>Mi Foto</h3>
+        <h1>Mi Foto</h1>
         <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
             {% csrf_token %}
             <div class="profile-photo-container">
                 <label for="imagen_perfil">
                     <div class="profile-photo">
-                            <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+                        <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
                     </div>
                     <div class="camera-icon">
                         <i class="fa-solid fa-camera"></i>
@@ -28,6 +29,15 @@
                 <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none" onchange="document.getElementById('profile-photo-form').submit();">
             </div>
         </form>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
         <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
         <div class="profile-contact-info">
             <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
@@ -36,16 +46,30 @@
     </div>
 
     <!-- Formulario de actualización de datos personales -->
+    
     <div class="profile-main">
-        <h2>Mis Datos Personales</h2>
+        <h1>Mis Datos Personales</h1>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="hidden" name="form_type" value="profile_update"> <!-- Add this line -->
             {{ u_form|crispy }}
             {{ p_form|crispy }}
             <button type="submit" class="btn-primario">Guardar Cambios</button>
         </form>
-    </div>
-</div>
+    
+        <h2 class="mt-4">Cambiar Contraseña</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="password_change">
+            {{ password_form|crispy }}
+            <button type="submit" class="btn-custom">Cambiar Contraseña</button>
 
-</div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+   
+</script>
 {% endblock %}

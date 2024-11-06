@@ -132,6 +132,22 @@
     background-color: #e65a00; /* Color de fondo en hover */
 }
 
+
+.btn-custom {
+    background-color: #ef6605; /* Color de fondo naranja */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Define el estilo cuando el ratón pasa sobre el botón */
+.btn-custom:hover {
+    background-color: #e65a00; /* Color de fondo en hover */
+}
 /* Bordes curvos en los campos de formulario */
 .profile-main input[type="text"],
 .profile-main input[type="email"],
@@ -155,7 +171,7 @@
 .profile-main input[type="file"]:focus,
 .profile-main select:focus,
 .profile-main textarea:focus {
-    border-color: #ff6b00;
+    border-color: #000000;
     outline: none;
 }
 
@@ -175,7 +191,7 @@
     padding: 25px;
     border: 2px solid black; /* Borde negro */
     border-radius: 15px; /* Esquinas redondeadas */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    
 }
 /* Responsividad para pantallas medianas y pequeñas */
 @media (max-width: 768px) {
@@ -203,4 +219,23 @@
         padding: 10px 20px;
         font-size: 14px;
     }
+}
+
+.messages .alert {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #a10212;
+    border: 1px solid #f5c6cb;
 }
