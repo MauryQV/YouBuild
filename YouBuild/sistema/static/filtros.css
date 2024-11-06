@@ -18,7 +18,7 @@
 
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
-    width: 150px;
+    /*width: 180px;*/
     padding: 10px 10px 10px 35px;
     text-align: left;
     background-color: #ffffff;
