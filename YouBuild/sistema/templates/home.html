@@ -17,7 +17,7 @@
     {% csrf_token %}
     <div class="filtros">
         <select id="categoria" name="categoria">
-            <option value="invisible" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+            <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
             <option value="">Todas las categorías</option>
             {% for categoria in categorias %}
                 <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
@@ -25,7 +25,7 @@
         </select>
     
         <select id="precio" name="precio" onchange="updatePrices()">
-            <option value="invisible" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+            <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
             <option value="0-50">Bs 0 - Bs 50</option>
             <option value="51-100">Bs 51 - Bs 100</option>
             <option value="101-200">Bs 101 - Bs 200</option>
@@ -36,7 +36,7 @@
         <input type="hidden" id="precio_max" name="precio_max">
     
         <select id="ordenar" name="ordenar">
-            <option value="invisible" style="display: none;">Ordenar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+            <option value="" style="display: none;">Ordenar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
             <option value="menor">Menor a mayor Precio</option>
             <option value="mayor">Mayor a menor Precio</option>
         </select>
