@@ -1,4 +1,7 @@
+{% extends 'layoutReg.html' %}
 {% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +10,6 @@
     <title>Registrar Producto</title>
     <link rel="stylesheet" href="{% static 'registro_prod.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 </head>
 <body>
     <div class="container">
@@ -17,6 +19,7 @@
             {% csrf_token %}
 
             <!-- Información del Producto -->
+            <!-- Aquí comienza el contenido de tu formulario... -->
             <fieldset class="section">
                 <legend>Información del Producto</legend>
                 <p class="section-subtitle">¿Qué vendes? Proporciona toda la información relevante</p>
@@ -358,4 +361,5 @@
         
 </body>
 </html>
+{% endblock %}
 
