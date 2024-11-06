@@ -140,9 +140,8 @@
                     <div class="error">{{ form.qr_imagen.errors }}</div>
                     <div id="qr-imagen-preview" class="imagen-preview">
                         <img id="qr-imagen-img" src="{% static 'image-icon.png' %}" alt="Imagen QR" class="uploaded-image">
-                        <span class="remove hidden-remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
-
-                    </div>
+                        <span class="remove hidden-remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+                    </div>                    
                 </div>
 
                 <!-- Términos y Condiciones Checkbox -->
@@ -397,21 +396,24 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     imgElement.src = e.target.result;
-                    preview.classList.remove("oculto");
-                    removeButton.classList.remove("hidden-remove"); 
+                    preview.classList.remove("oculto"); // Show the preview box
+                    removeButton.classList.remove("hidden-remove"); // Show the "X" button only when an image is present
                 };
                 reader.readAsDataURL(file);
             }
-        }
+        }        
         
         function removerImagen(previewId, inputId) {
             const preview = document.getElementById(previewId);
             const imgElement = preview.querySelector('img');
             const removeButton = preview.querySelector('.remove');
+        
+            imgElement.src = "{% static 'image-icon.png' %}";
+            document.getElementById(inputId).value = ""; // Clear the input field
+        
+            removeButton.classList.add("hidden-remove");
             
-            imgElement.src = "{% static 'image-icon.png' %}"; 
-            document.getElementById(inputId).value = ""; 
-            removeButton.classList.add("hidden-remove"); 
+            preview.classList.add("oculto");
         }
         
         
