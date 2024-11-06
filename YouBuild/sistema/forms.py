@@ -8,6 +8,7 @@ from django.db import transaction
 from .models import UsuarioDB, ProductoDb, CategoriaDb, DepartamentoDB, ProvinciaDB, MunicipioDB, ImagenProductoDB
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
+import re
 
 class LoginForm(AuthenticationForm):
     pass
@@ -138,7 +139,7 @@ class UserUpdateForm(forms.ModelForm):
                 Column('username', css_class='form-group col-md-6 mb-0'),
                 Column('email', css_class='form-group col-md-6 mb-0'),
             ),
-            Submit('submit', 'Guardar Cambios', css_class='btn btn-primary')
+            Submit('submit', 'Guardar Cambios', css_class='btn-primario')
         )
 
     def clean_email(self):
@@ -146,6 +147,7 @@ class UserUpdateForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise ValidationError("Correo electronico ya registrado.")
         return email
+    
     
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
@@ -159,8 +161,15 @@ class ProfileUpdateForm(forms.ModelForm):
         self.helper.layout = Layout(
             'nombre_completo',
             'direccion_1',
-            Submit('submit', 'Actualizar Perfil', css_class='btn btn-primary')
+            Submit('submit', 'Actualizar Perfil', css_class='btn-primario')
         )
+    def clean_nombre_completo(self):
+        nombre = self.cleaned_data.get('nombre_completo')
+        # Verificar que el nombre contenga solo letras y espacios
+        if not re.match("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$", nombre):
+            raise forms.ValidationError("El nombre solo puede contener letras")
+        return nombre
+
 
 
 class RegistroProductoForm(forms.ModelForm):
