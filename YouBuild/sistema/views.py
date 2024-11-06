@@ -322,6 +322,7 @@ def agregar_a_lista_favoritos(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id)
     favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
     favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar
+    messages.success(request, f"Producto {producto.nombre} agregado a favoritos.")    
     return redirect('listaFavoritos')
 
 @login_required
