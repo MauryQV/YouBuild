@@ -285,28 +285,33 @@
                 $("#error-nombre").text("El nombre solo puede contener letras.");
             } else if (nombre.length < 4) {
                 $("#error-nombre").text("No se permite registrar un usuario con un nombre menor a 4 caracteres.");
-            } else if (spaceCount > 7) {
+            } else if (hasConsecutiveSpaces) { // Prioritize consecutive spaces check
+                $("#error-nombre").text("No se permiten más de 2 espacios consecutivos.");
+            } else if (spaceCount > 7) { // Check for total spaces after consecutive spaces check
                 $("#error-nombre").text("El nombre incluye más de 7 espacios.");
-            } else if (hasConsecutiveSpaces) {
-                $("#error-nombre").text("No se permiten más de dos espacios consecutivos.");
             } else {
                 $("#error-nombre").text(""); // Clear error if input is valid
             }
         }
+        
                 
         function validarUsername() {
             const username = $("#id_username").val();
-        
+            
             if (username.trim() === "") { // Check if the field is empty or only contains whitespace
                 $("#error-username").text("Campo Obligatorio");
+            } else if (username.length < 5) { // Check for minimum length first
+                $("#error-username").text("Mínimo 5 caracteres.");
+            } else if (username.length > 15) { // Check if the length exceeds 15 characters
+                $("#error-username").text("Máximo 15 caracteres.");
             } else if (/\s/.test(username)) { // Check if there is any whitespace in the username
                 $("#error-username").text("No se permiten espacios.");
-            } else if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+            } else if (!/^[A-Za-z0-9]{5,15}$/.test(username)) { // Check for valid characters
                 $("#error-username").text("El nombre de usuario solo puede contener letras y números.");
             } else {
                 $("#error-username").text(""); // Clear error if input is valid
             }
-        }
+        }        
                 
         function validarPassword1() {
             const password1 = $("#id_password1").val();
@@ -314,9 +319,9 @@
             if (password1.trim() === "") { // Check if password1 is empty
                 $("#error-password1").text("Campo Obligatorio");
             } else if (password1.length > 25) { // Check if password1 exceeds 25 characters
-                $("#error-password1").text("Límite de caracteres excedido (25)");
+                $("#error-password1").text("Límite de caracteres excedido. (25)");
             } else if (password1.length < 8) { // Check if password1 is less than 8 characters
-                $("#error-password1").text("Mínimo 8 caracteres");
+                $("#error-password1").text("Mínimo 8 caracteres.");
             } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
                 $("#error-password1").text("Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.");
             } else {
