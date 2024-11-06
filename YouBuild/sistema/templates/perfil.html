@@ -1,51 +1,151 @@
 <!DOCTYPE html>
-{% extends "layoutReg.html" %}
-{% load crispy_forms_tags %}
-{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    {% load static %}
 
-{% block title %}Mi perfil{% endblock %}
-
-{% block extra_styles %}
-<link rel="stylesheet" href="{% static 'perfil.css' %}">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
-{% endblock %}
-
-{% block content %}
-<div class="profile-container">
-    <div class="profile-sidebar">
-        <h3>Mi Foto</h3>
-        <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
-            {% csrf_token %}
-            <div class="profile-photo-container">
+    <link rel="stylesheet" href="{% static 'perfil.css' %}">
+</head>
+<body>
+    <div class="perfil-wrapper">
+        <div class="perfil-lado-izquierdo">
+            <h3>Mi foto</h3>
+            <div class="foto-perfil">
                 <label for="imagen_perfil">
-                    <div class="profile-photo">
-                            <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
-                    </div>
-                    <div class="camera-icon">
-                        <i class="fa-solid fa-camera"></i>
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#ff6b00" stroke-width="6">
+                            <circle cx="50" cy="50" r="46"/>
+                            <circle cx="50" cy="42" r="20"/>
+                            <path d="M12 80 Q 50 44, 88 80" stroke="#ff6b00" fill="none" stroke-width="6" />
+                        </svg>
                     </div>
                 </label>
-                <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none" onchange="document.getElementById('profile-photo-form').submit();">
+                <input type="file" 
+                       id="imagen_perfil" 
+                       name="imagen_perfil" 
+                       accept="image/*" 
+                       required
+                       aria-label="Imagen de perfil">
+                <label for="imagen_perfil" class="icono-camara">
+                    <svg viewBox="0 0 30 30" fill="none" stroke="black" stroke-width="2">
+                        <rect x="3" y="5" width="24" height="20" rx="4"></rect>
+                        <circle cx="15" cy="15" r="5"></circle>
+                        <rect x="10" y="2" width="10" height="3" rx="1" fill="black"></rect>
+                    </svg>
+                </label>
             </div>
-        </form>
-        <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
-        <div class="profile-contact-info">
-            <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
-            <p><strong>Correo:</strong><br>{{ user.email }}</p>
+            <p class="nombre-usuario" id="display-nombre">{{ usuario.nombre_completo }}</p>
+            <div class="info-contacto">
+                <p><strong>Número de celular:</strong><br><span id="display-celular">{{ usuario.numero_celular }}</span></p>
+                <p><strong>Correo:</strong><br><span id="display-correo">{{ usuario.correo }}</span></p>
+            </div>
+        </div>
+        <div class="perfil-lado-derecho">
+            <h3>Mis datos personales</h3>
+            <form id="perfil-form" class="form-validation" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre completo:</label>
+                    <input type="text" 
+                           id="nombre_completo" 
+                           name="nombre_completo" 
+                           value="{{ usuario.nombre_completo }}"
+                           required
+                           maxlength="255"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="nombre_usuario">Nombre de usuario:</label>
+                    <input type="text" 
+                           id="nombre_usuario" 
+                           name="nombre_usuario" 
+                           value="{{ usuario.nombre_usuario }}"
+                           required
+                           maxlength="150"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="direccion_1">Dirección:</label>
+                    <input type="text" 
+                           id="direccion_1" 
+                           name="direccion_1" 
+                           value="{{ usuario.direccion_1 }}"
+                           required
+                           maxlength="255"
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="numero_celular">Número de celular:</label>
+                    <input type="tel" 
+                           id="numero_celular" 
+                           name="numero_celular" 
+                           value="{{ usuario.numero_celular }}"
+                           required
+                           maxlength="15"
+                           data-validation="required|phone">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" 
+                           id="correo" 
+                           name="correo" 
+                           value="{{ usuario.correo }}"
+                           required
+                           data-validation="required|email">
+                    <span class="error-message"></span>
+                </div>
+
+                <h3>Cambiar contraseña</h3>
+                <div class="form-group">
+                    <label for="password_actual">Contraseña actual:</label>
+                    <input type="password" 
+                           id="password_actual" 
+                           name="password_actual"
+                           required
+                           data-validation="required">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group password-group">
+                    <div class="password-container">
+                        <label for="nueva_contrasena">Nueva contraseña:</label>
+                        <input type="password" 
+                               id="nueva_contrasena" 
+                               name="nueva_contrasena"
+                               required
+                               data-validation="required|password">
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="button" class="btn-naranja" id="btn-cambiar-password">Cambiar contraseña</button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-naranja guardar">Guardar cambios</button>
+                </div>
+            </form>
+            
+            <!-- Mensaje de confirmación -->
+            <div id="mensaje-confirmacion" class="mensaje-confirmacion" style="display: none;">
+                <p>Los cambios han sido guardados exitosamente.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Formulario de actualización de datos personales -->
-    <div class="profile-main">
-        <h2>Mis Datos Personales</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ u_form|crispy }}
-            {{ p_form|crispy }}
-            <button type="submit" class="btn-primario">Guardar Cambios</button>
-        </form>
-    </div>
-</div>
-
-</div>
-{% endblock %}
+    <script src="{% static 'perfil.js' %}"></script>
+    <script>
+        document.getElementById('perfil-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aquí iría la lógica para enviar los datos del formulario
+            // Después de guardar los cambios exitosamente:
+            document.getElementById('mensaje-confirmacion').style.display = 'block';
+            setTimeout(function() {
+                document.getElementById('mensaje-confirmacion').style.display = 'none';
+            }, 3000); // El mensaje desaparecerá después de 3 segundos
+        });
+    </script>
+</body>
+</html>
