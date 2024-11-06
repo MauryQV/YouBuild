@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
 ]
 
+
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 MIDDLEWARE = [
