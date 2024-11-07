@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User 
 from .forms import RegistroUsuarioForm
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib import messages
@@ -39,6 +40,12 @@ def custom_logout_view(request):
     logout(request)
     return redirect('index')
 
+def check_email(request):
+    email = request.GET.get('email', None)
+    data = {
+        'email_exists': User.objects.filter(email=email).exists()
+    }
+    return JsonResponse(data)
 
 def registrar_usuario(request):
     if request.method == 'POST':
