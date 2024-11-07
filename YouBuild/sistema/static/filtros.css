@@ -2,40 +2,58 @@
 
 /* Estilos generales para la sección de filtros */
 .filtros {
-    display: flex;
+    width: 100%;
+    display: inline-block;    
+    flex-wrap: nowrap;
+    position: relative;
     justify-content: flex-start;
     align-items: center;
     gap: 15px; /* Aumentar el espacio entre los elementos */
     margin-bottom: 30px; /* Aumentar el espacio para que no choque con el carrusel */
     padding: 10px;
-    background-color: #ffffff; /* Fondo blanco limpio */
-    border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilo de las etiquetas */
-.filtros label {
-    font-size: 14px;
-    font-weight: normal;
-    color: #333;
-    margin-right: 5px;
+    background-color: #ffffff; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px #ef6605(0, 0, 0, 0.1);
 }
 
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
-    background-color: white; /* Fondo blanco */
-    color: #333; /* Texto gris oscuro */
-    padding: 8px;
-    border: 1px solid #ddd; /* Borde gris claro */
-    font-size: 14px;
+    /*width: 180px;*/
+    padding: 10px 10px 10px 35px;
+    text-align: left;
+    background-color: #ffffff;
+    color: #ef6605;
+    border: 1px solid #ef6605;
     border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     cursor: pointer;
-    outline: none;
 }
 
+.filtros::before {
+    content: "  ";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+}
+
+.filtros select::-ms-expand {
+    display: none;
+}
+    
 /* Opciones dentro de los selectores */
 .filtros select option {
     color: #333;
+    background-color: #ffffff;
     font-size: 14px;
     padding: 8px;
 }
@@ -64,5 +82,30 @@
     margin-top: 20px; /* Aumentar el margen superior del carrusel */
 }
 
+/* Estilo por defecto del select */
+select {
+    border: 2px solid #ccc;
+    background-color: transparent;
+    padding: 5px;
+    font-size: 14px;
+}
 
+/* Estilo cuando el select tiene foco (cuando el usuario lo selecciona) */
+select:focus {
+    border-color: #ef6605;
+    background-color: transparent;
+    outline: none;
+}
 
+/* Estilo cuando el select está activo (se hace clic sobre él) */
+select:active {
+    border-color: #ef6605;
+    background-color: transparent;
+}
+
+/* Estilo cuando el mouse pasa sobre el select */
+select:hover {
+    border-color: #ef6605;
+    background-color: #ef6605;
+    color: #ffffff;
+}
