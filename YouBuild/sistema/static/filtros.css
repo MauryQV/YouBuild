@@ -3,7 +3,7 @@
 /* Estilos generales para la sección de filtros */
 .filtros {
     width: 100%;
-    display: inline-block;    
+    display: flex;    
     flex-wrap: nowrap;
     position: relative;
     justify-content: flex-start;

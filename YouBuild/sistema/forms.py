@@ -185,7 +185,7 @@ class RegistroProductoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': '--Agrega el nombre del producto--'})
     )
     detalle = forms.CharField(
-        max_length=200,
+        max_length=500,
         required=True,
         label="Detalle",
         widget=forms.Textarea(attrs={'placeholder': '--Agrega mas detalles del producto--'})

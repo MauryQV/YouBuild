@@ -37,9 +37,10 @@
       <input type="hidden" id="precio_max" name="precio_max">
   
       <select id="ordenar" name="ordenar">
-          <option value="" style="display: none;">Ordenar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="menor">Menor a mayor Precio</option>
-          <option value="mayor">Mayor a menor Precio</option>
+          <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+          <option value="relevantes">Mas relevantes</option>
+          <option value="menor">Menor Precio</option>
+          <option value="mayor">Mayor Precio</option>
       </select>
   
       <button id ="aplicar-filtros" type="submit">Aplicar</button>
@@ -85,8 +86,16 @@
           <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">
             <i class="fas fa-eye"></i> Ver Detalles
           </button>
-          <button class="btn add-to-list" onclick="window.location.href='{% url 'login' %}'">
-            <i class="fas fa-heart"></i> Agregar a Lista
+          <button 
+                      class="btn add-to-list" 
+                      onclick="agregarAFavoritos({{ producto.id }})"
+                      id="favorito-btn-{{ producto.id }}">
+                      <i class="fas fa-heart"></i>
+                      {% if producto.id in favoritos_ids %}
+                          En Favoritos
+                      {% else %}
+                          Agregar a Lista
+                      {% endif %}
           </button>
         </div>
       </div>
@@ -142,22 +151,26 @@
   
   function agregarAFavoritos(productoId) {
     fetch(`/lista-favoritos/agregar/${productoId}/`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
+            'X-CSRFToken': '{{ csrf_token }}',  // Asegúrate de incluir el token CSRF
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        const btn = document.getElementById(`favorito-btn-${productoId}`);
+        if (data.enFavoritos) {
+            btn.innerHTML = '<i class="fas fa-heart"></i> En Favoritos';
             alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
         } else {
-            alert("Hubo un error al intentar agregar el producto a la lista de deseos.");
+            btn.innerHTML = '<i class="fas fa-heart"></i> Agregar a Lista';
+            alert("El producto ha sido eliminado de tu lista de deseos.");
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+        alert("Hubo un error al intentar actualizar la lista de deseos.");
     });
   }
 
