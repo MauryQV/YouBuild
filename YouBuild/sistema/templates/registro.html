@@ -206,8 +206,16 @@
         let seccionActual = 1;
         $(document).ready(function() {
             // Initialize the button to be disabled and styled as gray
+            $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            $('#id_nombre_completo').on('input', validarFormularioSeccion1);
+            $('#id_username').on('input', validarFormularioSeccion1);
+            $('#id_password1').on('input', validarFormularioSeccion1);
+            $('#id_password2').on('input', validarFormularioSeccion1);
+            $('#id_telefono').on('input', validarFormularioSeccion1);
+
             $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
-    
+            
             // Enable or disable the button based on the checkbox state
             $('#aceptar-terminos').change(function() {
                 if (this.checked) {
@@ -530,6 +538,43 @@
     $(".paso").removeClass("activo");
     $(".paso").eq(seccion - 1).addClass("activo");
 }
+function validarFormularioSeccion1() {
+    const nombre = $("#id_nombre_completo").val();
+    const username = $("#id_username").val();
+    const password1 = $("#id_password1").val();
+    const password2 = $("#id_password2").val();
+    const telefono = $("#id_telefono").val();
+
+    let allFieldsValid = true;
+
+    // Validate each field according to your restrictions
+    if (nombre.trim() === "" || !/^[A-Za-z\s]{1,50}$/.test(nombre) || nombre.length < 4 || (nombre.match(/\s/g) || []).length > 7 || /\s{2,}/.test(nombre)) {
+        allFieldsValid = false;
+    }
+
+    if (username.trim() === "" || /\s/.test(username) || !/^[A-Za-z0-9]{5,15}$/.test(username)) {
+        allFieldsValid = false;
+    }
+
+    if (password1.trim() === "" || password1.length < 8 || password1.length > 25 || !/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+        allFieldsValid = false;
+    }
+
+    if (password2.trim() === "" || password2 !== password1 || password2.length > 25) {
+        allFieldsValid = false;
+    }
+
+    if (telefono.trim() === "" || !/^[67]/.test(telefono) || telefono.length !== 8 || /\s/.test(telefono) || /[^0-9]/.test(telefono)) {
+        allFieldsValid = false;
+    }
+
+    // Enable the "Siguiente" button if all fields are valid, else disable it
+    if (allFieldsValid) {
+        $('.registro-btn-siguiente').prop('disabled', false).removeClass('disabled').addClass('enabled');
+    } else {
+        $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+    }
+}
 function validarSeccion1() {
     let nombre = document.getElementById("id_nombre_completo").value;
     let username = document.getElementById("id_username").value;
@@ -652,5 +697,16 @@ function validarSeccion2() {
             }
         }
     </script>
+    <style>
+        .disabled {
+            background-color: #bbbbbb; 
+            cursor: not-allowed;
+        }
+    
+        .enabled {
+            background-color: #ef6605;  
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
