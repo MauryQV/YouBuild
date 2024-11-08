@@ -128,6 +128,7 @@
                     <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
                     <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
                     <div class="error">{{ form.imagen_perfil.errors }}</div>
+                    <div class="error" id="error-id_imagen_perfil"></div> 
                     <div id="imagen-perfil-preview" class="imagen-preview">
                         <img id="imagen-perfil-img" src="{% static 'image-icon.png' %}" alt="Imagen de perfil" class="uploaded-image">
                         <span class="remove hidden-remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
@@ -137,6 +138,7 @@
                 <div class="registro-form-group">
                     <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
                     <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+                    <div class="error" id="error-id_qr_imagen"></div> <!-- Error message container -->
                     <div class="error">{{ form.qr_imagen.errors }}</div>
                     <div id="qr-imagen-preview" class="imagen-preview">
                         <img id="qr-imagen-img" src="{% static 'image-icon.png' %}" alt="Imagen QR" class="uploaded-image">
@@ -512,7 +514,6 @@
             }
         }
         
-        
         $(document).ready(function() {
             mostrarSeccion(seccionActual);
         });
@@ -522,17 +523,30 @@
             const preview = document.getElementById(previewId);
             const imgElement = preview.querySelector('img');
             const removeButton = preview.querySelector('.remove');
-            
+            const errorElement = document.getElementById(`error-${inputId}`); // Element to show error message
+        
+            errorElement.textContent = "";
+        
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imgElement.src = e.target.result;
-                    preview.classList.remove("oculto"); // Show the preview box
-                    removeButton.classList.remove("hidden-remove"); // Show the "X" button only when an image is present
-                };
-                reader.readAsDataURL(file);
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+                // Check if the file is a png or jpg
+                if (fileExtension === "png" || fileExtension === "jpg" || fileExtension === "jpeg") {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imgElement.src = e.target.result;
+                        preview.classList.remove("oculto"); // Show the preview box
+                        removeButton.classList.remove("hidden-remove"); // Show the "X" button
+                        errorElement.textContent = ""; // Clear any error if file is valid
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    errorElement.textContent = "Formato de imagen no permitido";
+                    input.value = ""; // Clear the invalid file from input
+                }
             }
-        }        
+        }
+             
         
         function removerImagen(previewId, inputId) {
             const preview = document.getElementById(previewId);
