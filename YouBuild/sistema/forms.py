@@ -21,6 +21,11 @@ class RegistroUsuarioForm(UserCreationForm):
         label="Nombre completo",
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu nombre completo'})
     )
+    email = forms.EmailField(
+        required=True,
+        label="Correo electrónico (opcional)",  
+        widget=forms.EmailInput(attrs={'placeholder': 'Ingresa tu correo electrónico'})
+    )
     departamento_fk = forms.ModelChoiceField(
         queryset=DepartamentoDB.objects.all(), 
         required=True, 
