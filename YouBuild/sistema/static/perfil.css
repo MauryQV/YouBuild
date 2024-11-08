@@ -239,3 +239,9 @@
     color: #a10212;
     border: 1px solid #f5c6cb;
 }
+
+.btn-primario:disabled {
+    background-color: #ccc;  /* Color gris claro */
+    cursor: not-allowed;  /* Cursor para indicar que no se puede hacer clic */
+    color: #666;  /* Color de texto gris */
+}
