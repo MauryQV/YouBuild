@@ -312,7 +312,7 @@ def registro_producto(request):
             for imagen in imagenes:
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
             
-            return redirect('home') 
+            return redirect('confirmacion_producto')  # Redirigir a la página de confirmación
     else:
         form = RegistroProductoForm()
     return render(request, 'registro_producto.html', {'form': form})    
@@ -352,4 +352,6 @@ def eliminar_de_lista_favoritos(request, producto_id):
 
     return redirect('listaFavoritos')
 
+def confirmacion_producto(request):
+    return render(request, 'confirmacion_producto.html')
 
