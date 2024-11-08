@@ -213,7 +213,7 @@
             $('#id_password1').on('input', validarFormularioSeccion1);
             $('#id_password2').on('input', validarFormularioSeccion1);
             $('#id_telefono').on('input', validarFormularioSeccion1);
-
+            $('#id_direccion_1').on('input', validarDireccion);
             $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
             
             // Enable or disable the button based on the checkbox state
@@ -425,23 +425,23 @@
             }
         }        
         
-            function validarTelefono() {
-                const telefono = $("#id_telefono").val();
+        function validarTelefono() {
+            const telefono = $("#id_telefono").val();
             
-                if (telefono.trim() === "") { 
-                    $("#error-telefono").text("Campo obligatorio");
-                } else if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
-                    $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
-                } else if (/\s/.test(telefono)) { // Checks for any whitespace character
-                    $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
-                } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
-                    $("#error-telefono").text("Solo se permiten caracteres numéricos.");
-                } else if (telefono.length !== 8) { // Ensures exactly 8 digits
-                    $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
-                } else {
-                    $("#error-telefono").text(""); // Clear error if input is valid
-                }
+            if (telefono.trim() === "") { 
+                $("#error-telefono").text("Campo obligatorio");
+            } else if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
+                $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
+            } else if (/\s/.test(telefono)) { // Checks for any whitespace character
+                $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
+            } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
+                $("#error-telefono").text("Solo se permiten caracteres numéricos.");
+            } else if (telefono.length !== 8) { // Ensures exactly 8 digits
+                $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
+            } else {
+                $("#error-telefono").text(""); // Clear error if input is valid
             }
+        }
                                
         
         function validarEmail() {
@@ -492,6 +492,27 @@
             }
         }
 
+        function validarDireccion() {
+            const direccion1 = $("#id_direccion_1").val();
+        
+            if (direccion1.trim() === "") {
+                $("#error-direccion_1").text("Campo Obligatorio");
+            }
+            else if (direccion1.length > 150) {
+                $("#error-direccion_1").text("Límite de caracteres excedido (150)");
+            }
+            else if (direccion1.length < 5) {
+                $("#error-direccion_1").text("Mínimo 5 caracteres");
+            }
+            else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                $("#error-direccion_1").text("No se permiten caracteres especiales (Excepto ',' '.' y '#')");
+            }
+            else {
+                $("#error-direccion_1").text("");
+            }
+        }
+        
+        
         $(document).ready(function() {
             mostrarSeccion(seccionActual);
         });
@@ -538,148 +559,151 @@
     $(".paso").removeClass("activo");
     $(".paso").eq(seccion - 1).addClass("activo");
 }
-function validarFormularioSeccion1() {
-    const nombre = $("#id_nombre_completo").val();
-    const username = $("#id_username").val();
-    const password1 = $("#id_password1").val();
-    const password2 = $("#id_password2").val();
-    const telefono = $("#id_telefono").val();
+        function validarFormularioSeccion1() {
+            const nombre = $("#id_nombre_completo").val();
+            const username = $("#id_username").val();
+            const password1 = $("#id_password1").val();
+            const password2 = $("#id_password2").val();
+            const telefono = $("#id_telefono").val();
 
-    let allFieldsValid = true;
+            let allFieldsValid = true;
 
-    // Validate each field according to your restrictions
-    if (nombre.trim() === "" || !/^[A-Za-z\s]{1,50}$/.test(nombre) || nombre.length < 4 || (nombre.match(/\s/g) || []).length > 7 || /\s{2,}/.test(nombre)) {
-        allFieldsValid = false;
-    }
+            // Validate each field according to your restrictions
+            if (nombre.trim() === "" || !/^[A-Za-z\s]{1,50}$/.test(nombre) || nombre.length < 4 || (nombre.match(/\s/g) || []).length > 7 || /\s{2,}/.test(nombre)) {
+                allFieldsValid = false;
+            }
 
-    if (username.trim() === "" || /\s/.test(username) || !/^[A-Za-z0-9]{5,15}$/.test(username)) {
-        allFieldsValid = false;
-    }
+            if (username.trim() === "" || /\s/.test(username) || !/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                allFieldsValid = false;
+            }
 
-    if (password1.trim() === "" || password1.length < 8 || password1.length > 25 || !/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
-        allFieldsValid = false;
-    }
+            if (password1.trim() === "" || password1.length < 8 || password1.length > 25 || !/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                allFieldsValid = false;
+            }
 
-    if (password2.trim() === "" || password2 !== password1 || password2.length > 25) {
-        allFieldsValid = false;
-    }
+            if (password2.trim() === "" || password2 !== password1 || password2.length > 25) {
+                allFieldsValid = false;
+            }
 
-    if (telefono.trim() === "" || !/^[67]/.test(telefono) || telefono.length !== 8 || /\s/.test(telefono) || /[^0-9]/.test(telefono)) {
-        allFieldsValid = false;
-    }
+            if (telefono.trim() === "" || !/^[67]/.test(telefono) || telefono.length !== 8 || /\s/.test(telefono) || /[^0-9]/.test(telefono)) {
+                allFieldsValid = false;
+            }
 
-    // Enable the "Siguiente" button if all fields are valid, else disable it
-    if (allFieldsValid) {
-        $('.registro-btn-siguiente').prop('disabled', false).removeClass('disabled').addClass('enabled');
-    } else {
-        $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
-    }
-}
-function validarSeccion1() {
-    let nombre = document.getElementById("id_nombre_completo").value;
-    let username = document.getElementById("id_username").value;
-    let password1 = document.getElementById("id_password1").value;
-    let password2 = document.getElementById("id_password2").value;
-    let telefono = document.getElementById("id_telefono").value;
-    let email = document.getElementById("id_email").value;
+            // Enable the "Siguiente" button if all fields are valid, else disable it
+            if (allFieldsValid) {
+                $('.registro-btn-siguiente').prop('disabled', false).removeClass('disabled').addClass('enabled');
+            } else {
+                $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+            }
+        }
+        function validarSeccion1() {
+            let nombre = document.getElementById("id_nombre_completo").value;
+            let username = document.getElementById("id_username").value;
+            let password1 = document.getElementById("id_password1").value;
+            let password2 = document.getElementById("id_password2").value;
+            let telefono = document.getElementById("id_telefono").value;
+            let email = document.getElementById("id_email").value;
 
-    let error = false;
-    // Validación de nombre completo
-    if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-        document.getElementById("error-nombre").innerText = "Campo obligatorio.";
-        error = true;
-    } else {
-        document.getElementById("error-nombre").innerText = "";
-    }
-    // Validación de nombre de usuario
-    if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-        document.getElementById("error-username").innerText = "Campo Obligatorio.";
-        error = true;
-    } else {
-        document.getElementById("error-username").innerText = "";
-    }
-    // Validación de contraseña (password1)
-    if (password1.trim() === "") {
-        document.getElementById("error-password1").innerText = "Campo Obligatorio";
-        error = true;
-    } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
-        document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
-        error = true;
-    } else {
-        document.getElementById("error-password1").innerText = "";
-    }
-    
-    // Validación de coincidencia de contraseñas (password2)
-    if (password2.trim() === "") {
-        document.getElementById("error-password2").innerText = "Campo Obligatorio";
-        error = true;
-    } else if (password1 !== password2) {
-        document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
-        error = true;
-    } else {
-        document.getElementById("error-password2").innerText = "";
-    }
-    // Validación de teléfono
-    if (!/^\d{8}$/.test(telefono)) {
-        document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
-        error = true;
-    } else {
-        document.getElementById("error-telefono").innerText = "";
-    }
-    // Validación de correo electrónico
-    if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
-        document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
-        error = true;
-    } else {
-        document.getElementById("error-email").innerText = "";
-    }
-    // Si no hay errores, avanza a la siguiente sección
-    if (!error) {
-        seccionActual++;
-        mostrarSeccion(seccionActual);
-    }
-}
-function validarSeccion2() {
-    let departamento = document.getElementById("id_departamento_fk").value;
-    let provincia = document.getElementById("id_provincia_fk").value;
-    let municipio = document.getElementById("id_municipio_fk").value;
-    let direccion1 = document.getElementById("id_direccion_1").value;
+            let error = false;
+            // Validación de nombre completo
+            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                document.getElementById("error-nombre").innerText = "Campo obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-nombre").innerText = "";
+            }
+            // Validación de nombre de usuario
+            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                document.getElementById("error-username").innerText = "Campo Obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-username").innerText = "";
+            }
+            // Validación de contraseña (password1)
+            if (password1.trim() === "") {
+                document.getElementById("error-password1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
+                error = true;
+            } else {
+                document.getElementById("error-password1").innerText = "";
+            }
+            
+            // Validación de coincidencia de contraseñas (password2)
+            if (password2.trim() === "") {
+                document.getElementById("error-password2").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (password1 !== password2) {
+                document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
+                error = true;
+            } else {
+                document.getElementById("error-password2").innerText = "";
+            }
+            // Validación de teléfono
+            if (!/^\d{8}$/.test(telefono)) {
+                document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-telefono").innerText = "";
+            }
+            // Validación de correo electrónico
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
+                document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-email").innerText = "";
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+        function validarSeccion2() {
+            let departamento = document.getElementById("id_departamento_fk").value;
+            let provincia = document.getElementById("id_provincia_fk").value;
+            let municipio = document.getElementById("id_municipio_fk").value;
+            let direccion1 = document.getElementById("id_direccion_1").value;
 
-    let error = false;
-    // Validación de departamento
-    if (!departamento) {
-        document.getElementById("error-departamento").innerText = "Campo Obligatorio";
-        error = true;
-    } else {
-        document.getElementById("error-departamento").innerText = "";
-    }
-    // Validación de provincia
-    if (!provincia) {
-        document.getElementById("error-provincia").innerText = "Campo Obligatorio";
-        error = true;
-    } else {
-        document.getElementById("error-provincia").innerText = "";
-    }
-    // Validación de municipio
-    if (!municipio) {
-        document.getElementById("error-municipio").innerText = "Campo Obligatorio";
-        error = true;
-    } else {
-        document.getElementById("error-municipio").innerText = "";
-    }
-    // Validación de dirección
-    if (!direccion1) {
-        document.getElementById("error-direccion_1").innerText = "Introduce una dirección válida.";
-        error = true;
-    } else {
-        document.getElementById("error-direccion_1").innerText = "";
-    }
-    // Si no hay errores, avanza a la siguiente sección
-    if (!error) {
-        seccionActual++;
-        mostrarSeccion(seccionActual);
-    }
-}
+            let error = false;
+            // Validación de departamento
+            if (!departamento) {
+                document.getElementById("error-departamento").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-departamento").innerText = "";
+            }
+            // Validación de provincia
+            if (!provincia) {
+                document.getElementById("error-provincia").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-provincia").innerText = "";
+            }
+            // Validación de municipio
+            if (!municipio) {
+                document.getElementById("error-municipio").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-municipio").innerText = "";
+            }
+            // Validación de dirección
+            if (direccion1.trim() === "") {
+                document.getElementById("error-direccion_1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                document.getElementById("error-direccion_1").innerText = "No se permiten caracteres especiales (Excepto ',' '.' y '#')";
+                error = true;
+            } else {
+                document.getElementById("error-direccion_1").innerText = ""; // Clear error if valid
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
         function siguienteSeccion() {
             if (seccionActual === 1) {
             validarSeccion1();
