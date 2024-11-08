@@ -109,14 +109,16 @@ def buscar_view(request):
     productos = ProductoDb.objects.filter(nombre__icontains=q)
     categorias = CategoriaDb.objects.all()
     favoritos_ids = []
+    pag = 'index.html'
     if request.user.is_authenticated:
+        pag = 'home.html'
         favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
         print("Productos en favoritos:", list(favoritos_ids))
 
     # Guardar los IDs de los productos de la búsqueda en la sesión
     request.session['productos_busqueda'] = [producto.id for producto in productos]
     
-    return render(request, 'index.html', {'producto': productos, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
+    return render(request, pag, {'producto': productos, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
 
 def filtro_productos_view(request):
     # Obtener los IDs de los productos de la búsqueda almacenados en la sesión
