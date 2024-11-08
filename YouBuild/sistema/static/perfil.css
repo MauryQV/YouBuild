@@ -257,3 +257,11 @@
     opacity: 0.6;
     pointer-events: none;
 }
+
+.lockout-message {
+    color: #d9534f; /* Rojo Bootstrap para alertas */
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 0.95rem;
+    text-align: left;
+}

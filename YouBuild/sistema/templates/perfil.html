@@ -64,7 +64,13 @@
             <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
                 Cambiar Contraseña
             </button>
+            
+            <!-- Mostrar el mensaje de bloqueo si el usuario está bloqueado -->
+            {% if user.usuariodb.esta_bloqueado %}
+            <p class="lockout-message">Demasiados intentos fallidos, inténtelo nuevamente en 24 hrs.</p>
+            {% endif %}
         </form>
+
     </div>
 {% endblock %}
 
