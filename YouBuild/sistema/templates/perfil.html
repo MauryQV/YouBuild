@@ -57,12 +57,11 @@
             <button type="submit" id="submitButton" class="btn-primario" disabled>Guardar Cambios</button>
         </form>
         <h2 class="mt-4">Cambiar Contraseña</h2>
-        <form method="POST" id="passwordChangeForm">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="password_change">
             {{ password_form|crispy }}
-            <button type="submit" id="password-change-btn" class="btn-custom"
-                    {% if user.usuariodb.esta_bloqueado %} disabled {% endif %}>
+            <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
                 Cambiar Contraseña
             </button>
         </form>
@@ -135,32 +134,7 @@
         }
     });
 
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const passwordChangeBtn = document.getElementById("password-change-btn");
-        const passwordChangeForm = document.getElementById("passwordChangeForm");
-        const bloqueoHasta = "{{ user.usuariodb.bloqueo_password_hasta|date:'U' }}";  // Timestamp en segundos
-    
-        if (bloqueoHasta) {
-            const desbloqueoTimestamp = parseInt(bloqueoHasta) * 1000;  // Convertir a milisegundos
-            const now = new Date().getTime();
-    
-            if (desbloqueoTimestamp > now) {
-                passwordChangeBtn.disabled = true;
-                passwordChangeForm.querySelectorAll("input, button").forEach(element => {
-                    element.disabled = true;  // Deshabilitar cada campo del formulario
-                });
-    
-                const tiempoRestante = desbloqueoTimestamp - now;
-                setTimeout(() => {
-                    passwordChangeBtn.disabled = false;
-                    passwordChangeForm.querySelectorAll("input, button").forEach(element => {
-                        element.disabled = false;  // Habilitar cada campo del formulario
-                    });
-                }, tiempoRestante);
-            }
-        }
-    });    
+   
 </script>
 
 
