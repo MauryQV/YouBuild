@@ -23,12 +23,15 @@ body {
   flex-direction: column; /* Asegura que el footer esté al final */
   justify-content: flex-start;
   align-items: center;
+
   overflow: auto; /* Controla el desbordamiento */
 }
 
 footer {
   margin-top: 50px; /* Aumenta este valor si es necesario */
+
 }
+
 
 /* Estilos para centrar el título */
 h2.registro-titulo {
@@ -219,6 +222,5 @@ h2.registro-titulo {
 .error {
   color: rgb(217, 0, 0);
   font-size: 0.9em;
-  margin-top: 5px;
+  margin-top: 5px;
 }
-
