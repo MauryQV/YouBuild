@@ -24,6 +24,7 @@
                             <th></th>
                             <th></th>
                             <th style="text-align: right;">Precio / u</th>
+                            <th style="text-align: right;">Fecha de Agregado</th> <!-- Nueva columna -->
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,7 @@
                                 </div>
                             </td>
                             <td class="product-price">Bs {{ item.producto.precio }}</td>
+                            <td class="fecha-agregado">{{ item.fecha_agregado|date:"d/m/Y H:i" }}</td>
                         </tr>
                         {% empty %}
                         <tr>

@@ -267,41 +267,43 @@ def update_profile_photo(request):
 
 @login_required
 def perfil_view(request):
-    # Initialize forms with instances, so they are accessible throughout the function
     u_form = UserUpdateForm(instance=request.user)
     p_form = ProfileUpdateForm(instance=request.user.usuariodb)
     password_form = PasswordChangeForm(user=request.user)
 
     if request.method == 'POST':
-        # Check which form is being submitted
         form_type = request.POST.get('form_type')
 
         if form_type == 'profile_update':
             u_form = UserUpdateForm(request.POST, instance=request.user)
             p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.usuariodb)
-            
-            # Validate and save profile update forms
             if u_form.is_valid() and p_form.is_valid():
                 u_form.save()
                 p_form.save()
                 messages.success(request, '¡Tus datos personales han sido actualizados!')
                 return redirect('profile')
             else:
-                # Print errors for debugging
                 print("User form errors:", u_form.errors)
                 print("Profile form errors:", p_form.errors)
 
         elif form_type == 'password_change':
-            password_form = PasswordChangeForm(user=request.user, data=request.POST)
-            
-            # Validate and save password change form
-            if password_form.is_valid():
-                password_form.save()
-                update_session_auth_hash(request, password_form.user)  # Keep the user logged in after password change
-                messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
-                return redirect('profile')
+            # Verificar si el usuario está bloqueado
+            if request.user.usuariodb.esta_bloqueado:
+                tiempo_restante = (request.user.usuariodb.bloqueo_password_hasta - timezone.now()).seconds // 3600
+                messages.error(request, f'Demasiados intentos fallidos, inténtelo nuevamente en {tiempo_restante} horas.', extra_tags='danger')
+            else:
+                password_form = PasswordChangeForm(user=request.user, data=request.POST)
+                if password_form.is_valid():
+                    password_form.save()
+                    update_session_auth_hash(request, password_form.user)
+                    messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+                    # Restablecer intentos después de un cambio exitoso
+                    request.user.usuariodb.restablecer_intentos()
+                    return redirect('profile')
+                else:
+                    # Incrementar intentos fallidos si la contraseña es incorrecta
+                    request.user.usuariodb.incrementar_intentos_fallidos()
 
-    # Render the forms whether POST or GET
     context = {
         'u_form': u_form,
         'p_form': p_form,

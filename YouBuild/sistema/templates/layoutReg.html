@@ -25,9 +25,10 @@
           <a href="/home " class="logo"><img src="{% static 'logo.jpeg' %}" alt="Logo" width="125" /></a>
         </div>
         <div class="topbar-center">
-          <form action="{% url 'buscar' %}" method="GET">
+          <!-- Aquí está el formulario con las restricciones necesarias -->
+          <form action="{% url 'buscar' %}" method="GET" onsubmit="return validateSearch()">
             <div class="search-box">
-              <input type="text" placeholder="Buscar" name="q" />
+              <input type="text" placeholder="Buscar" name="q" maxlength="20" pattern="[A-Za-z0-9\s]+" required>
               <button><i class="fa fa-search"></i></button>
             </div>
           </form>
@@ -115,6 +116,7 @@
     {% block extra_scripts %}
       <!-- COLOCAR SUS SCRIPTS AQUI -->
       <script src="{% static 'script.js' %}"></script>
+      <script src="{% static 'js/validaciones.js' %}"></script>
     {% endblock %}
   </body>
 </html>
