@@ -128,19 +128,20 @@
                     <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
                     <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
                     <div class="error">{{ form.imagen_perfil.errors }}</div>
-                    <div id="imagen-perfil-preview" class="imagen-preview oculto">
-                        <img id="imagen-perfil-img" src="" alt="Imagen de perfil" />
-                        <span class="remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
+                    <div id="imagen-perfil-preview" class="imagen-preview">
+                        <img id="imagen-perfil-img" src="{% static 'image-icon.png' %}" alt="Imagen de perfil" class="uploaded-image">
+                        <span class="remove hidden-remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
                     </div>
                 </div>
+                
                 <div class="registro-form-group">
                     <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
                     <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
                     <div class="error">{{ form.qr_imagen.errors }}</div>
-                    <div id="qr-imagen-preview" class="imagen-preview oculto">
-                        <img id="qr-imagen-img" src="" alt="Imagen QR" />
-                        <span class="remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
-                    </div>
+                    <div id="qr-imagen-preview" class="imagen-preview">
+                        <img id="qr-imagen-img" src="{% static 'image-icon.png' %}" alt="Imagen QR" class="uploaded-image">
+                        <span class="remove hidden-remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+                    </div>                    
                 </div>
 
                 <!-- Términos y Condiciones Checkbox -->
@@ -389,26 +390,32 @@
             const file = input.files[0];
             const preview = document.getElementById(previewId);
             const imgElement = preview.querySelector('img');
-        
+            const removeButton = preview.querySelector('.remove');
+            
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     imgElement.src = e.target.result;
-                    preview.classList.remove("oculto"); // Muestra la imagen seleccionada
-                    input.classList.add("oculto"); // Oculta el input de selección
+                    preview.classList.remove("oculto"); // Show the preview box
+                    removeButton.classList.remove("hidden-remove"); // Show the "X" button only when an image is present
                 };
                 reader.readAsDataURL(file);
             }
-        }
+        }        
         
         function removerImagen(previewId, inputId) {
             const preview = document.getElementById(previewId);
             const imgElement = preview.querySelector('img');
-            imgElement.src = "";
-            preview.classList.add("oculto"); // Oculta la imagen
-            document.getElementById(inputId).value = ""; // Limpia el input
-            document.getElementById(inputId).classList.remove("oculto"); // Vuelve a mostrar el input
+            const removeButton = preview.querySelector('.remove');
+        
+            imgElement.src = "{% static 'image-icon.png' %}";
+            document.getElementById(inputId).value = ""; // Clear the input field
+        
+            removeButton.classList.add("hidden-remove");
+            
+            preview.classList.add("oculto");
         }
+        
         
         function mostrarSeccion(seccion) {
     // Oculta todas las secciones
