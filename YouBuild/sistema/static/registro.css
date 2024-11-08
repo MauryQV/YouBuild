@@ -179,13 +179,15 @@ h2.registro-titulo {
 .imagen-preview {
   position: relative;
   margin-top: 10px;
-  width: 100px;
-  height: 100px;
+  width: 130px;
+  height: 130px;
   overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 8px;
+  display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #c4c3c3;
   margin-left: auto;
   margin-right: auto;
 }
@@ -201,7 +203,7 @@ h2.registro-titulo {
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: #ef4444;
+  background-color: #afafaf;
   color: white;
   border: none;
   border-radius: 50%;
@@ -218,7 +220,7 @@ h2.registro-titulo {
 
 /* Mensajes de error */
 .error {
-  color: rgb(177, 0, 0);
+  color: rgb(217, 0, 0);
   font-size: 0.9em;
   margin-top: 5px;
 }

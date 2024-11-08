@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'sistema.apps.SistemaConfig',
     'rest_framework',
     'crispy_forms',
-    'crispy_bootstrap4',
+    "crispy_bootstrap5",
 ]
 
 LOGIN_REDIRECT_URL = '/'
@@ -83,7 +83,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'YouBuild.wsgi.application'
 
-
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
