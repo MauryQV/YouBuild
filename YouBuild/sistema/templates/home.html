@@ -85,16 +85,16 @@
                       <i class="fas fa-eye"></i> Ver Detalles
                   </button>
                   <button 
-                      class="btn add-to-list" 
-                      onclick="agregarAFavoritos({{ producto.id }})"
-                      id="favorito-btn-{{ producto.id }}">
-                      <i class="fas fa-heart"></i>
-                      {% if producto.id in favoritos_ids %}
-                          En Favoritos
-                      {% else %}
-                          Agregar a Lista
-                      {% endif %}
-                  </button>
+                        class="btn add-to-list" 
+                        onclick="agregarAFavoritos({{ producto.id }})"
+                        id="favorito-btn-{{ producto.id }}">
+                        <i class="fas fa-heart"></i>
+                        {% if producto.id in favoritos_ids %}
+                            En Favoritos
+                        {% else %}
+                            Agregar a Lista
+                        {% endif %}
+                    </button>
               </div>
           </div>
       </div>
