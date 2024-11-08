@@ -20,11 +20,17 @@ def home_view(request):
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
     usuario = request.user.usuariodb
+    favoritos_ids = []
+    if request.user.is_authenticated:
+        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+        print("Productos en favoritos:", list(favoritos_ids))
+
     return render(request, "home.html", {
         "producto": productos,
         "carrusel": carruseles,
         "usuario": usuario,
         'categorias': categorias,
+        "favoritos_ids": favoritos_ids,
     })
 
 
@@ -73,39 +79,63 @@ def index_view(request):
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
-    return render(request, "index.html", {"producto": productos, "carrusel": carruseles, 'categorias': categorias})
+    favoritos_ids = []
+    if request.user.is_authenticated:
+        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+        print("Productos en favoritos:", list(favoritos_ids))
 
-
+    return render(request, "index.html", {"producto": productos, "carrusel": carruseles, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
 
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
+    favoritos_ids = []
+    if request.user.is_authenticated:
+        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+        print("Productos en favoritos:", list(favoritos_ids))
+
     template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
+    
     return render(request, "detalle_producto.html", {
         "producto": producto,
         "template": template,
+        "favoritos_ids": favoritos_ids,
     })
-
 
 # Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
     productos = ProductoDb.objects.filter(nombre__icontains=q)
     categorias = CategoriaDb.objects.all()
-    return render(request, 'index.html', {'producto': productos, 'categorias': categorias})
+    favoritos_ids = []
+    pag = 'index.html'
+    if request.user.is_authenticated:
+        pag = 'home.html'
+        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+        print("Productos en favoritos:", list(favoritos_ids))
+
+    # Guardar los IDs de los productos de la búsqueda en la sesión
+    request.session['productos_busqueda'] = [producto.id for producto in productos]
+    
+    return render(request, pag, {'producto': productos, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
 
 def filtro_productos_view(request):
+    # Obtener los IDs de los productos de la búsqueda almacenados en la sesión
+    productos_busqueda_ids = request.session.get('productos_busqueda', None)
+    
+    # Obtener la lista inicial de productos con base en la búsqueda o todos si no hubo búsqueda
+    if productos_busqueda_ids:
+        productos = ProductoDb.objects.filter(id__in=productos_busqueda_ids)
+    else:
+        productos = ProductoDb.objects.all().order_by('-visitas')
+    
+    categorias = CategoriaDb.objects.all()
     # Obtener parámetros de búsqueda del POST
     categoria = request.POST.get('categoria', '')
     precio_min = request.POST.get('precio_min', None)
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
-    # Filtrar productos
-    productos = ProductoDb.objects.all().order_by('-visitas')
-    categorias = CategoriaDb.objects.all()
-
-
  
     if categoria:
         productos = productos.filter(categoria_fk=categoria)
@@ -130,6 +160,8 @@ def filtro_productos_view(request):
         productos = productos.order_by('-precio')
     elif ordenar == 'menor':
         productos = productos.order_by('precio')
+    elif ordenar == 'relevantes':
+        productos = productos.order_by('-visitas')
     print("Productos después de filtrar y ordenar:", productos)
 
     if categoria==None and precio_min==None and precio_max and ordenar==None:
@@ -212,7 +244,6 @@ def agregar_al_carrito(request, producto_id):
     messages.success(request, f"Producto {producto.nombre} agregado al carrito.")
     return redirect('Carrito')
 
-
 def get_cart_count(request):
     usuario = request.user.usuariodb
     cart_count = CarritoProductoDB.objects.filter(carrito_fk__usuario_fk=usuario).aggregate(total_quantity=Sum('cantidad'))['total_quantity'] or 0
@@ -257,41 +288,43 @@ def update_profile_photo(request):
 
 @login_required
 def perfil_view(request):
-    # Initialize forms with instances, so they are accessible throughout the function
     u_form = UserUpdateForm(instance=request.user)
     p_form = ProfileUpdateForm(instance=request.user.usuariodb)
     password_form = PasswordChangeForm(user=request.user)
 
     if request.method == 'POST':
-        # Check which form is being submitted
         form_type = request.POST.get('form_type')
 
         if form_type == 'profile_update':
             u_form = UserUpdateForm(request.POST, instance=request.user)
             p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.usuariodb)
-            
-            # Validate and save profile update forms
             if u_form.is_valid() and p_form.is_valid():
                 u_form.save()
                 p_form.save()
                 messages.success(request, '¡Tus datos personales han sido actualizados!')
                 return redirect('profile')
             else:
-                # Print errors for debugging
                 print("User form errors:", u_form.errors)
                 print("Profile form errors:", p_form.errors)
 
         elif form_type == 'password_change':
-            password_form = PasswordChangeForm(user=request.user, data=request.POST)
-            
-            # Validate and save password change form
-            if password_form.is_valid():
-                password_form.save()
-                update_session_auth_hash(request, password_form.user)  # Keep the user logged in after password change
-                messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
-                return redirect('profile')
+            # Verificar si el usuario está bloqueado
+            if request.user.usuariodb.esta_bloqueado:
+                tiempo_restante = (request.user.usuariodb.bloqueo_password_hasta - timezone.now()).seconds // 3600
+                messages.error(request, f'Demasiados intentos fallidos, inténtelo nuevamente en {tiempo_restante} horas.', extra_tags='danger')
+            else:
+                password_form = PasswordChangeForm(user=request.user, data=request.POST)
+                if password_form.is_valid():
+                    password_form.save()
+                    update_session_auth_hash(request, password_form.user)
+                    messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+                    # Restablecer intentos después de un cambio exitoso
+                    request.user.usuariodb.restablecer_intentos()
+                    return redirect('profile')
+                else:
+                    # Incrementar intentos fallidos si la contraseña es incorrecta
+                    request.user.usuariodb.incrementar_intentos_fallidos()
 
-    # Render the forms whether POST or GET
     context = {
         'u_form': u_form,
         'p_form': p_form,
@@ -333,10 +366,22 @@ def ver_lista_favoritos(request):
 
 @login_required
 def agregar_a_lista_favoritos(request, producto_id):
-    producto = get_object_or_404(ProductoDb, id=producto_id)
-    favoritos = ListaFavoritosDB(usuario=request.user.usuariodb)
-    favoritos.agregar_producto(producto)  # Utiliza el nuevo método para agregar   
-    return redirect('listaFavoritos')
+    if request.method == 'POST':
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        favoritos, created = ListaFavoritosDB.objects.get_or_create(
+            usuario=request.user.usuariodb, 
+            producto=producto
+        )
+
+        if not created:  # Ya existía, así que lo eliminamos
+            favoritos.delete()
+            en_favoritos = False
+        else:
+            en_favoritos = True
+
+        return JsonResponse({'enFavoritos': en_favoritos, 'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 @login_required
 def eliminar_de_lista_favoritos(request, producto_id):

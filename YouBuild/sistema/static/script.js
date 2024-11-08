@@ -143,6 +143,32 @@ function agregarAlCarrito(productId) {
     });
   }
 
+function agregarAFavoritos(productoId) {
+    fetch(`/lista-favoritos/agregar/${productoId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',  // Asegúrate de incluir el token CSRF
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const btn = document.getElementById(`favorito-btn-${productoId}`);
+        if (data.enFavoritos) {
+            btn.innerHTML = '<i class="fas fa-heart"></i> En Favoritos';
+            alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+        } else {
+            btn.innerHTML = '<i class="fas fa-heart"></i> Agregar a Lista';
+            alert("El producto ha sido eliminado de tu lista de deseos.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Hubo un error al intentar actualizar la lista de deseos.");
+    });
+}
+
   function registrarse() {
     window.location.href = "/registro";
 }
+
