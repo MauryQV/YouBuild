@@ -14,6 +14,7 @@ urlpatterns = [
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
+    path('check_email/', views.check_email, name='check_email'),
     path('registro/', registrar_usuario, name='registro'),
     path('success/', views.success, name='success'), 
     path('terms-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
