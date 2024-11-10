@@ -675,7 +675,7 @@
                 toggleSiguienteButton(allFieldsValid); // Enable "Siguiente" if all fields are valid
             }
         }
-        
+    
         // Helper function to toggle the "Siguiente" button
         function toggleSiguienteButton(isEnabled) {
             if (isEnabled) {
@@ -749,6 +749,62 @@
                 mostrarSeccion(seccionActual);
             }
         }
+
+        function validarFormularioSeccion2() {
+            const departamento = $("#id_departamento_fk").val();
+            const provincia = $("#id_provincia_fk").val();
+            const municipio = $("#id_municipio_fk").val();
+            const direccion = $("#id_direccion_1").val();
+        
+            let allFieldsValid = true;
+        
+            // Validate each field according to the restrictions
+        
+            if (!departamento) {
+                allFieldsValid = false;
+            }
+        
+            if (!provincia) {
+                allFieldsValid = false;
+            }
+        
+            if (!municipio) {
+                allFieldsValid = false;
+            }
+        
+            if (direccion.trim() === "" || direccion.length < 6 || direccion.length > 150 || !/^[A-Za-z0-9\s.,#]+$/.test(direccion)) {
+                allFieldsValid = false;
+            }
+        
+            // Toggle button state based on validation
+            toggleSiguienteButtonSeccion2(allFieldsValid);
+        }
+        
+        function toggleSiguienteButtonSeccion2(isEnabled) {
+            const nextButton = $('.registro-btn-siguiente');
+        
+            if (isEnabled) {
+                nextButton.prop('disabled', false).removeClass('disabled').addClass('enabled'); // Turn orange and enable
+            } else {
+                nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled'); // Keep gray and disabled
+            }
+        }        
+
+
+        $(document).ready(function() {
+            const nextButton = $('.registro-btn-siguiente');
+            
+            // Set the initial button state to gray and disabled
+            nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            // Attach real-time validation to Section 2 fields
+            $('#id_departamento_fk').on('change', validarFormularioSeccion2);
+            $('#id_provincia_fk').on('change', validarFormularioSeccion2);
+            $('#id_municipio_fk').on('change', validarFormularioSeccion2);
+            $('#id_direccion_1').on('input', validarFormularioSeccion2);
+        });
+        
+
         function validarSeccion2() {
             let departamento = document.getElementById("id_departamento_fk").value;
             let provincia = document.getElementById("id_provincia_fk").value;
@@ -803,6 +859,7 @@
             mostrarSeccion(seccionActual);
             }
         } 
+
         function anteriorSeccion() {
             if (seccionActual > 1) {
                 seccionActual--;
