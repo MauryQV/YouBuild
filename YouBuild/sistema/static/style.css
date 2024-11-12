@@ -1,4 +1,3 @@
-
 :root {
     --primary-color: #ED8C2B;
     --secondary-color: #E5E8EB; /* Color del fondo del carrusel */
@@ -8,9 +7,8 @@
     --background-color: #FFFFFB;
 }
 
-
 body {
-    font-family: 'Comfortaa', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: grid; 
@@ -24,27 +22,50 @@ main {
     flex-direction: column; 
     flex: 1; 
     justify-content: flex-start; 
-    margin: 0 2cm; /* Adds 2cm margin on left and right */
+    margin: 0;
     padding-top: 10px; 
 }
 footer {
-    background-color: #bcbbbb;
+    background-color: #1c1c0d;
     padding: 20px 0;
     width: 100%; 
     position: relative; 
-    color: #ffffff;
+    color: #fff;
 }
 
 .footer-container {
     display: flex; 
     justify-content: space-around; 
     flex-wrap: wrap;
+<<<<<<< HEAD
+    width: 100%; 
+    margin: 0 auto; 
+    padding: 0 10px; 
+}
+
+.footer-description {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
+
+.footer-links {
+    flex: 1; /* Cada sección toma un espacio igual */
+    min-width: 200px; /* Ancho mínimo para cada sección */
+    margin: 10px; /* Margen entre secciones */
+    margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
+}
+
+=======
     width: 100%;
     margin: 0 auto; 
     padding: 0 0px; 
-    margin: 0 2cm; 
+    
 }
 
+>>>>>>> develop
 .footer-contact,
 .footer-legal {
     flex: 1; /* Cada sección toma un espacio igual */
@@ -76,7 +97,7 @@ footer {
 
 .social-title {
     margin-bottom: 10px; /* Espacio inferior entre el título y los botones */
-    color: #ff6f27; /* Color del texto */
+    color: #ffffff; /* Color del texto */
     font-size: 1.5rem; /* Tamaño del texto, ajusta según necesites */
     margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
 }
@@ -91,7 +112,7 @@ footer {
 .footer-links a,
 .footer-legal a {
     text-decoration: none; /* Sin subrayado */
-    color: #004fa3; /* Color de los enlaces */
+    color: #007bff; /* Color de los enlaces */
 }
 
 .footer-links a:hover,
@@ -134,7 +155,7 @@ footer {
 }
 
 .social-button:hover {
-    background-color: #005ec3; /* Cambiar fondo al pasar el ratón */
+    background-color: #007bff; /* Cambiar fondo al pasar el ratón */
     color: #fff; /* Cambiar color del ícono */
     transform: scale(1.1); /* Aumentar el tamaño al pasar el ratón */
 }
@@ -160,9 +181,7 @@ footer {
     display: block; /* Mostrar cuando la clase esté activa */
 }
 
-.container {
-    margin: 0 2cm; /* 2cm margin on left and right */
-}
+
 
 
 
