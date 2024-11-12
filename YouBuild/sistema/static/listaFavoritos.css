@@ -149,3 +149,32 @@ h2 {
 .btn-volver:hover {
     background-color: #e55b00;
 }
+
+/* Light gray background container */
+.background-container {
+    background-color: #f0f0f0; /* Light gray color */
+    padding: 50px 20px; /* Adjust padding for icon and text spacing */
+    border-radius: 10px; /* Rounded corners */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 870px; /* Width of the background container */
+    margin: 0 auto; /* Center it horizontally */
+    position: relative;
+}
+
+/* Cart icon styling */
+.cart-icon {
+    width: 200px; /* Adjust size as needed */
+    position: absolute;
+    top: 20px; /* Position icon slightly above the text */
+}
+
+/* Centered text styling */
+.background-container p {
+    margin-top: 170px; /* Space text below the icon */
+    font-size: 1em;
+    color: #9f9f9f;
+    font-weight: 300;
+}

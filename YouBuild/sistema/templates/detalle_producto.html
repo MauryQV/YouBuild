@@ -39,9 +39,17 @@
             <button class="btn add-to-view" id="btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">
                 <i class="fas fa-shopping-cart"></i> Agregar al Carrito
             </button>
-            <button class="btn add-to-view" onclick="agregarAFavoritos({{ producto.id }})">
-                <i class="fas fa-heart"></i> Agregar a Lista
-            </button>
+            <button 
+                      class="btn add-to-view" 
+                      onclick="agregarAFavoritos({{ producto.id }})"
+                      id="favorito-btn-{{ producto.id }}">
+                      <i class="fas fa-heart"></i>
+                      {% if producto.id in favoritos_ids %}
+                          En Favoritos
+                      {% else %}
+                          Agregar a Lista
+                      {% endif %}
+                  </button>
         </div>
     </div>
     <div class="column column-right flex-column">
@@ -117,18 +125,26 @@
     }
     function agregarAFavoritos(productoId) {
         fetch(`/lista-favoritos/agregar/${productoId}/`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
+                'X-CSRFToken': '{{ csrf_token }}',  // Asegúrate de incluir el token CSRF
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                alert("Producto agregado a la lista de deseos!");
+            const btn = document.getElementById(`favorito-btn-${productoId}`);
+            if (data.enFavoritos) {
+                btn.innerHTML = '<i class="fas fa-heart"></i> En Favoritos';
+                alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
             } else {
-                alert("Hubo un error al agregar el producto.");
+                btn.innerHTML = '<i class="fas fa-heart"></i> Agregar a Lista';
+                alert("El producto ha sido eliminado de tu lista de deseos.");
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Hubo un error al intentar actualizar la lista de deseos.");
         });
     }
 </script>

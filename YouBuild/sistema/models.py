@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db.models import Sum, F
+from django.utils import timezone
+from datetime import timedelta
 
 # Departamento
 class DepartamentoDB(models.Model):
@@ -52,6 +54,8 @@ class UsuarioDB(models.Model):
     )
     imagen_perfil = models.ImageField(upload_to='perfil/', null=True, blank=True, default='perfil/perfil.png',verbose_name="Foto de perfil")
     qr_imagen = models.ImageField(upload_to='qr/', null=True, blank=True, verbose_name="Código QR")
+    intentos_fallidos_password = models.IntegerField(default=0)
+    bloqueo_password_hasta = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Perfil de Usuario"
@@ -59,6 +63,27 @@ class UsuarioDB(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def bloquear_cambio_password(self):
+        self.intentos_fallidos_password = 0
+        self.bloqueo_password_hasta = timezone.now() + timedelta(hours=24)
+        self.save()
+
+    def incrementar_intentos_fallidos(self):
+        self.intentos_fallidos_password += 1
+        if self.intentos_fallidos_password >= 5:
+            self.bloquear_cambio_password()
+        else:
+            self.save()
+
+    def restablecer_intentos(self):
+        self.intentos_fallidos_password = 0
+        self.bloqueo_password_hasta = None
+        self.save()
+    
+    @property
+    def esta_bloqueado(self):
+        return self.bloqueo_password_hasta and timezone.now() < self.bloqueo_password_hasta
 
 
 # Carrito
@@ -123,7 +148,7 @@ class SubcategoriaDB(models.Model):
 
 class ProductoDb(models.Model):
     nombre = models.CharField(max_length=50, verbose_name="Nombre")
-    detalle = models.TextField(max_length=200, verbose_name="Detalle")
+    detalle = models.TextField(max_length=500, verbose_name="Detalle")
     precio = models.FloatField(verbose_name="Precio", validators=[MinValueValidator(0.0), MaxValueValidator(99999.9)])
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     subcategoria_fk = models.ForeignKey(SubcategoriaDB, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Subcategoría")  # Nuevo campo

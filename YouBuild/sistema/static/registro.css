@@ -23,12 +23,15 @@ body {
   flex-direction: column; /* Asegura que el footer esté al final */
   justify-content: flex-start;
   align-items: center;
+
   overflow: auto; /* Controla el desbordamiento */
 }
 
 footer {
   margin-top: 50px; /* Aumenta este valor si es necesario */
+
 }
+
 
 /* Estilos para centrar el título */
 h2.registro-titulo {
@@ -179,12 +182,12 @@ h2.registro-titulo {
   width: 130px;
   height: 130px;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: 1px solid #ededed;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #c4c3c3;
+  background-color: #e3e3e3;
   margin-left: auto;
   margin-right: auto;
 }
@@ -194,6 +197,10 @@ h2.registro-titulo {
   max-height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.hidden-remove {
+  display: none;
 }
 
 .remove {
@@ -219,6 +226,5 @@ h2.registro-titulo {
 .error {
   color: rgb(217, 0, 0);
   font-size: 0.9em;
-  margin-top: 5px;
+  margin-top: 5px;
 }
-

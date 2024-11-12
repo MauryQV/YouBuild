@@ -21,6 +21,11 @@ class RegistroUsuarioForm(UserCreationForm):
         label="Nombre completo",
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu nombre completo'})
     )
+    email = forms.EmailField(
+        required=True,
+        label="Correo electrónico (opcional)",  
+        widget=forms.EmailInput(attrs={'placeholder': 'Ingresa tu correo electrónico'})
+    )
     departamento_fk = forms.ModelChoiceField(
         queryset=DepartamentoDB.objects.all(), 
         required=True, 
@@ -180,7 +185,7 @@ class RegistroProductoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': '--Agrega el nombre del producto--'})
     )
     detalle = forms.CharField(
-        max_length=200,
+        max_length=500,
         required=True,
         label="Detalle",
         widget=forms.Textarea(attrs={'placeholder': '--Agrega mas detalles del producto--'})

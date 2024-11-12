@@ -128,6 +128,7 @@
                     <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
                     <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
                     <div class="error">{{ form.imagen_perfil.errors }}</div>
+                    <div class="error" id="error-id_imagen_perfil"></div> 
                     <div id="imagen-perfil-preview" class="imagen-preview">
                         <img id="imagen-perfil-img" src="{% static 'image-icon.png' %}" alt="Imagen de perfil" class="uploaded-image">
                         <span class="remove hidden-remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
@@ -137,6 +138,7 @@
                 <div class="registro-form-group">
                     <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
                     <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+                    <div class="error" id="error-id_qr_imagen"></div> <!-- Error message container -->
                     <div class="error">{{ form.qr_imagen.errors }}</div>
                     <div id="qr-imagen-preview" class="imagen-preview">
                         <img id="qr-imagen-img" src="{% static 'image-icon.png' %}" alt="Imagen QR" class="uploaded-image">
@@ -205,9 +207,27 @@
     <script type="text/javascript">
         let seccionActual = 1;
         $(document).ready(function() {
+            let isEmailUnique = false;
             // Initialize the button to be disabled and styled as gray
+            $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            $('#id_nombre_completo').on('input', validarFormularioSeccion1);
+            $('#id_username').on('input', validarFormularioSeccion1);
+            $('#id_password1').on('input', validarFormularioSeccion1);
+            $('#id_password2').on('input', validarFormularioSeccion1);
+            $('#id_telefono').on('input', validarFormularioSeccion1);
+            $('#id_direccion_1').on('input', validarDireccion);
             $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
-    
+            
+            // Check all fields including email uniqueness on each input change
+            $('#id_nombre_completo, #id_username, #id_password1, #id_password2, #id_telefono, #id_email').on('input', function() {
+                validarFormularioSeccion1();
+            });
+
+            // Email uniqueness check on email field blur event
+            $('#id_email').on('blur', function() {
+                checkEmailUniqueness();
+            });
             // Enable or disable the button based on the checkbox state
             $('#aceptar-terminos').change(function() {
                 if (this.checked) {
@@ -220,41 +240,116 @@
             // Existing code for form validation and section navigation
             configurarValidacionEnTiempoReal();
             mostrarSeccion(seccionActual);
-    
+            
             // Cargar provincias cuando se selecciona un departamento
+            $("#id_provincia_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+            $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+
+            // Load Provincias when a Departamento is selected and enable Provincia field
             $('#id_departamento_fk').change(function() {
-                var url = "{% url 'ajax_cargar_provincias' %}";  // URL de la vista que carga provincias
                 var departamentoId = $(this).val();
-                $.ajax({
-                    url: url,
-                    data: {
-                        'departamento_id': departamentoId
-                    },
-                    success: function(data) {
-                        $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
-                        $.each(data, function(key, value) {
-                            $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
-                        });
-                    }
-                });
+                
+                if (departamentoId) {
+                    // Enable Provincia and reset Municipio
+                    $("#id_provincia_fk").prop("disabled", false).css("background-color", "");
+                    $("#error-departamento").text(""); // Clear any error for Departamento
+
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+                    $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+
+                    var url = "{% url 'ajax_cargar_provincias' %}";
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'departamento_id': departamentoId
+                        },
+                        success: function(data) {
+                            $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
+                            $.each(data, function(key, value) {
+                                $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    // Keep Provincia and Municipio disabled if no Departamento is selected
+                    $("#id_provincia_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona una provincia...</option>');
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona un municipio...</option>');
+                }
             });
-    
-            // Cargar municipios cuando se selecciona una provincia
+
+            // Load Municipios when a Provincia is selected and enable Municipio field
             $('#id_provincia_fk').change(function() {
-                var url = "{% url 'ajax_cargar_municipios' %}";  // URL de la vista que carga municipios
                 var provinciaId = $(this).val();
-                $.ajax({
-                    url: url,
-                    data: {
-                        'provincia_id': provinciaId
-                    },
-                    success: function(data) {
-                        $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
-                        $.each(data, function(key, value) {
-                            $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
-                        });
-                    }
-                }); 
+                
+                if (provinciaId) {
+                    $("#id_municipio_fk").prop("disabled", false).css("background-color", "");
+                    $("#error-provincia").text(""); // Clear any error for Provincia
+
+                    var url = "{% url 'ajax_cargar_municipios' %}";
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'provincia_id': provinciaId
+                        },
+                        success: function(data) {
+                            $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+                            $.each(data, function(key, value) {
+                                $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    // Keep Municipio disabled if no Provincia is selected
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona un municipio...</option>');
+                }
+            });
+
+            // Real-time and blur validation setup for various fields
+            configurarValidacionEnTiempoReal();
+
+            // Field-specific blur events to check "Campo obligatorio" on tab-out
+            $("#id_nombre_completo").on("blur", function() {
+                validarNombre(); 
+            });
+            $("#id_username").on("blur", function() {
+                validarUsername(); 
+            });
+            $("#id_password1").on("blur", function() {
+                validarPassword1(); 
+            });
+            $("#id_password2").on("blur", function() {
+                validarPassword2(); 
+            });
+            $("#id_telefono").on("blur", function() {
+                validarTelefono(); 
+            });
+            $("#id_email").on("blur", function() {
+                const email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        url: "{% url 'check_email' %}",  // URL for the view that will handle email checking
+                        data: {
+                            'email': email
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.email_exists) {
+                                $("#error-email").text("Correo electrónico ya registrado");
+                            } else {
+                                $("#error-email").text(""); // Clear any previous error if email is unique
+                            }
+                        }
+                    });
+                }
+            });
+            $("#id_departamento_fk").on("blur", function() {
+                validarDepartamento();
+            });
+            $("#id_provincia_fk").on("blur", function() {
+                validarProvincia();
+            });
+            $("#id_municipio_fk").on("blur", function() {
+                validarMunicipio();
             });
         });
     
@@ -344,21 +439,47 @@
         
         function validarTelefono() {
             const telefono = $("#id_telefono").val();
-        
-            if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
+            
+            if (telefono.trim() === "") { 
+                $("#error-telefono").text("Campo obligatorio");
+            } else if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
                 $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
             } else if (/\s/.test(telefono)) { // Checks for any whitespace character
                 $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
             } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
                 $("#error-telefono").text("Solo se permiten caracteres numéricos.");
-            } else if (telefono.length > 8) { // Ensures no more than 8 digits
-                $("#error-telefono").text("Debe tener solo 8 dígitos.");
             } else if (telefono.length !== 8) { // Ensures exactly 8 digits
                 $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
             } else {
                 $("#error-telefono").text(""); // Clear error if input is valid
             }
-        }                        
+        }
+        
+        function checkEmailUniqueness() {
+            const email = $("#id_email").val();
+    
+            if (email) {
+                $.ajax({
+                    url: "{% url 'check_email' %}",  // URL for checking email
+                    data: { 'email': email },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.email_exists) {
+                            $("#error-email").text("Correo electrónico ya registrado");
+                            isEmailUnique = false;
+                        } else {
+                            $("#error-email").text("");
+                            isEmailUnique = true;
+                        }
+                        // Check all fields after email check
+                        validarFormularioSeccion1();
+                    }
+                });
+            } else {
+                isEmailUnique = true; // If email is empty, consider it unique (optional field)
+                validarFormularioSeccion1();
+            }
+        }
         
         function validarEmail() {
             const email = $("#id_email").val();
@@ -381,7 +502,53 @@
                 mostrarSeccion(seccionActual);
             }
         }
+        function validarDepartamento() {
+            const departamento = $("#id_departamento_fk").val();
+            if (departamento === "") {
+                $("#error-departamento").text("Campo obligatorio");
+            } else {
+                $("#error-departamento").text("");
+            }
+        }
+        
+        function validarProvincia() {
+            const provincia = $("#id_provincia_fk").val();
+            if (provincia === "") {
+                $("#error-provincia").text("Campo obligatorio");
+            } else {
+                $("#error-provincia").text("");
+            }
+        }
+        
+        function validarMunicipio() {
+            const municipio = $("#id_municipio_fk").val();
+            if (municipio === "") {
+                $("#error-municipio").text("Campo obligatorio");
+            } else {
+                $("#error-municipio").text("");
+            }
+        }
 
+        function validarDireccion() {
+            const direccion1 = $("#id_direccion_1").val();
+        
+            if (direccion1.trim() === "") {
+                $("#error-direccion_1").text("Campo Obligatorio");
+            }
+            else if (direccion1.length > 150) {
+                $("#error-direccion_1").text("Límite de caracteres excedido (150)");
+            }
+            else if (direccion1.length < 6) {
+                $("#error-direccion_1").text("Mínimo 5 caracteres");
+            }
+            else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                $("#error-direccion_1").text("No se permiten caracteres especiales (Excepto ',' '.' y '#')");
+            }
+            else {
+                $("#error-direccion_1").text("");
+            }
+        }
+        
         $(document).ready(function() {
             mostrarSeccion(seccionActual);
         });
@@ -391,17 +558,30 @@
             const preview = document.getElementById(previewId);
             const imgElement = preview.querySelector('img');
             const removeButton = preview.querySelector('.remove');
-            
+            const errorElement = document.getElementById(`error-${inputId}`); // Element to show error message
+        
+            errorElement.textContent = "";
+        
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imgElement.src = e.target.result;
-                    preview.classList.remove("oculto"); // Show the preview box
-                    removeButton.classList.remove("hidden-remove"); // Show the "X" button only when an image is present
-                };
-                reader.readAsDataURL(file);
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+                // Check if the file is a png or jpg
+                if (fileExtension === "png" || fileExtension === "jpg" || fileExtension === "jpeg") {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imgElement.src = e.target.result;
+                        preview.classList.remove("oculto"); // Show the preview box
+                        removeButton.classList.remove("hidden-remove"); // Show the "X" button
+                        errorElement.textContent = ""; // Clear any error if file is valid
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    errorElement.textContent = "Formato de imagen no permitido";
+                    input.value = ""; // Clear the invalid file from input
+                }
             }
-        }        
+        }
+             
         
         function removerImagen(previewId, inputId) {
             const preview = document.getElementById(previewId);
@@ -418,121 +598,257 @@
         
         
         function mostrarSeccion(seccion) {
-    // Oculta todas las secciones
-    $(".form-seccion").addClass("oculto");
+            // Oculta todas las secciones
+            $(".form-seccion").addClass("oculto");
+        
+            // Muestra solo la sección actual
+            $("#seccion-" + seccion).removeClass("oculto");
+        
+            // Actualiza la barra de progreso
+            $(".paso").removeClass("activo");
+            $(".paso").eq(seccion - 1).addClass("activo");
+        }
+        
 
-    // Muestra solo la sección actual
-    $("#seccion-" + seccion).removeClass("oculto");
-
-    // Actualiza la barra de progreso
-    $(".paso").removeClass("activo");
-    $(".paso").eq(seccion - 1).addClass("activo");
-}
-function validarSeccion1() {
-    let nombre = document.getElementById("id_nombre_completo").value;
-    let username = document.getElementById("id_username").value;
-    let password1 = document.getElementById("id_password1").value;
-    let password2 = document.getElementById("id_password2").value;
-    let telefono = document.getElementById("id_telefono").value;
-    let email = document.getElementById("id_email").value;
-
-    let error = false;
-    // Validación de nombre completo
-    if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
-        document.getElementById("error-nombre").innerText = "Campo obligatorio.";
-        error = true;
-    } else {
-        document.getElementById("error-nombre").innerText = "";
-    }
-    // Validación de nombre de usuario
-    if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
-        document.getElementById("error-username").innerText = "Campo Obligatorio.";
-        error = true;
-    } else {
-        document.getElementById("error-username").innerText = "";
-    }
-    // Validación de contraseña (password1)
-    if (password1.trim() === "") {
-        document.getElementById("error-password1").innerText = "Campo Obligatorio";
-        error = true;
-    } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
-        document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
-        error = true;
-    } else {
-        document.getElementById("error-password1").innerText = "";
-    }
+        function validarFormularioSeccion1() {
+            const nombre = $("#id_nombre_completo").val();
+            const username = $("#id_username").val();
+            const password1 = $("#id_password1").val();
+            const password2 = $("#id_password2").val();
+            const telefono = $("#id_telefono").val();
+            const email = $("#id_email").val();
+        
+            let allFieldsValid = true;
+        
+            // Validate each field according to your restrictions
+            if (nombre.trim() === "" || !/^[A-Za-z\s]{1,50}$/.test(nombre) || nombre.length < 4 || (nombre.match(/\s/g) || []).length > 7 || /\s{2,}/.test(nombre)) {
+                allFieldsValid = false;
+            }
+        
+            if (username.trim() === "" || /\s/.test(username) || !/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                allFieldsValid = false;
+            }
+        
+            if (password1.trim() === "" || password1.length < 8 || password1.length > 25 || !/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                allFieldsValid = false;
+            }
+        
+            if (password2.trim() === "" || password2 !== password1 || password2.length > 25) {
+                allFieldsValid = false;
+            }
+        
+            if (telefono.trim() === "" || !/^[67]/.test(telefono) || telefono.length !== 8 || /\s/.test(telefono) || /[^0-9]/.test(telefono)) {
+                allFieldsValid = false;
+            }
+        
+            // Email validation: Only check uniqueness and format if email is not empty
+            if (email.trim() !== "") {
+                if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                    $("#error-email").text("Formato de correo electrónico inválido.");
+                    allFieldsValid = false;
+                    isEmailUnique = false;
+                    toggleSiguienteButton(false); // Disable "Siguiente" in gray
+                } else {
+                    // Perform AJAX call to check if email exists, and proceed only after completion
+                    $.ajax({
+                        url: "{% url 'check_email' %}",  // Replace with your URL for checking emails
+                        data: { 'email': email },
+                        dataType: 'json',
+                        async: false,  // Make the AJAX call synchronous for a more strict control flow
+                        success: function(data) {
+                            if (data.email_exists) {
+                                $("#error-email").text("Correo electrónico ya registrado");
+                                isEmailUnique = false;  // Mark as false if email exists
+                                toggleSiguienteButton(false); // Disable "Siguiente" in gray
+                            } else {
+                                $("#error-email").text("");
+                                isEmailUnique = true;   // Mark as true if email is unique
+                                toggleSiguienteButton(allFieldsValid); // Enable "Siguiente" in orange if all fields are valid
+                            }
+                        }
+                    });
+                }
+            } else {
+                // If email is empty, treat it as valid
+                $("#error-email").text("");  // Clear any error if email is empty (optional)
+                isEmailUnique = true;  // Allow the empty email field as valid
+                toggleSiguienteButton(allFieldsValid); // Enable "Siguiente" if all fields are valid
+            }
+        }
     
-    // Validación de coincidencia de contraseñas (password2)
-    if (password2.trim() === "") {
-        document.getElementById("error-password2").innerText = "Campo Obligatorio";
-        error = true;
-    } else if (password1 !== password2) {
-        document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
-        error = true;
-    } else {
-        document.getElementById("error-password2").innerText = "";
-    }
-    // Validación de teléfono
-    if (!/^\d{8}$/.test(telefono)) {
-        document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
-        error = true;
-    } else {
-        document.getElementById("error-telefono").innerText = "";
-    }
-    // Validación de correo electrónico
-    if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
-        document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
-        error = true;
-    } else {
-        document.getElementById("error-email").innerText = "";
-    }
-    // Si no hay errores, avanza a la siguiente sección
-    if (!error) {
-        seccionActual++;
-        mostrarSeccion(seccionActual);
-    }
-}
-function validarSeccion2() {
-    let departamento = document.getElementById("id_departamento_fk").value;
-    let provincia = document.getElementById("id_provincia_fk").value;
-    let municipio = document.getElementById("id_municipio_fk").value;
-    let direccion1 = document.getElementById("id_direccion_1").value;
+        // Helper function to toggle the "Siguiente" button
+        function toggleSiguienteButton(isEnabled) {
+            if (isEnabled) {
+                $('.registro-btn-siguiente').prop('disabled', false).removeClass('disabled').addClass('enabled');
+            } else {
+                $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+            }
+        }        
 
-    let error = false;
-    // Validación de departamento
-    if (!departamento) {
-        document.getElementById("error-departamento").innerText = "Selecciona un departamento.";
-        error = true;
-    } else {
-        document.getElementById("error-departamento").innerText = "";
-    }
-    // Validación de provincia
-    if (!provincia) {
-        document.getElementById("error-provincia").innerText = "Selecciona una provincia.";
-        error = true;
-    } else {
-        document.getElementById("error-provincia").innerText = "";
-    }
-    // Validación de municipio
-    if (!municipio) {
-        document.getElementById("error-municipio").innerText = "Selecciona un municipio.";
-        error = true;
-    } else {
-        document.getElementById("error-municipio").innerText = "";
-    }
-    // Validación de dirección
-    if (!direccion1) {
-        document.getElementById("error-direccion_1").innerText = "Introduce una dirección válida.";
-        error = true;
-    } else {
-        document.getElementById("error-direccion_1").innerText = "";
-    }
-    // Si no hay errores, avanza a la siguiente sección
-    if (!error) {
-        seccionActual++;
-        mostrarSeccion(seccionActual);
-    }
-}
+        function validarSeccion1() {
+            let nombre = document.getElementById("id_nombre_completo").value;
+            let username = document.getElementById("id_username").value;
+            let password1 = document.getElementById("id_password1").value;
+            let password2 = document.getElementById("id_password2").value;
+            let telefono = document.getElementById("id_telefono").value;
+            let email = document.getElementById("id_email").value;
+
+            let error = false;
+            // Validación de nombre completo
+            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                document.getElementById("error-nombre").innerText = "Campo obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-nombre").innerText = "";
+            }
+            // Validación de nombre de usuario
+            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                document.getElementById("error-username").innerText = "Campo Obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-username").innerText = "";
+            }
+            // Validación de contraseña (password1)
+            if (password1.trim() === "") {
+                document.getElementById("error-password1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
+                error = true;
+            } else {
+                document.getElementById("error-password1").innerText = "";
+            }
+            
+            // Validación de coincidencia de contraseñas (password2)
+            if (password2.trim() === "") {
+                document.getElementById("error-password2").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (password1 !== password2) {
+                document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
+                error = true;
+            } else {
+                document.getElementById("error-password2").innerText = "";
+            }
+            // Validación de teléfono
+            if (!/^\d{8}$/.test(telefono)) {
+                document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-telefono").innerText = "";
+            }
+            // Validación de correo electrónico
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
+                document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-email").innerText = "";
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        function validarFormularioSeccion2() {
+            const departamento = $("#id_departamento_fk").val();
+            const provincia = $("#id_provincia_fk").val();
+            const municipio = $("#id_municipio_fk").val();
+            const direccion = $("#id_direccion_1").val();
+        
+            let allFieldsValid = true;
+        
+            // Validate each field according to the restrictions
+        
+            if (!departamento) {
+                allFieldsValid = false;
+            }
+        
+            if (!provincia) {
+                allFieldsValid = false;
+            }
+        
+            if (!municipio) {
+                allFieldsValid = false;
+            }
+        
+            if (direccion.trim() === "" || direccion.length < 6 || direccion.length > 150 || !/^[A-Za-z0-9\s.,#]+$/.test(direccion)) {
+                allFieldsValid = false;
+            }
+        
+            // Toggle button state based on validation
+            toggleSiguienteButtonSeccion2(allFieldsValid);
+        }
+        
+        function toggleSiguienteButtonSeccion2(isEnabled) {
+            const nextButton = $('.registro-btn-siguiente');
+        
+            if (isEnabled) {
+                nextButton.prop('disabled', false).removeClass('disabled').addClass('enabled'); // Turn orange and enable
+            } else {
+                nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled'); // Keep gray and disabled
+            }
+        }        
+
+
+        $(document).ready(function() {
+            const nextButton = $('.registro-btn-siguiente');
+            
+            // Set the initial button state to gray and disabled
+            nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            // Attach real-time validation to Section 2 fields
+            $('#id_departamento_fk').on('change', validarFormularioSeccion2);
+            $('#id_provincia_fk').on('change', validarFormularioSeccion2);
+            $('#id_municipio_fk').on('change', validarFormularioSeccion2);
+            $('#id_direccion_1').on('input', validarFormularioSeccion2);
+        });
+        
+
+        function validarSeccion2() {
+            let departamento = document.getElementById("id_departamento_fk").value;
+            let provincia = document.getElementById("id_provincia_fk").value;
+            let municipio = document.getElementById("id_municipio_fk").value;
+            let direccion1 = document.getElementById("id_direccion_1").value;
+
+            let error = false;
+            // Validación de departamento
+            if (!departamento) {
+                document.getElementById("error-departamento").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-departamento").innerText = "";
+            }
+            // Validación de provincia
+            if (!provincia) {
+                document.getElementById("error-provincia").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-provincia").innerText = "";
+            }
+            // Validación de municipio
+            if (!municipio) {
+                document.getElementById("error-municipio").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-municipio").innerText = "";
+            }
+            // Validación de dirección
+            if (direccion1.trim() === "") {
+                document.getElementById("error-direccion_1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                document.getElementById("error-direccion_1").innerText = "No se permiten caracteres especiales (Excepto ',' '.' y '#')";
+                error = true;
+            } else {
+                document.getElementById("error-direccion_1").innerText = ""; // Clear error if valid
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
         function siguienteSeccion() {
             if (seccionActual === 1) {
             validarSeccion1();
@@ -543,6 +859,7 @@ function validarSeccion2() {
             mostrarSeccion(seccionActual);
             }
         } 
+
         function anteriorSeccion() {
             if (seccionActual > 1) {
                 seccionActual--;
@@ -550,5 +867,16 @@ function validarSeccion2() {
             }
         }
     </script>
+    <style>
+        .disabled {
+            background-color: #bbbbbb; 
+            cursor: not-allowed;
+        }
+    
+        .enabled {
+            background-color: #ef6605;  
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
