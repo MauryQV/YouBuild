@@ -84,6 +84,9 @@
     display: flex;
     gap: 10px;
 }
+.topbar-right .icon-btn i {
+    font-size: 18px; /* Adjust as needed */
+}
 
 /* Estilo de los botones de enlace e icono */
 .btn-link,
