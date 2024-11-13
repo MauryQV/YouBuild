@@ -17,6 +17,7 @@ from .forms import *
 # Vista principal
 @login_required
 def home_view(request):
+    request.session['productos_busqueda'] = None
     productos = ProductoDb.objects.all().order_by('-visitas')
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
@@ -248,7 +249,6 @@ def agregar_al_carrito(request, producto_id):
     carrito, _ = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
     cantidad = int(request.POST.get('cantidad', 1))
     carrito.agregar_producto(producto, cantidad)
-    messages.success(request, f"Producto {producto.nombre} agregado al carrito.")
     return redirect('Carrito')
 
 def get_cart_count(request):
