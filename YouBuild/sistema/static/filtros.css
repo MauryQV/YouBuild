@@ -1,34 +1,41 @@
-/* filtros.css */
 
 /* Estilos generales para la sección de filtros */
 .filtros {
-    width: 100%;
-    display: flex;    
+    width: 100vw; /* Full viewport width */
+    margin-left: calc(-50vw + 50%); /* Center align full-width */
+    display: flex;
     flex-wrap: nowrap;
     position: relative;
     justify-content: flex-start;
     align-items: center;
-    gap: 15px; /* Aumentar el espacio entre los elementos */
-    margin-bottom: 30px; /* Aumentar el espacio para que no choque con el carrusel */
-    padding: 10px;
-    background-color: #ffffff; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 5px #ef6605(0, 0, 0, 0.1);
+    gap: 10px; /* Space between elements */
+    padding: 10px 2cm; /* 2cm padding on left and right */
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Correct shadow format */
+    box-sizing: border-box; /* Ensures padding is within the width */
 }
 
+.carousel-container {
+    margin-top: 20px; /* Adds more space above the carousel */
+}
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
     /*width: 180px;*/
-    padding: 10px 10px 10px 35px;
+    padding: 8px 8px 8px 35px;
     text-align: left;
     background-color: #ffffff;
     color: #ef6605;
     border: 1px solid #ef6605;
-    border-radius: 4px;
+    border-radius: 7px;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
+    margin-left: 2cm; /* Adds 2cm margin for the elements only */
+    margin-right: -70px; /* Reduced right margin for closer spacing */
+    gap: 10px; /* Reduced space between elements */
+
 }
 
 .filtros::before {
@@ -44,6 +51,8 @@
     background-repeat: no-repeat;
     background-size: contain;
     pointer-events: none;
+    margin-left: 2cm; /* Adds 2cm margin for the elements only */
+
 }
 
 .filtros select::-ms-expand {
@@ -68,6 +77,8 @@
     font-size: 14px;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: 77px; /* Spacing to separate buttons from the selects */
+    margin-right: -70px
 }
 
 /* Efecto hover en los botones */
@@ -79,7 +90,7 @@
 
 /* Evitar choque con el carrusel */
 .carousel {
-    margin-top: 20px; /* Aumentar el margen superior del carrusel */
+    margin-top: 0px; /* Aumentar el margen superior del carrusel */
 }
 
 /* Estilo por defecto del select */

@@ -1,26 +1,32 @@
-
 /* Estilo general del topbar */
 .topbar-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0px;
+    padding: 13px 0px;
     background-color: #FFFFFF;
-    margin: 0;
+    margin: 0 2cm; 
     position: relative;
     font-size: 16px;
+    
 }
-
+.topbar-background {
+    background-color: #FFFFFF;  /* White background */
+    width: 100%;  /* Full width */
+    position: relative;  /* To make sure the content layers on top */
+}
 /* Franja naranja en la parte inferior del topbar */
 .topbar-container::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
     height: 1px;
     background-color: #ef6605;
+    margin-left: -2cm; /* Centers the underline within the topbar container */
+    margin-right: 0cm; /* Centers the underline within the topbar container */
 }
 
 /* Sección izquierda (Logo) */
@@ -39,7 +45,7 @@
 .topbar-center {
     flex-grow: 1;
     text-align: center;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 .search-box {
@@ -79,6 +85,9 @@
     display: flex;
     gap: 10px;
 }
+.topbar-right .icon-btn i {
+    font-size: 18px; /* Adjust as needed */
+}
 
 /* Estilo de los botones de enlace e icono */
 .btn-link,
@@ -99,7 +108,7 @@
 
 /* Estilo del ícono en el botón icon-btn */
 .icon-btn i {
-    font-size: 18px;
+    font-size: 25px !important;   
 }
 
 /* Hover (Cambios al acercar el cursor) */
@@ -136,7 +145,7 @@
 /* Ensure the icon-btn is relatively positioned */
 .icon-btn {
     position: relative;
-    padding: 10px 15px;
+    padding: 10px 10px;
     background-color: white;
     border: 2px solid #ef6605;
     border-radius: 25px;
@@ -179,6 +188,7 @@
 /* Media Queries para diseño responsivo */
 @media (max-width: 768px) {
     .topbar-container {
+        margin: 0; /* Remove margin for smaller screens */
         flex-direction: column;
         align-items: center;
         padding: 10px;
@@ -209,6 +219,7 @@
 
 @media (max-width: 480px) {
     .topbar-left .logo img {
+        margin: 0; /* Remove margin for mobile view */
         width: 120px;
     }
 
