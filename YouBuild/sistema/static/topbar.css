@@ -107,7 +107,7 @@
 
 /* Estilo del ícono en el botón icon-btn */
 .icon-btn i {
-    font-size: 18px;
+    font-size: 25px !important;   
 }
 
 /* Hover (Cambios al acercar el cursor) */
@@ -144,7 +144,7 @@
 /* Ensure the icon-btn is relatively positioned */
 .icon-btn {
     position: relative;
-    padding: 10px 15px;
+    padding: 10px 10px;
     background-color: white;
     border: 2px solid #ef6605;
     border-radius: 25px;
