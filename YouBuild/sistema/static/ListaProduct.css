@@ -58,7 +58,7 @@ body {
 .product h3 {
     font-size: 0.9em; /* Tamaño del nombre del producto */
     margin: 5px 0; /* Reducir el margen para acercar al precio */
-    color: #444;
+    color: #100f0f;
 }
 
 .product p {
