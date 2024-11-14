@@ -121,9 +121,9 @@ class CarritoDB(models.Model):
         return f"Carrito de {self.usuario_fk}"
 
 
-# Categoria
 class CategoriaDb(models.Model):
     nombre = models.CharField(max_length=50, verbose_name="Nombre de la categoría")
+    imagen = models.ImageField(upload_to='categorias/', null=True, blank=True, verbose_name="Imagen de la categoría")  # Campo de imagen
 
     class Meta:
         verbose_name = "Categoría"
@@ -131,6 +131,7 @@ class CategoriaDb(models.Model):
 
     def __str__(self):
         return self.nombre
+
 
 
 # Subcategoria
