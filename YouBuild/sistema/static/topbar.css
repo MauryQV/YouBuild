@@ -1,3 +1,8 @@
+.topbar-background {
+    background-color: #FFFFFF;  /* White background */
+    width: 100%;  /* Full width */
+    position: relative;  /* To make sure the content layers on top */
+}
 /* Estilo general del topbar */
 .topbar-container {
     display: flex;
@@ -10,11 +15,10 @@
     position: relative;
     font-size: 16px;
 }
-.topbar-background {
-    background-color: #FFFFFF;  /* White background */
-    width: 100%;  /* Full width */
-    position: relative;  /* To make sure the content layers on top */
+.icon-btn {
+    text-decoration: none !important; /* Removes underline */
 }
+
 /* Franja naranja en la parte inferior del topbar */
 .topbar-container::after {
     content: '';
@@ -169,6 +173,7 @@
     text-decoration: none;
     transition: background-color 0.3s;
     font-size: inherit;
+    text-decoration: none !important; /* Ensure no underline */
 }
 
 .btn-sell i {
@@ -178,10 +183,12 @@
     padding: 5px;
     margin-right: 10px;
     font-size: 16px;
+    text-decoration: none !important; /* Ensure no underline */
 }
 
 .btn-sell:hover {
     background-color: #ea580c;
+    text-decoration: none !important; /* Ensure no underline */
 }
 
 /* Media Queries para diseño responsivo */

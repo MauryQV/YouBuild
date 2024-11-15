@@ -1,6 +1,15 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+body {
+    font-family: 'Comfortaa', sans-serif !important;
+}
+.filtros,
+.filtros select,
+button {
+    font-family: 'Comfortaa', sans-serif !important;
+}   
 /* Estilos generales para la sección de filtros */
 .filtros {
+    font-family: 'Comfortaa', sans-serif;
     width: 100vw; /* Full viewport width */
     margin-left: calc(-50vw + 50%); /* Center align full-width */
     display: flex;
@@ -11,7 +20,7 @@
     gap: 10px; /* Space between elements */
     padding: 10px 2cm; /* 2cm padding on left and right */
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 30px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Correct shadow format */
     box-sizing: border-box; /* Ensures padding is within the width */
 }
@@ -23,11 +32,12 @@
 .filtros select {
     /*width: 180px;*/
     padding: 8px 8px 8px 35px;
-    text-align: left;
+    text-align: center; 
+    text-align-last: center;
     background-color: #ffffff;
     color: #ef6605;
     border: 1px solid #ef6605;
-    border-radius: 7px;
+    border-radius: 15px;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -35,7 +45,7 @@
     margin-left: 2cm; /* Adds 2cm margin for the elements only */
     margin-right: -70px; /* Reduced right margin for closer spacing */
     gap: 10px; /* Reduced space between elements */
-
+    width: auto; /* Dynamic width based on content */
 }
 
 .filtros::before {
@@ -57,6 +67,7 @@
 
 .filtros select::-ms-expand {
     display: none;
+    width: auto; /* Dynamic width based on content */
 }
     
 /* Opciones dentro de los selectores */
@@ -75,10 +86,11 @@
     border: 1px solid #ef6605; /* Borde delgado naranja */
     padding: 8px 20px;
     font-size: 14px;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     margin-left: 77px; /* Spacing to separate buttons from the selects */
-    margin-right: -70px
+    margin-right: -70px;
+    width: auto; /* Dynamic width based on content */
 }
 
 /* Efecto hover en los botones */
@@ -86,6 +98,7 @@
 #reset-filtros:hover {
     background-color: #ef6605; /* Fondo naranja */
     color: white; /* Texto blanco */
+    width: auto; /* Dynamic width based on content */
 }
 
 /* Evitar choque con el carrusel */

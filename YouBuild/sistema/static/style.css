@@ -274,6 +274,9 @@ footer {
         height: 4px;
     }
 }
+button, .btn, .btn-volver, .btn-detalle, .btn-agregar, .btn-comprar {
+    font-family: 'Comfortaa', sans-serif !important;
+}
 
 /* Ajustes para pantallas pequeñas (móviles) */
 @media (max-width: 480px) {
