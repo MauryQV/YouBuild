@@ -175,9 +175,9 @@ footer {
    /* max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
     margin: -25px auto; /* Reduce aún más el margen superior e inferior */
     overflow: hidden; /* Oculta cualquier contenido que sobresalga */
-    /*height: 200px;  Mantiene la altura reducida del contenedor */
-    height: auto; /* Permitir que la altura se ajuste automáticamente */
-    max-width: 1200px; /* Puedes aumentar el ancho máximo del carrusel si es necesario */
+    height: 350px; /* Mantiene la altura reducida del contenedor */
+    /*height: auto; /* Permitir que la altura se ajuste automáticamente */
+    max-width: 1800px; /* Puedes aumentar el ancho máximo del carrusel si es necesario */
 }
 
 .carousel {
