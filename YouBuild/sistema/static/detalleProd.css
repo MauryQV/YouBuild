@@ -203,3 +203,18 @@ p {
     line-height: 1.5;
 }
 
+.precio-original {
+    text-decoration: line-through;
+    color: red;
+    font-weight: bold;
+}
+.precio-descuento {
+    color: green;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+.contador-oferta {
+    font-size: 1.2em;
+    color: orange;
+    margin-top: 10px;
+}

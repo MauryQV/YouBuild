@@ -64,7 +64,14 @@
         <div class="sub-container">
             <div class="subcolumn1 flex-column column-left">
                 <h3>Precio c/u</h3>
-                <p class="aux">{{ producto.precio }} Bs.</p>
+                {% if producto.esta_en_promocion %}
+                    <p class="precio-original">{{ producto.precio }} Bs.</p>
+                    <p class="precio-descuento">{{ producto.precio_final|floatformat:2 }} Bs.</p>
+                    <p>Descuento: {{ producto.descuento }}%</p>
+                    <div id="contador-{{ producto.id }}" class="contador-oferta"></div>
+                {% else %}
+                    <p>{{ producto.precio }} Bs.</p>
+                {% endif %}
             </div>
             <div class="subcolumn2 flex-column column-right">
                 <h3>Cantidad Disponible</h3>
@@ -81,9 +88,38 @@
 </div>
 <button class="btn volver-a-lista" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
     productos</button>
-<!-- COLOCAR SU CONTENIDO -->
 {% endblock %}
 {% block extra_scripts %}
+
+<script>
+    // Configurar el contador dinámico
+    const contador = document.getElementById("contador-{{ producto.id }}");
+    {% if producto.estado == 'promocion' and producto.fecha_fin_promocion %}
+    const fechaFin = new Date("{{ producto.fecha_fin_promocion|date:'c' }}");
+
+    function actualizarContador() {
+        const ahora = new Date();
+        const tiempoRestante = fechaFin - ahora;
+
+        if (tiempoRestante <= 0) {
+            contador.innerText = "La oferta ha terminado.";
+            clearInterval(intervaloContador);
+            return;
+        }
+
+        const dias = Math.floor(tiempoRestante / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((tiempoRestante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
+
+        contador.innerText = `Tiempo restante: ${dias}d ${horas}h ${minutos}m ${segundos}s`;
+    }
+
+    const intervaloContador = setInterval(actualizarContador, 1000);
+    actualizarContador(); // Inicializa de inmediato
+    {% endif %}
+</script>
+
 <script src="{% static 'carrouselproductos.js' %}"></script>
 <script>
     function agregarAlCarrito(productId) {
