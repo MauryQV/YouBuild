@@ -12,7 +12,11 @@ from .models import ImagenProductoDB
 import json
 from django.shortcuts import render
 from .forms import *
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .serializers import ProductoSerializer
 
 # Vista principal
 @login_required
@@ -407,3 +411,63 @@ def eliminar_de_lista_favoritos(request, producto_id):
 def confirmacion_producto(request):
     return render(request, 'confirmacion_producto.html')
 
+class PublicacionesUsuarioAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        usuario = request.user.usuariodb
+
+        estado = request.query_params.get('estado', None)
+
+        productos = ProductoDb.objects.filter(usuario_fk=usuario)
+
+        if estado:
+            productos = productos.filter(estado=estado)
+
+        data = []
+        for producto in productos:
+            foto_principal = producto.imagenes.first()
+            data.append({
+                "nombre": producto.nombre,
+                "detalle": producto.detalle,
+                "precio": producto.precio_final(),
+                "foto_principal": foto_principal.imagen.url if foto_principal else None,
+                "estado": producto.estado,
+            })
+
+        return Response(data, status=status.HTTP_200_OK)
+    
+class ActualizarPublicacionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, id):
+        # Obtener la publicación del usuario autenticado
+        usuario = request.user.usuariodb
+        producto = get_object_or_404(ProductoDb, id=id, usuario_fk=usuario)
+
+        # Validar y actualizar los datos recibidos
+        nombre = request.data.get('nombre', producto.nombre)
+        detalle = request.data.get('detalle', producto.detalle)
+        precio = request.data.get('precio', producto.precio)
+
+        if precio is not None and float(precio) <= 0:
+            return Response({"error": "El precio debe ser mayor a 0."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Actualizar campos básicos
+        producto.nombre = nombre
+        producto.detalle = detalle
+        producto.precio = precio
+        producto.save()
+
+        # Manejo de fotos (opcional)
+        fotos = request.FILES.getlist('fotos')
+        if fotos:
+            # Eliminar imágenes existentes
+            producto.imagenes.all().delete()
+            # Subir nuevas imágenes
+            for foto in fotos:
+                ImagenProductoDB.objects.create(producto_fk=producto, imagen=foto)
+
+        # Responder con los datos actualizados
+        serializer = ProductoSerializer(producto)
+        return Response(serializer.data, status=status.HTTP_200_OK)

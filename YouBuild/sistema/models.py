@@ -147,7 +147,12 @@ class SubcategoriaDB(models.Model):
         return self.nombre
 
 
-class ProductoDb(models.Model):
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
+from django.db import models
+
+class ProductoDb(models.Model): 
     ESTADO_CHOICES = [
         ('disponible', 'Disponible'),
         ('promocion', 'En Promoción'),
@@ -161,12 +166,10 @@ class ProductoDb(models.Model):
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='disponible', verbose_name="Estado del Producto")
     fecha_inicio_promocion = models.DateTimeField(null=True, blank=True, verbose_name="Inicio de Promoción")
     fecha_fin_promocion = models.DateTimeField(null=True, blank=True, verbose_name="Fin de Promoción")
-    
-    # Relación con otras tablas
+    disponible = models.BooleanField(default=True, verbose_name="Disponible para la venta")  # Para activar o desactivar el producto manualmente
     categoria_fk = models.ForeignKey(CategoriaDb, on_delete=models.CASCADE, null=True, blank=True)
     usuario_fk = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, null=True, blank=True)
     municipio_fk = models.ForeignKey(MunicipioDB, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Municipio")
-    
     direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
@@ -179,15 +182,37 @@ class ProductoDb(models.Model):
     def __str__(self):
         return self.nombre
 
+    def clean(self):
+        # Validación para asegurar que la fecha de fin sea posterior a la fecha de inicio
+        if self.fecha_inicio_promocion and self.fecha_fin_promocion:
+            if self.fecha_fin_promocion <= self.fecha_inicio_promocion:
+                raise ValidationError("La fecha de fin de promoción debe ser posterior a la fecha de inicio.")
+
     def precio_final(self):
         """
-        Calcula el precio con descuento si el producto está en promoción y dentro del período.
+        Calcula el precio final aplicando el descuento si el producto está en promoción.
         """
-        if self.estado == 'promocion' and self.fecha_inicio_promocion and self.fecha_fin_promocion:
-            ahora = timezone.now()
-            if self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion:
-                return self.precio * (1 - self.descuento / 100)
+        if self.esta_en_promocion():
+            return self.precio * (1 - self.descuento / 100)
         return self.precio
+
+    def esta_en_promocion(self):
+        ahora = timezone.now()
+        return (
+            self.estado == 'promocion' and
+            self.fecha_inicio_promocion and
+            self.fecha_fin_promocion and
+            self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion
+        )
+
+    def dias_restantes_promocion(self):
+       
+        ahora = timezone.now()
+        if self.esta_en_promocion() and self.fecha_fin_promocion:
+            delta = self.fecha_fin_promocion - ahora
+            return delta.days
+        return 0
+
 
 # ImagenProducto
 class ImagenProductoDB(models.Model):
