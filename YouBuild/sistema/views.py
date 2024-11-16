@@ -12,6 +12,10 @@ from .models import ImagenProductoDB
 import json
 from django.shortcuts import render
 from .forms import *
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 
 # Vista principal
@@ -407,3 +411,28 @@ def eliminar_de_lista_favoritos(request, producto_id):
 def confirmacion_producto(request):
     return render(request, 'confirmacion_producto.html')
 
+class PublicacionesUsuarioAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        usuario = request.user.usuariodb
+
+        estado = request.query_params.get('estado', None)
+
+        productos = ProductoDb.objects.filter(usuario_fk=usuario)
+
+        if estado:
+            productos = productos.filter(estado=estado)
+
+        data = []
+        for producto in productos:
+            foto_principal = producto.imagenes.first()
+            data.append({
+                "nombre": producto.nombre,
+                "detalle": producto.detalle,
+                "precio": producto.precio_final(),
+                "foto_principal": foto_principal.imagen.url if foto_principal else None,
+                "estado": producto.estado,
+            })
+
+        return Response(data, status=status.HTTP_200_OK)
