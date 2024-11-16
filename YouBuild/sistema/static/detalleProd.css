@@ -136,11 +136,13 @@ body {
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 13px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
     max-width: fit-content;
+    display: block; /* Allows margin auto to center */
+    margin: 20px auto; /* Centers horizontally on the page */
 }
 
 .btn.volver-a-lista:hover {
@@ -201,20 +203,4 @@ h3 {
 p {
     font-size: 1rem;
     line-height: 1.5;
-}
-
-.precio-original {
-    text-decoration: line-through;
-    color: red;
-    font-weight: bold;
-}
-.precio-descuento {
-    color: green;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-.contador-oferta {
-    font-size: 1.2em;
-    color: orange;
-    margin-top: 10px;
 }
