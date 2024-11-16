@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import UsuarioDB
+from .models import UsuarioDB, ProductoDb
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,3 +31,11 @@ class UsuarioDBSerializer(serializers.ModelSerializer):
         usuario_db = UsuarioDB.objects.create(user=user, **validated_data)
         return usuario_db
 
+class ProductoSerializer(serializers.ModelSerializer):
+    imagenes = serializers.StringRelatedField(many=True)
+    categoria = serializers.StringRelatedField()
+    subcategoria = serializers.StringRelatedField()
+
+    class Meta:
+        model = ProductoDb
+        fields = ['id', 'nombre', 'detalle', 'precio', 'estado', 'imagenes', 'municipio_fk', 'categoria', 'subcategoria']
