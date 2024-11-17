@@ -17,14 +17,22 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .serializers import ProductoSerializer
+from django.utils import timezone
+from django.shortcuts import render, redirect
 
 # Vista principal
 @login_required
 def home_view(request):
     request.session['productos_busqueda'] = None
+
+    # Todos los productos y los que están en promoción
+    productos, productos_oferta = obtener_productos_oferta()
     productos = ProductoDb.objects.all().order_by('-visitas')
+
+    # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
+
     usuario = request.user.usuariodb
     favoritos_ids = []
     if request.user.is_authenticated:
@@ -33,11 +41,15 @@ def home_view(request):
 
     return render(request, "home.html", {
         "producto": productos,
+        "productos_oferta": productos_oferta,
         "carrusel": carruseles,
         "usuario": usuario,
-        'categorias': categorias,
+        "categorias": categorias,
         "favoritos_ids": favoritos_ids,
     })
+def product_list(request):
+    productos = ProductoDb.objects.all()
+    return render(request, 'product_list.html', {'productos': productos})
 
 
 def perfil_view(request):
@@ -84,19 +96,35 @@ class CustomLoginView(LoginView):
             return redirect('index')
         return super().dispatch(request, *args, **kwargs)
 
-# Página de inicio
+# Página de inicio para usuarios no autenticados
 def index_view(request): 
     if request.user.is_authenticated:
         return redirect('home')
+
+    # Todos los productos y los que están en promoción
+    productos, productos_oferta = obtener_productos_oferta()
     productos = ProductoDb.objects.all().order_by('-visitas')
+
+    # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
     favoritos_ids = []
+
     if request.user.is_authenticated:
         favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
         print("Productos en favoritos:", list(favoritos_ids))
 
-    return render(request, "index.html", {"producto": productos, "carrusel": carruseles, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
+    return render(request, "index.html", {
+        "producto": productos,
+        "productos_oferta": productos_oferta,
+        "carrusel": carruseles,
+        "categorias": categorias,
+        "favoritos_ids": favoritos_ids,
+    })
+def obtener_productos_oferta():
+    productos = ProductoDb.objects.all().order_by('-visitas')
+    productos_oferta = [producto for producto in productos if producto.esta_en_promocion()]
+    return productos, productos_oferta
 
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)

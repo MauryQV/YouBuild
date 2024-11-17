@@ -104,6 +104,7 @@ body {
 .btn.add-to-list,
 .btn.add-to-view,
 .btn.add-to-cart {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
     background-color: #faf7f6; /* Color de fondo gris */
     color: rgb(243, 174, 37); /* Color de texto gris */
     border: 1px solid rgb(243, 174, 37); /* Borde gris */
@@ -112,6 +113,7 @@ body {
 .btn.add-to-list:hover,
 .btn.add-to-view:hover,
 .btn.add-to-cart:hover {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
     background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
     color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
 }
