@@ -36,8 +36,7 @@ urlpatterns = [
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
 
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
-    # En urls.py: llamada a datos de la BD para promociones
-    path('detalles-promocion/<int:id>/', views.detalles_promocion, name='detalles_promocion'),
+
 
 ]
 
