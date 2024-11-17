@@ -27,6 +27,7 @@ def home_view(request):
 
     # Todos los productos y los que están en promoción
     productos, productos_oferta = obtener_productos_oferta()
+    productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
@@ -35,9 +36,7 @@ def home_view(request):
     # Usuario y favoritos
     usuario = request.user.usuariodb
     favoritos_ids = []
-    if request.user.is_authenticated:
-        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=usuario).values_list('producto_id', flat=True)
-        print("Productos en favoritos:", list(favoritos_ids))
+    ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
 
     return render(request, "home.html", {
         "producto": productos,
@@ -103,6 +102,7 @@ def index_view(request):
 
     # Todos los productos y los que están en promoción
     productos, productos_oferta = obtener_productos_oferta()
+    productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
