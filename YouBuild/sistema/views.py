@@ -439,6 +439,7 @@ def eliminar_de_lista_favoritos(request, producto_id):
 def confirmacion_producto(request):
     return render(request, 'confirmacion_producto.html')
 
+<<<<<<< Updated upstream
 class PublicacionesUsuarioAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -499,3 +500,18 @@ class ActualizarPublicacionAPIView(APIView):
         # Responder con los datos actualizados
         serializer = ProductoSerializer(producto)
         return Response(serializer.data, status=status.HTTP_200_OK)
+=======
+# En views.py: promociones 
+from django.shortcuts import get_object_or_404, render
+from .models import ProductoDb  # Asegúrate de que el nombre del modelo sea correcto
+
+def detalles_promocion(request, id):
+    # Obtener el producto específico o mostrar un error 404 si no existe
+    producto = get_object_or_404(ProductoDb, id=id)
+    
+    # Pasar el producto y el vendedor al template
+    return render(request, 'detalles_promocion.html', {
+        'producto': producto,
+        'vendedor': producto.usuario_fk  # Suponiendo que usuario_fk es el campo en ProductoDb
+    })
+>>>>>>> Stashed changes
