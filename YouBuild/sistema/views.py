@@ -33,10 +33,11 @@ def home_view(request):
     carruseles = CarruselDB.objects.all().order_by("id")
     categorias = CategoriaDb.objects.all()
 
-    # Usuario y favoritos
     usuario = request.user.usuariodb
     favoritos_ids = []
-    ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+    if request.user.is_authenticated:
+        favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
+        print("Productos en favoritos:", list(favoritos_ids))
 
     return render(request, "home.html", {
         "producto": productos,
