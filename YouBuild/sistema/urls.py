@@ -36,14 +36,8 @@ urlpatterns = [
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
 
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
-<<<<<<< Updated upstream
-    path('api/publicaciones/', PublicacionesUsuarioAPIView.as_view(), name='publicaciones_usuario'),
-    path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
-     path('productos/', views.product_list, name='product_list'),
-=======
     # En urls.py: llamada a datos de la BD para promociones
     path('detalles-promocion/<int:id>/', views.detalles_promocion, name='detalles_promocion'),
->>>>>>> Stashed changes
 
 ]
 
