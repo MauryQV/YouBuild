@@ -95,31 +95,40 @@
       <span class="super-offers-title">Super Ofertas</span>
       <a href="#" class="super-offers-view-all">Ver todas</a>
   </div>
+
   <div class="super-offers-content">
       <button class="super-offers-btn super-offers-left-btn">&#10094;</button>
 
-      {% for producto in productos_oferta %}
-      <div class="super-offers-item">
-          {% if producto.imagenes.exists %}
-              <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
-          {% else %}
-              <img src="{% static 'path/to/default_image.jpg' %}" alt="{{ producto.nombre }}">
-          {% endif %}
-          <div class="super-offers-details">
-              <h3>{{ producto.nombre }}</h3>
-              <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
-              <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
-              <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
-              <button class="super-offers-details-btn">Ver Detalles</button>
+      {% if productos_oferta %}
+          {% for producto in productos_oferta %}
+              {% if producto.estado == "promocion" %}
+                  <div class="super-offers-item">
+                      {% if producto.imagenes.exists %}
+                          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
+                      {% else %}
+                          <img src="{% static 'path/to/default_image.jpg' %}" alt="{{ producto.nombre }}">
+                      {% endif %}
+                      <div class="super-offers-details">
+                          <h3>{{ producto.nombre }}</h3>
+                          <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
+                          <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
+                          <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
+                          <button class="super-offers-details-btn">Ver Detalles</button>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      {% else %}
+          <div class="super-offers-no-products">
+              <p>No hay productos disponibles en promoción</p>
           </div>
-      </div>
-      {% endfor %}
+      {% endif %}
 
       <button class="super-offers-btn super-offers-right-btn">&#10095;</button>
   </div>
 </div>
 
-  
+
 
   <!-- Lista de productos disponibles -->
   <h2 class="products-title">Productos Disponibles</h2>
