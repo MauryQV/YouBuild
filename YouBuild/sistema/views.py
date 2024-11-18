@@ -463,9 +463,7 @@ class ActualizarPublicacionAPIView(APIView):
         # Manejo de fotos (opcional)
         fotos = request.FILES.getlist('fotos')
         if fotos:
-            # Eliminar imágenes existentes
             producto.imagenes.all().delete()
-            # Subir nuevas imágenes
             for foto in fotos:
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=foto)
 
