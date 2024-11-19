@@ -47,9 +47,6 @@ def home_view(request):
         "categorias": categorias,
         "favoritos_ids": favoritos_ids,
     })
-def product_list(request):
-    productos = ProductoDb.objects.all()
-    return render(request, 'product_list.html', {'productos': productos})
 
 
 def perfil_view(request):
@@ -125,6 +122,22 @@ def obtener_productos_oferta():
     productos = ProductoDb.objects.all().order_by('-visitas')
     productos_oferta = [producto for producto in productos if producto.esta_en_promocion()]
     return productos, productos_oferta
+
+def lista_productosOfert(request):
+    # Importamos el método para obtener los productos y las ofertas
+    productos, productos_oferta = obtener_productos_oferta()
+
+    # Determinamos la plantilla base según si el usuario está autenticado
+    layout_template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
+
+    # Renderizamos la vista con la plantilla base y los productos/ofertas como parte del contexto
+    return render(request, 'ListaProductOferta.html', {
+        'productos': productos,
+        'productos_oferta': productos_oferta,
+        'layout_template': layout_template,  # Pasamos el layout base según el estado del usuario
+    })
+
+
 
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
