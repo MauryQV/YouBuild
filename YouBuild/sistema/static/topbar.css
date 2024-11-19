@@ -1,0 +1,241 @@
+.topbar-background {
+    background-color: #FFFFFF;  /* White background */
+    width: 100%;  /* Full width */
+    position: relative;  /* To make sure the content layers on top */
+}
+/* Estilo general del topbar */
+.topbar-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0px;
+    background-color: #FFFFFF;
+    margin: 0 2cm; 
+    position: relative;
+    font-size: 16px;
+    
+}
+.icon-btn {
+    text-decoration: none !important; /* Removes underline */
+}
+
+/* Franja naranja en la parte inferior del topbar */
+.topbar-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
+    height: 1px;
+    background-color: #ef6605;
+    margin-left: -2cm; /* Centers the underline within the topbar container */
+    margin-right: 0cm; /* Centers the underline within the topbar container */
+}
+
+/* Sección izquierda (Logo) */
+.topbar-left .logo {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-left .logo img {
+    vertical-align: middle;
+    width: 170px; /* Aumentar tamaño fijo del logo */
+    height: auto;
+}
+
+/* Sección centro (Búsqueda) */
+.topbar-center {
+    flex-grow: 1;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.search-box {
+    display: inline-flex;
+    background-color: #f8f7f5;
+    border: 2px solid #ef6605;
+    border-radius: 25px; /* Valor de border-radius igual al de los botones */
+    padding: 5px;
+    width: 80%;
+    max-width: 700px;
+    margin: 10px auto;
+}
+
+/* Ajustar el tamaño de fuente en el campo de búsqueda */
+.search-box input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    padding-left: 12px; /* Espacio a la izquierda */
+    font-size: inherit;
+}
+
+
+/* Ajuste para el botón de búsqueda */
+.search-box button {
+    background-color: transparent;
+    border: none;
+    color: #ED8C2B;
+    cursor: pointer;
+    margin-right: 6px; /* Espacio a la derecha para alejar la lupa del borde */
+}
+
+/* Sección derecha (Botones) */
+.topbar-right {
+    display: flex;
+    gap: 10px;
+}
+.topbar-right .icon-btn i {
+    font-size: 18px; /* Adjust as needed */
+}
+
+/* Estilo de los botones de enlace e icono */
+.btn-link,
+.icon-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 2px solid #ef6605;
+    border-radius: 25px;
+    color: #ef6605;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: inherit;
+}
+
+/* Estilo del ícono en el botón icon-btn */
+.icon-btn i {
+    font-size: 25px !important;   
+}
+
+/* Hover (Cambios al acercar el cursor) */
+.btn-link:hover,
+.icon-btn:hover {
+    background-color: #ef6605;
+    color: white;
+}
+
+/* Ajuste del botón "Iniciar Sesión" */
+.btn-link:first-of-type {
+    background-color: #ef6605;
+    color: white;
+}
+
+/* Style for the little cart count number */
+.cart-count {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: orange;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+    border: 2px solid white;
+}
+
+/* Ensure the icon-btn is relatively positioned */
+.icon-btn {
+    position: relative;
+    padding: 10px 10px;
+    background-color: white;
+    border: 2px solid #ef6605;
+    border-radius: 25px;
+    color: #ef6605;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+/* Botón para vender */
+.btn-sell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ef6605;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: inherit;
+    text-decoration: none !important; /* Ensure no underline */
+}
+
+.btn-sell i {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 50%;
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+    text-decoration: none !important; /* Ensure no underline */
+}
+
+.btn-sell:hover {
+    background-color: #ea580c;
+    text-decoration: none !important; /* Ensure no underline */
+}
+
+/* Media Queries para diseño responsivo */
+@media (max-width: 768px) {
+    .topbar-container {
+        margin: 0; /* Remove margin for smaller screens */
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .topbar-left .logo img {
+        width: 150px;
+    }
+
+    .search-box {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .topbar-right {
+        flex-wrap: nowrap;
+        width: auto;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .btn-link,
+    .icon-btn,
+    .btn-sell {
+        margin: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar-left .logo img {
+        margin: 0; /* Remove margin for mobile view */
+        width: 120px;
+    }
+
+    .search-box {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .topbar-container {
+        padding: 10px;
+    }
+}

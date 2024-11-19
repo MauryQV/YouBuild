@@ -1,0 +1,230 @@
+/* Ajuste general del espacio entre todos los campos */
+.registro-form-group {
+  margin-bottom: 15px;
+}
+
+/* Estilos específicos para los elementos que estarán en la misma fila */
+.registro-inline {
+  display: flex;
+  gap: 15px; /* Espacio entre los botones */
+}
+
+.registro-inline-item {
+  flex: 1;
+}
+
+/* Otros estilos del formulario */
+body {
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column; /* Asegura que el footer esté al final */
+  justify-content: flex-start;
+  align-items: center;
+
+  overflow: auto; /* Controla el desbordamiento */
+}
+
+footer {
+  margin-top: 50px; /* Aumenta este valor si es necesario */
+
+}
+
+
+/* Estilos para centrar el título */
+h2.registro-titulo {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  width: 100%; /* Asegura que el título ocupe todo el ancho disponible */
+}
+
+.registro-container {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  margin: 30px auto; /* Centra el contenedor */
+  overflow: auto; /* Permite que el contenedor maneje su propio desbordamiento */
+}
+
+/* Barra de progreso de pasos */
+.registro-progreso {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px; /* Sin espacio entre los botones */
+  margin-bottom: 20px;
+}
+
+.paso {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.paso.activo {
+  background-color: #ef6605;
+}
+
+.registro-progreso .linea {
+  width: 10px; /* Reduce el ancho de la línea entre pasos */
+  height: 4px;
+  background-color: #ccc;
+  transition: background-color 0.3s ease;
+}
+
+.registro-progreso .linea.activa {
+  background-color: #ef6605;
+}
+
+.registro-formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.registro-form-group label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.registro-form-group input[type="text"],
+.registro-form-group input[type="email"],
+.registro-form-group input[type="password"],
+.registro-form-group select,
+.registro-form-group input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Button Styles */
+.registro-btn-siguiente,
+.registro-btn-anterior,
+.registro-btn-submit {
+  background-color: #ef6605;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.registro-btn-siguiente:hover,
+.registro-btn-anterior:hover,
+.registro-btn-submit:hover {
+  background-color: #d67a0b;
+}
+
+/* Styles for Disabled 'Crear una Cuenta' Button */
+.registro-btn-submit.disabled {
+  background-color: #e0e0e0; /* Gray color for disabled state */
+  color: #333;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
+}
+
+/* Styles for Enabled 'Crear una Cuenta' Button */
+.registro-btn-submit.enabled {
+  background-color: #ef6605; /* Orange color when enabled */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registro-btn-anterior {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.registro-btn-anterior:hover {
+  background-color: #bdbdbd;
+}
+
+.terminos {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.terminos input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.oculto {
+  display: none;
+}
+
+.imagen-preview {
+  position: relative;
+  margin-top: 10px;
+  width: 130px;
+  height: 130px;
+  overflow: hidden;
+  border: 1px solid #ededed;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e3e3e3;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.imagen-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hidden-remove {
+  display: none;
+}
+
+.remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #afafaf;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Mensajes de error */
+.error {
+  color: rgb(217, 0, 0);
+  font-size: 0.9em;
+  margin-top: 5px;
+}

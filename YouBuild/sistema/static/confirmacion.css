@@ -1,0 +1,331 @@
+.confirmacion-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.confirmacion-h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.confirmacion-shipping-info,
+.confirmacion-carrito,
+.confirmacion-total,
+.confirmacion-section,
+.qr-section {
+  margin-bottom: 30px;
+}
+
+.confirmacion-h2,
+.qr-h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.confirmacion-carrito-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.confirmacion-carrito-tabla th,
+.confirmacion-carrito-tabla td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.confirmacion-total h3 {
+  font-size: 1.2em;
+}
+
+.payment-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.payment-form select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.qr-container img {
+  max-width: 200px;
+}
+
+.check-payment-btn,
+.confirmacion-confirm-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em; /* Aumenta el tamaño de la fuente */
+  font-weight: bold; /* Negrita para resaltar el texto */
+  color: #000000; /* Color del texto */
+}
+
+.check-payment-btn {
+  background-color: #38a169;
+  color: #ffffff;
+}
+
+.check-payment-btn:hover {
+  background-color: #2f855a;
+}
+
+.confirmacion-confirm-btn {
+  background-color: #ef6605;
+  border: 1px solid #000000;
+  color: #ffffff; /* Color del texto */
+}
+
+.confirmacion-confirm-btn:hover {
+  background-color: #e2e8f0; /* Cambia a un gris claro en hover */
+  color: #000000;
+}
+
+.messages .alert {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.success-message {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: #742a2a;
+}
+
+.hidden {
+  display: none;
+}
+
+.payment-status .status-message {
+  font-size: 1.1em;
+}
+
+#qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Estilos para centrar el contenido */
+.confirmacion-container {
+  background-color: white; /* Fondo blanco */
+  padding: 30px; /* Espaciado interno */
+  margin: 50px auto; /* Centrar la caja verticalmente y horizontalmente */
+  max-width: 800px; /* Tamaño máximo del cuadro */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para resaltar el cuadro */
+}
+
+/* Títulos */
+.confirmacion-h1 {
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.confirmacion-h2 {
+  font-size: 1.8em;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Tabla de carrito */
+.confirmacion-carrito-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.confirmacion-carrito-tabla th, .confirmacion-carrito-tabla td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.confirmacion-carrito-tabla th {
+  background-color: #f9f9f9;
+}
+
+/* Sección de total */
+.confirmacion-total h3 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+/* Botón de confirmar compra */
+.confirmacion-confirm-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #e67e22;
+  color: white;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.confirmacion-confirm-btn:hover {
+  background-color: #e67e22;
+}
+
+/* Ajustar sección de QR y método de pago */
+.confirmacion-section {
+  margin-bottom: 30px;
+}
+
+/* Ocultar inicialmente la sección de pago con QR */
+.hidden {
+  display: none;
+}
+
+/* Mensajes de alerta */
+.messages {
+  margin-bottom: 20px;
+}
+.alert {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.editable-input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Contenedor del mensaje de éxito */
+.success-message {
+  background-color: #f9f9f9;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.success-message h2 {
+  color: #4CAF50;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.success-message p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #333;
+  text-align: center;
+}
+
+/* Tabla de resumen de pedido en el recibo */
+.order-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.order-summary-table th,
+.order-summary-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.order-summary-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.order-summary-table tfoot {
+  font-weight: bold;
+}
+
+/* Resaltar el total */
+#orderTotal {
+  font-size: 18px;
+  font-weight: bold;
+  color: #e67e22;
+  text-align: right;
+}
+
+/* Información de envío */
+.shipping-info h3 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.shipping-info p {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+}
+
+/* Estilos adicionales para mejorar la visualización */
+.success-message table {
+  border-spacing: 0;
+}
+
+.success-message th, .success-message td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.success-message td {
+  text-align: right;
+}
+
+.success-message tfoot td {
+  font-weight: bold;
+  text-align: right;
+}
+
+.success-message h3, .success-message h2, .success-message p {
+  margin: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .success-message {
+    padding: 10px;
+  }
+
+  .order-summary-table th,
+  .order-summary-table td {
+    font-size: 14px;
+  }
+
+  #orderTotal {
+    font-size: 16px;
+  }
+}

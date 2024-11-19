@@ -1,0 +1,178 @@
+/* Contenedor general del carrusel de ofertas */
+.super-offers-carousel {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px 10px; /* Incrementar padding lateral */
+    position: relative;
+    margin: 0px auto;
+   /* max-width: 1200px; /* Ancho máximo */
+    height: 450px; /* Altura fija del carrusel */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido interno esté bien alineado */
+}
+
+/* Encabezado del carrusel */
+.super-offers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff6f61;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.super-offers-title {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.super-offers-view-all {
+    color: #ffffff;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.super-offers-view-all:hover {
+    text-decoration: underline;
+}
+
+/* Contenido del carrusel */
+.super-offers-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    flex: 1; /* Se adapta al espacio disponible */
+    padding: 0 40px; /* Espaciado interno para las flechas */
+}
+
+/* Botones de navegación ajustados */
+.super-offers-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(8, 8, 8, 0.907);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(11, 11, 11, 0.3);
+}
+
+.super-offers-btn.super-offers-left-btn {
+    left: 1px; /* Espaciado dentro del contenedor blanco */
+}
+
+.super-offers-btn.super-offers-right-btn {
+    right: 1px; /* Espaciado dentro del contenedor blanco */
+}
+
+.super-offers-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Elemento del carrusel */
+.super-offers-item {
+    display: flex;
+    align-items: flex-start;
+    background-color: #ffffff;
+    border-radius: 12px;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+    overflow: hidden;
+    padding: 10px;
+    flex-shrink: 0;
+    height: 90%;
+    width: 700px; /* Ajusta el ancho aquí */
+}
+
+/* Imágenes dentro del carrusel */
+.super-offers-item img {
+    width: 500px; /* Ancho fijo para la imagen */
+    height: 100%; /* Ajustar la altura total al contenedor */
+    object-fit: cover;
+    border-radius: 20px;
+    margin-right: 15px;
+    display: block;  /* Hace que la imagen se comporte como un bloque, lo cual permite usar margin auto */
+    margin-left: auto; /* Alinea la imagen horizontalmente al centro */
+    margin-right: auto; /* Alinea la imagen horizontalmente al centro */
+}
+
+
+/* Contenedor de detalles centrado */
+.super-offers-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra los elementos verticalmente */
+    align-items: center; /* Centra los elementos horizontalmente */
+    height: 90%;
+    gap: 5px;
+    text-align: center; /* Centra el texto */
+}
+
+/* Títulos y detalles del producto */
+.super-offers-details h3 {
+    font-size: 20px;
+    color: #333333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.super-offers-original-price {
+    text-decoration: line-through;
+    text-decoration-color: #F2690D; /* Línea tachada de color naranja */
+    color: #333333; /* Texto oscuro para mejor contraste */
+    font-size: 20px;
+}
+
+/* Precio con descuento con fondo amarillo */
+.super-offers-discounted-price {
+    background-color: #ffeb3b; /* Fondo amarillo */
+    color: #333333; /* Texto oscuro para mejor contraste */
+    font-size: 22px;
+    font-weight: bold;
+    padding: 5px 10px; /* Espaciado interno para un bloque más visible */
+    border-radius: 5px; /* Bordes redondeados */
+    display: inline-block; /* Para que se ajuste al contenido */
+    margin: 5px 0;
+}
+
+/* Porcentaje de descuento */
+.super-offers-discount-rate {
+    color: #333333; /* Texto oscuro para mejor contraste */
+    font-size: 22px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Botón de detalles centrado */
+.super-offers-details-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #ff6f61;
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block; /* Mantiene el botón como un bloque en línea */
+    align-self: center; /* Centra el botón */
+    border-radius: 20px;
+}
+
+.super-offers-details-btn:hover {
+    background-color: #e0554f;
+}

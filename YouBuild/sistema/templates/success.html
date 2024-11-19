@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Exitoso</title>
+
+    <!-- External Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <style>
+        /* Centered Success Message */
+        body {
+            font-family: 'Comfortaa', sans-serif;
+        }
+        .success-message-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 80vh;
+            text-align: center;
+        }
+        .success-message {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            color: #333;
+            position: relative;
+        }
+        .success-message h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .success-message p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .success-message-icon {
+            color: #28a745; /* Green color for success icon */
+            font-size: 70px; /* Size for the icon */
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease forwards; /* Apply animation */
+        }
+        .success-button {
+            display: inline-block;
+            background-color: #ef6605;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .success-button:hover {
+            background-color: #d67a0b;
+        }
+        /* Profile Photo Styling */
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            object-fit: cover; /* Ensures the image covers the area without stretching */
+        }
+        /* Animation for checkmark */
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-message-container">
+    <!-- Profile Photo Display in Center with Fallback to Default -->
+    {% if usuario.imagen_perfil and usuario.imagen_perfil.url %}
+        <img src="{{ usuario.imagen_perfil.url }}" alt="Profile Photo" class="profile-photo" />
+    {% else %}
+        <img src="{% static 'images/default_profile_photo.png' %}" alt="Default Photo" class="profile-photo" />
+    {% endif %}
+
+    <div class="success-message">
+        <!-- Font Awesome Icon for the animated checkmark -->
+        <div class="success-message-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>¡Gracias por registrarte!</h2>
+        <p>Tu cuenta se ha creado exitosamente. Ahora puedes explorar más y comprar los materiales que necesites.</p>
+        <a href="/" class="success-button">Regresar al inicio</a>
+    </div>
+</div>
+
+</body>
+</html>

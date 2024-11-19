@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Publicación</title>
+
+    <!-- External Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <style>
+        /* Centered Success Message */
+        body {
+            font-family: 'Comfortaa', sans-serif;
+        }
+        .success-message-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 80vh;
+            text-align: center;
+        }
+        .success-message {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            color: #333;
+            position: relative;
+        }
+        .success-message h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .success-message p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .success-message-icon {
+            color: #28a745; /* Green color for success icon */
+            font-size: 70px; /* Size for the icon */
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease forwards; /* Apply animation */
+        }
+        .success-button {
+            display: inline-block;
+            background-color: #ef6605;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .success-button:hover {
+            background-color: #d67a0b;
+        }
+        /* Animation for checkmark */
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-message-container">
+    <div class="success-message">
+        <!-- Font Awesome Icon for the animated checkmark -->
+        <div class="success-message-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Producto publicado exitosamente</h2>
+        <p>El producto se ha registrado correctamente y ahora es visible para los compradores en la plataforma.</p>
+        <a href="/" class="success-button">Ver productos publicados</a>
+    </div>
+</div>
+
+</body>
+</html>

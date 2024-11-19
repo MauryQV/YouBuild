@@ -1,0 +1,217 @@
+/* CSS general */
+body {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.titulo h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-top: 20px;
+}
+
+/* Flex container y columnas */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.column {
+    flex: 1;
+    padding: 20px;
+}
+
+.column-left {
+    border-right: 1px solid #ddd;
+}
+
+.column-right {
+    padding-left: 20px;
+}
+
+/* Estilos del carrusel */
+.carousel-productos-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    height: 300px; /* Altura fija para el carrusel */
+    overflow: hidden; /* Ocultar contenido desbordado */
+}
+
+.carousel-productos {
+    display: flex;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.carousel-productos-item {
+    min-width: 100%;
+}
+
+.producto-imagen {
+    width: 100%;
+    height: 100%; /* Asegura que la imagen llene el contenedor */
+    object-fit: cover; /* Mantiene la proporción de la imagen */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.carousel-productos-button {
+    background-color: #333;
+    color: #fff;
+    font-size: 1.5rem;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-productos-button.prev {
+    left: 10px;
+}
+
+.carousel-productos-button.next {
+    right: 10px;
+}
+
+/* Dots del carrusel */
+.carousel-productos-dots {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: #333;
+}
+
+/* Botones de acciones */
+.botones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 14px; /* Cambia este valor al tamaño deseado */
+}
+
+/* Botón Comprar - Naranja */
+#btn-comprar {
+    background-color: #ef6605; /* Naranja */
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Hacer que ocupe el mismo tamaño */
+    margin-right: 10px; /* Espacio entre botones */
+    
+}
+
+#btn-comprar:hover {
+    background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
+    
+}
+
+/* Botón Volver a la lista */
+.btn.volver-a-lista {
+    background-color: #ef6605; /* Naranja */
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 13px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    max-width: fit-content;
+    display: block; /* Allows margin auto to center */
+    margin: 20px auto; /* Centers horizontally on the page */
+    
+}
+
+.btn.volver-a-lista:hover {
+    background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
+    
+}
+
+
+.btn.add-to-view,
+#btn-agregar-carrito,
+#btn-deseos {
+    font-size: 14px; /* Tamaño de letra específico para estos botones */
+    background-color: #faf7f6; 
+    color: rgb(243, 174, 37); 
+    border: 1px solid rgb(243, 174, 37); 
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    flex: 1; /* Hacer que ocupe el mismo tamaño */
+    margin-right: 10px; /* Espacio entre botones */
+}
+
+
+.btn.add-to-view:hover,
+#btn-agregar-carrito:hover,
+#btn-deseos:hover {
+    background-color: #595450; /* Fondo gris oscuro al pasar el ratón */
+    color: rgb(243, 174, 37); /* Texto gris oscuro */
+    font-size: 14px; /* Tamaño de letra específico para estos botones */
+}
+
+.button-row {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+/* Estilos adicionales de la sección derecha */
+.sub-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.subcolumn1,
+.subcolumn2 {
+    flex: 1;
+    padding: 0 10px;
+}
+
+.aux {
+    font-size: 1.25rem;
+    color: #333;
+}
+
+h3 {
+    color: #333;
+    font-size: 1.2rem;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.button-row .btn {
+    font-size: 14px; /* Cambia este valor al tamaño deseado */
+}

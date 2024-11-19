@@ -1,0 +1,883 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'registro.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
+</head>
+<body>
+    <header>
+        <div class="topbar-container">
+          <div class="topbar-left">
+            <a href="/ " class="logo">
+              <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
+            </a>
+          </div>
+          <div class="topbar-right">
+            <a href="{% url 'login' %}" class="btn-link">Iniciar Sesión</a>
+          </div>
+        </div>
+      </header>      
+   
+  <!-- Contenedor principal para centrar el formulario entre el topbar y el footer -->
+  <main class="main-container">
+    {% block content %}
+    <div class="registro-container">
+        <h2 class="registro-titulo">Crear Cuenta</h2>
+
+        <!-- Barra de progreso de pasos -->
+        <div class="registro-progreso">
+            <div class="paso activo">1</div>
+            <div class="paso">2</div>
+            <div class="paso">3</div>
+        </div>
+
+        <form method="post" class="registro-formulario" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Mostramos errores no asociados a un campo específico -->
+            <div class="error">{{ form.non_field_errors }}</div>
+            
+            <!-- Sección 1: Datos generales -->
+            <div class="form-seccion" id="seccion-1">
+                <div class="registro-form-group">
+                    {{ form.nombre_completo.label_tag }}
+                    {{ form.nombre_completo }}
+                    <div class="error">{{ form.nombre_completo.errors }}</div>
+                    <div class="error" id="error-nombre"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <div class="error">{{ form.username.errors }}</div>
+                    <div class="error" id="error-username"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                    <div class="error">{{ form.password1.errors }}</div>
+                    <div class="error" id="error-password1"></div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                    <div class="error">{{ form.password2.errors }}</div>
+                    <div class="error" id="error-password2"></div>
+                </div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.telefono.label_tag }}
+                        {{ form.telefono }}
+                        <div class="error">{{ form.telefono.errors }}</div>
+                        <div class="error" id="error-telefono"></div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        <div class="error">{{ form.email.errors }}</div>
+                        <div class="error" id="error-email"></div>
+                    </div>
+                </div>
+                <div class="registro-botones">
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 2: Dirección -->
+            <div class="form-seccion oculto" id="seccion-2">
+                <div class="registro-form-group">
+                    {{ form.departamento_fk.label_tag }}
+                    {{ form.departamento_fk }}
+                    <div class="error">{{ form.departamento_fk.errors }}</div>
+                    <div class="error" id="error-departamento">{{ form.departamento_fk.errors }}</div>
+                </div>
+                <div class="registro-form-group registro-inline">
+                    <div class="registro-inline-item">
+                        {{ form.provincia_fk.label_tag }}
+                        {{ form.provincia_fk }}
+                        <div class="error">{{ form.provincia_fk.errors }}</div>
+                        <div class="error" id="error-provincia">{{ form.provincia_fk.errors }}</div>
+                    </div>
+                    <div class="registro-inline-item">
+                        {{ form.municipio_fk.label_tag }}
+                        {{ form.municipio_fk }}
+                        <div class="error">{{ form.municipio_fk.errors }}</div>
+                        <div class="error" id="error-municipio">{{ form.municipio_fk.errors }}</div>
+                    </div>
+                </div>
+                <div class="registro-form-group">
+                    {{ form.direccion_1.label_tag }}
+                    {{ form.direccion_1 }}
+                    <div class="error">{{ form.direccion_1.errors }}</div>
+                    <div class="error" id="error-direccion_1">{{ form.direccion_1.errors }}</div>
+                </div>
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atrás</button>
+                    <button type="button" class="registro-btn-siguiente" onclick="siguienteSeccion()">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 3: Carga de Imágenes -->
+            <div class="form-seccion oculto" id="seccion-3">
+                <div class="registro-form-group">
+                    <label for="id_imagen_perfil" class="custom-file-upload">Agregar foto de perfil (Opcional)</label>
+                    <input type="file" id="id_imagen_perfil" name="imagen_perfil" accept="image/*" onchange="mostrarImagen(this, 'imagen-perfil-preview', 'id_imagen_perfil')" />
+                    <div class="error">{{ form.imagen_perfil.errors }}</div>
+                    <div class="error" id="error-id_imagen_perfil"></div> 
+                    <div id="imagen-perfil-preview" class="imagen-preview">
+                        <img id="imagen-perfil-img" src="{% static 'image-icon.png' %}" alt="Imagen de perfil" class="uploaded-image">
+                        <span class="remove hidden-remove" onclick="removerImagen('imagen-perfil-preview', 'id_imagen_perfil')">X</span>
+                    </div>
+                </div>
+                
+                <div class="registro-form-group">
+                    <label for="id_qr_imagen" class="custom-file-upload">Agregar imagen para el pago QR (Opcional)</label>
+                    <input type="file" id="id_qr_imagen" name="qr_imagen" accept="image/*" onchange="mostrarImagen(this, 'qr-imagen-preview', 'id_qr_imagen')" />
+                    <div class="error" id="error-id_qr_imagen"></div> <!-- Error message container -->
+                    <div class="error">{{ form.qr_imagen.errors }}</div>
+                    <div id="qr-imagen-preview" class="imagen-preview">
+                        <img id="qr-imagen-img" src="{% static 'image-icon.png' %}" alt="Imagen QR" class="uploaded-image">
+                        <span class="remove hidden-remove" onclick="removerImagen('qr-imagen-preview', 'id_qr_imagen')">X</span>
+                    </div>                    
+                </div>
+
+                <!-- Términos y Condiciones Checkbox -->
+                <div class="registro-form-group terminos">
+                    <input type="checkbox" id="aceptar-terminos" name="aceptar_terminos" required>
+                    <label for="aceptar-terminos">Al crear una cuenta, acepta los 
+                        <a href="{% url 'terms_and_conditions' %}" class="terminos-link">Términos de servicio y Política de privacidad</a> establecidos por YouBuild
+                    </label>
+                </div>
+
+                <!-- Button Container -->
+                <div class="registro-botones registro-inline">
+                    <button type="button" class="registro-btn-anterior" onclick="anteriorSeccion()">Atras</button>
+                    <button type="submit" class="registro-btn-submit" id="crear-cuenta" disabled>Crear una cuenta</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Descripción de la empresa -->
+        <div class="footer-description">
+            <p>Somos una empresa dedicada a ofrecer los mejores productos para ti. Nuestro compromiso es brindarte calidad y un excelente servicio.</p>
+        </div>
+        
+        <!-- Redes Sociales -->
+        <div class="footer-social">
+            <h4>Síguenos en redes sociales</h4>
+            <div class="social-buttons">
+                <a href="https://facebook.com" target="_blank" class="social-button facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="social-button instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="social-button twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contacto -->
+        <div class="footer-contact">
+            <h4>Contáctanos</h4>
+            <p>Email: <a href="mailto:youbuild@gmail.com">youbuild@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+5916457657X">+591 6457657X</a></p>
+        </div>
+        
+        <!-- Términos y condiciones -->
+        <div class="footer-links">
+            <h4>Sobre nosotros</h4>
+            <p><a href="#">Términos y Condiciones</a></p>
+            <p><a href="#">Política de Privacidad</a></p>
+        </div>
+    </div>
+</footer>
+
+    <script type="text/javascript">
+        let seccionActual = 1;
+        $(document).ready(function() {
+            let isEmailUnique = false;
+            // Initialize the button to be disabled and styled as gray
+            $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            $('#id_nombre_completo').on('input', validarFormularioSeccion1);
+            $('#id_username').on('input', validarFormularioSeccion1);
+            $('#id_password1').on('input', validarFormularioSeccion1);
+            $('#id_password2').on('input', validarFormularioSeccion1);
+            $('#id_telefono').on('input', validarFormularioSeccion1);
+            $('#id_direccion_1').on('input', validarDireccion);
+            $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled');
+            
+            // Check all fields including email uniqueness on each input change
+            $('#id_nombre_completo, #id_username, #id_password1, #id_password2, #id_telefono, #id_email').on('input', function() {
+                validarFormularioSeccion1();
+            });
+
+            // Email uniqueness check on email field blur event
+            $('#id_email').on('blur', function() {
+                checkEmailUniqueness();
+            });
+            // Enable or disable the button based on the checkbox state
+            $('#aceptar-terminos').change(function() {
+                if (this.checked) {
+                    $('#crear-cuenta').prop('disabled', false).removeClass('disabled').addClass('enabled'); // Enable and set to orange
+                } else {
+                    $('#crear-cuenta').prop('disabled', true).removeClass('enabled').addClass('disabled'); // Disable and set to gray
+                }
+            });
+    
+            // Existing code for form validation and section navigation
+            configurarValidacionEnTiempoReal();
+            mostrarSeccion(seccionActual);
+            
+            // Cargar provincias cuando se selecciona un departamento
+            $("#id_provincia_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+            $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+
+            // Load Provincias when a Departamento is selected and enable Provincia field
+            $('#id_departamento_fk').change(function() {
+                var departamentoId = $(this).val();
+                
+                if (departamentoId) {
+                    // Enable Provincia and reset Municipio
+                    $("#id_provincia_fk").prop("disabled", false).css("background-color", "");
+                    $("#error-departamento").text(""); // Clear any error for Departamento
+
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0");
+                    $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+
+                    var url = "{% url 'ajax_cargar_provincias' %}";
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'departamento_id': departamentoId
+                        },
+                        success: function(data) {
+                            $("#id_provincia_fk").html('<option value="">Selecciona una provincia...</option>');
+                            $.each(data, function(key, value) {
+                                $("#id_provincia_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    // Keep Provincia and Municipio disabled if no Departamento is selected
+                    $("#id_provincia_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona una provincia...</option>');
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona un municipio...</option>');
+                }
+            });
+
+            // Load Municipios when a Provincia is selected and enable Municipio field
+            $('#id_provincia_fk').change(function() {
+                var provinciaId = $(this).val();
+                
+                if (provinciaId) {
+                    $("#id_municipio_fk").prop("disabled", false).css("background-color", "");
+                    $("#error-provincia").text(""); // Clear any error for Provincia
+
+                    var url = "{% url 'ajax_cargar_municipios' %}";
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'provincia_id': provinciaId
+                        },
+                        success: function(data) {
+                            $("#id_municipio_fk").html('<option value="">Selecciona un municipio...</option>');
+                            $.each(data, function(key, value) {
+                                $("#id_municipio_fk").append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    // Keep Municipio disabled if no Provincia is selected
+                    $("#id_municipio_fk").prop("disabled", true).css("background-color", "#e0e0e0").html('<option value="">Selecciona un municipio...</option>');
+                }
+            });
+
+            // Real-time and blur validation setup for various fields
+            configurarValidacionEnTiempoReal();
+
+            // Field-specific blur events to check "Campo obligatorio" on tab-out
+            $("#id_nombre_completo").on("blur", function() {
+                validarNombre(); 
+            });
+            $("#id_username").on("blur", function() {
+                validarUsername(); 
+            });
+            $("#id_password1").on("blur", function() {
+                validarPassword1(); 
+            });
+            $("#id_password2").on("blur", function() {
+                validarPassword2(); 
+            });
+            $("#id_telefono").on("blur", function() {
+                validarTelefono(); 
+            });
+            $("#id_email").on("blur", function() {
+                const email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        url: "{% url 'check_email' %}",  // URL for the view that will handle email checking
+                        data: {
+                            'email': email
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.email_exists) {
+                                $("#error-email").text("Correo electrónico ya registrado");
+                            } else {
+                                $("#error-email").text(""); // Clear any previous error if email is unique
+                            }
+                        }
+                    });
+                }
+            });
+            $("#id_departamento_fk").on("blur", function() {
+                validarDepartamento();
+            });
+            $("#id_provincia_fk").on("blur", function() {
+                validarProvincia();
+            });
+            $("#id_municipio_fk").on("blur", function() {
+                validarMunicipio();
+            });
+        });
+    
+
+        function mostrarSeccion(seccion) {
+            $(".form-seccion").addClass("oculto");
+            $("#seccion-" + seccion).removeClass("oculto");
+            $(".paso").removeClass("activo");
+            $(".paso").eq(seccion - 1).addClass("activo");
+        }
+
+        function configurarValidacionEnTiempoReal() {
+            $("#id_nombre_completo").on("input", validarNombre);
+            $("#id_username").on("input", validarUsername);
+            $("#id_password1").on("input", validarPassword1);
+            $("#id_password2").on("input", validarPassword2);
+            $("#id_telefono").on("input", validarTelefono);
+            $("#id_email").on("input", validarEmail);
+        }
+
+        function validarNombre() {
+            const nombre = $("#id_nombre_completo").val();
+            const spaceCount = (nombre.match(/\s/g) || []).length; // Counts the total spaces
+            const hasConsecutiveSpaces = /\s{2,}/.test(nombre); // Checks for consecutive spaces
+        
+            if (nombre.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-nombre").text("Campo Obligatorio");
+            } else if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                $("#error-nombre").text("El nombre solo puede contener letras.");
+            } else if (nombre.length < 4) {
+                $("#error-nombre").text("No se permite registrar un usuario con un nombre menor a 4 caracteres.");
+            } else if (spaceCount > 7) {
+                $("#error-nombre").text("El nombre incluye más de 7 espacios.");
+            } else if (hasConsecutiveSpaces) {
+                $("#error-nombre").text("No se permiten más de dos espacios consecutivos.");
+            } else {
+                $("#error-nombre").text(""); // Clear error if input is valid
+            }
+        }
+                
+        function validarUsername() {
+            const username = $("#id_username").val();
+        
+            if (username.trim() === "") { // Check if the field is empty or only contains whitespace
+                $("#error-username").text("Campo Obligatorio");
+            } else if (/\s/.test(username)) { // Check if there is any whitespace in the username
+                $("#error-username").text("No se permiten espacios.");
+            } else if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                $("#error-username").text("El nombre de usuario solo puede contener letras y números.");
+            } else {
+                $("#error-username").text(""); // Clear error if input is valid
+            }
+        }
+                
+        function validarPassword1() {
+            const password1 = $("#id_password1").val();
+        
+            if (password1.trim() === "") { // Check if password1 is empty
+                $("#error-password1").text("Campo Obligatorio");
+            } else if (password1.length > 25) { // Check if password1 exceeds 25 characters
+                $("#error-password1").text("Límite de caracteres excedido (25)");
+            } else if (password1.length < 8) { // Check if password1 is less than 8 characters
+                $("#error-password1").text("Mínimo 8 caracteres");
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                $("#error-password1").text("Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.");
+            } else {
+                $("#error-password1").text(""); // Clear error if input is valid
+            }
+        }
+        
+        function validarPassword2() {
+            const password1 = $("#id_password1").val();
+            const password2 = $("#id_password2").val();
+        
+            if (password2.trim() === "") { // Check if password2 is empty
+                $("#error-password2").text("Campo Obligatorio");
+            } else if (password2.length > 25) { // Check if password2 exceeds 25 characters
+                $("#error-password2").text("Límite de caracteres excedido (25)");
+            } else if (password2.length < 8) { // Check if password2 is less than 8 characters
+                $("#error-password2").text("Mínimo 8 caracteres");
+            } else if (password1 !== password2) {
+                $("#error-password2").text("Las contraseñas no coinciden.");
+            } else {
+                $("#error-password2").text(""); // Clear error if input is valid
+            }
+        }        
+        
+        function validarTelefono() {
+            const telefono = $("#id_telefono").val();
+            
+            if (telefono.trim() === "") { 
+                $("#error-telefono").text("Campo obligatorio");
+            } else if (!/^[67]/.test(telefono)) { // Ensures the number starts with 6 or 7
+                $("#error-telefono").text("El número de celular debe empezar por 6 o 7.");
+            } else if (/\s/.test(telefono)) { // Checks for any whitespace character
+                $("#error-telefono").text("No se permiten espacios en el número de teléfono.");
+            } else if (/[^0-9]/.test(telefono)) { // Checks for any character that is not a digit
+                $("#error-telefono").text("Solo se permiten caracteres numéricos.");
+            } else if (telefono.length !== 8) { // Ensures exactly 8 digits
+                $("#error-telefono").text("Número de teléfono debe tener 8 dígitos.");
+            } else {
+                $("#error-telefono").text(""); // Clear error if input is valid
+            }
+        }
+        
+        function checkEmailUniqueness() {
+            const email = $("#id_email").val();
+    
+            if (email) {
+                $.ajax({
+                    url: "{% url 'check_email' %}",  // URL for checking email
+                    data: { 'email': email },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.email_exists) {
+                            $("#error-email").text("Correo electrónico ya registrado");
+                            isEmailUnique = false;
+                        } else {
+                            $("#error-email").text("");
+                            isEmailUnique = true;
+                        }
+                        // Check all fields after email check
+                        validarFormularioSeccion1();
+                    }
+                });
+            } else {
+                isEmailUnique = true; // If email is empty, consider it unique (optional field)
+                validarFormularioSeccion1();
+            }
+        }
+        
+        function validarEmail() {
+            const email = $("#id_email").val();
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {  // Email ahora es opcional
+                $("#error-email").text("Formato de correo electrónico inválido.");
+            } else {
+                $("#error-email").text("");
+            }
+        }
+        function siguienteSeccion() {
+            if (seccionActual < 3) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        function anteriorSeccion() {
+            if (seccionActual > 1) {
+                seccionActual--;
+                mostrarSeccion(seccionActual);
+            }
+        }
+        function validarDepartamento() {
+            const departamento = $("#id_departamento_fk").val();
+            if (departamento === "") {
+                $("#error-departamento").text("Campo obligatorio");
+            } else {
+                $("#error-departamento").text("");
+            }
+        }
+        
+        function validarProvincia() {
+            const provincia = $("#id_provincia_fk").val();
+            if (provincia === "") {
+                $("#error-provincia").text("Campo obligatorio");
+            } else {
+                $("#error-provincia").text("");
+            }
+        }
+        
+        function validarMunicipio() {
+            const municipio = $("#id_municipio_fk").val();
+            if (municipio === "") {
+                $("#error-municipio").text("Campo obligatorio");
+            } else {
+                $("#error-municipio").text("");
+            }
+        }
+
+        function validarDireccion() {
+            const direccion1 = $("#id_direccion_1").val();
+        
+            if (direccion1.trim() === "") {
+                $("#error-direccion_1").text("Campo Obligatorio");
+            }
+            else if (direccion1.length > 150) {
+                $("#error-direccion_1").text("Límite de caracteres excedido (150)");
+            }
+            else if (direccion1.length < 6) {
+                $("#error-direccion_1").text("Mínimo 5 caracteres");
+            }
+            else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                $("#error-direccion_1").text("No se permiten caracteres especiales (Excepto ',' '.' y '#')");
+            }
+            else {
+                $("#error-direccion_1").text("");
+            }
+        }
+        
+        $(document).ready(function() {
+            mostrarSeccion(seccionActual);
+        });
+
+        function mostrarImagen(input, previewId, inputId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+            const removeButton = preview.querySelector('.remove');
+            const errorElement = document.getElementById(`error-${inputId}`); // Element to show error message
+        
+            errorElement.textContent = "";
+        
+            if (file) {
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+                // Check if the file is a png or jpg
+                if (fileExtension === "png" || fileExtension === "jpg" || fileExtension === "jpeg") {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imgElement.src = e.target.result;
+                        preview.classList.remove("oculto"); // Show the preview box
+                        removeButton.classList.remove("hidden-remove"); // Show the "X" button
+                        errorElement.textContent = ""; // Clear any error if file is valid
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    errorElement.textContent = "Formato de imagen no permitido";
+                    input.value = ""; // Clear the invalid file from input
+                }
+            }
+        }
+             
+        
+        function removerImagen(previewId, inputId) {
+            const preview = document.getElementById(previewId);
+            const imgElement = preview.querySelector('img');
+            const removeButton = preview.querySelector('.remove');
+        
+            imgElement.src = "{% static 'image-icon.png' %}";
+            document.getElementById(inputId).value = ""; // Clear the input field
+        
+            removeButton.classList.add("hidden-remove");
+            
+            preview.classList.add("oculto");
+        }
+        
+        
+        function mostrarSeccion(seccion) {
+            // Oculta todas las secciones
+            $(".form-seccion").addClass("oculto");
+        
+            // Muestra solo la sección actual
+            $("#seccion-" + seccion).removeClass("oculto");
+        
+            // Actualiza la barra de progreso
+            $(".paso").removeClass("activo");
+            $(".paso").eq(seccion - 1).addClass("activo");
+        }
+        
+
+        function validarFormularioSeccion1() {
+            const nombre = $("#id_nombre_completo").val();
+            const username = $("#id_username").val();
+            const password1 = $("#id_password1").val();
+            const password2 = $("#id_password2").val();
+            const telefono = $("#id_telefono").val();
+            const email = $("#id_email").val();
+        
+            let allFieldsValid = true;
+        
+            // Validate each field according to your restrictions
+            if (nombre.trim() === "" || !/^[A-Za-z\s]{1,50}$/.test(nombre) || nombre.length < 4 || (nombre.match(/\s/g) || []).length > 7 || /\s{2,}/.test(nombre)) {
+                allFieldsValid = false;
+            }
+        
+            if (username.trim() === "" || /\s/.test(username) || !/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                allFieldsValid = false;
+            }
+        
+            if (password1.trim() === "" || password1.length < 8 || password1.length > 25 || !/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                allFieldsValid = false;
+            }
+        
+            if (password2.trim() === "" || password2 !== password1 || password2.length > 25) {
+                allFieldsValid = false;
+            }
+        
+            if (telefono.trim() === "" || !/^[67]/.test(telefono) || telefono.length !== 8 || /\s/.test(telefono) || /[^0-9]/.test(telefono)) {
+                allFieldsValid = false;
+            }
+        
+            // Email validation: Only check uniqueness and format if email is not empty
+            if (email.trim() !== "") {
+                if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                    $("#error-email").text("Formato de correo electrónico inválido.");
+                    allFieldsValid = false;
+                    isEmailUnique = false;
+                    toggleSiguienteButton(false); // Disable "Siguiente" in gray
+                } else {
+                    // Perform AJAX call to check if email exists, and proceed only after completion
+                    $.ajax({
+                        url: "{% url 'check_email' %}",  // Replace with your URL for checking emails
+                        data: { 'email': email },
+                        dataType: 'json',
+                        async: false,  // Make the AJAX call synchronous for a more strict control flow
+                        success: function(data) {
+                            if (data.email_exists) {
+                                $("#error-email").text("Correo electrónico ya registrado");
+                                isEmailUnique = false;  // Mark as false if email exists
+                                toggleSiguienteButton(false); // Disable "Siguiente" in gray
+                            } else {
+                                $("#error-email").text("");
+                                isEmailUnique = true;   // Mark as true if email is unique
+                                toggleSiguienteButton(allFieldsValid); // Enable "Siguiente" in orange if all fields are valid
+                            }
+                        }
+                    });
+                }
+            } else {
+                // If email is empty, treat it as valid
+                $("#error-email").text("");  // Clear any error if email is empty (optional)
+                isEmailUnique = true;  // Allow the empty email field as valid
+                toggleSiguienteButton(allFieldsValid); // Enable "Siguiente" if all fields are valid
+            }
+        }
+    
+        // Helper function to toggle the "Siguiente" button
+        function toggleSiguienteButton(isEnabled) {
+            if (isEnabled) {
+                $('.registro-btn-siguiente').prop('disabled', false).removeClass('disabled').addClass('enabled');
+            } else {
+                $('.registro-btn-siguiente').prop('disabled', true).addClass('disabled').removeClass('enabled');
+            }
+        }        
+
+        function validarSeccion1() {
+            let nombre = document.getElementById("id_nombre_completo").value;
+            let username = document.getElementById("id_username").value;
+            let password1 = document.getElementById("id_password1").value;
+            let password2 = document.getElementById("id_password2").value;
+            let telefono = document.getElementById("id_telefono").value;
+            let email = document.getElementById("id_email").value;
+
+            let error = false;
+            // Validación de nombre completo
+            if (!/^[A-Za-z\s]{1,50}$/.test(nombre)) {
+                document.getElementById("error-nombre").innerText = "Campo obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-nombre").innerText = "";
+            }
+            // Validación de nombre de usuario
+            if (!/^[A-Za-z0-9]{5,15}$/.test(username)) {
+                document.getElementById("error-username").innerText = "Campo Obligatorio.";
+                error = true;
+            } else {
+                document.getElementById("error-username").innerText = "";
+            }
+            // Validación de contraseña (password1)
+            if (password1.trim() === "") {
+                document.getElementById("error-password1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(password1)) {
+                document.getElementById("error-password1").innerText = "Contraseña débil. Debe contener mayúsculas, números y caracteres especiales.";
+                error = true;
+            } else {
+                document.getElementById("error-password1").innerText = "";
+            }
+            
+            // Validación de coincidencia de contraseñas (password2)
+            if (password2.trim() === "") {
+                document.getElementById("error-password2").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (password1 !== password2) {
+                document.getElementById("error-password2").innerText = "Las contraseñas no coinciden.";
+                error = true;
+            } else {
+                document.getElementById("error-password2").innerText = "";
+            }
+            // Validación de teléfono
+            if (!/^\d{8}$/.test(telefono)) {
+                document.getElementById("error-telefono").innerText = "Número de teléfono inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-telefono").innerText = "";
+            }
+            // Validación de correo electrónico
+            if (email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) { // Solo valida si el campo tiene un valor
+                document.getElementById("error-email").innerText = "Formato de correo electrónico inválido.";
+                error = true;
+            } else {
+                document.getElementById("error-email").innerText = "";
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+
+        function validarFormularioSeccion2() {
+            const departamento = $("#id_departamento_fk").val();
+            const provincia = $("#id_provincia_fk").val();
+            const municipio = $("#id_municipio_fk").val();
+            const direccion = $("#id_direccion_1").val();
+        
+            let allFieldsValid = true;
+        
+            // Validate each field according to the restrictions
+        
+            if (!departamento) {
+                allFieldsValid = false;
+            }
+        
+            if (!provincia) {
+                allFieldsValid = false;
+            }
+        
+            if (!municipio) {
+                allFieldsValid = false;
+            }
+        
+            if (direccion.trim() === "" || direccion.length < 6 || direccion.length > 150 || !/^[A-Za-z0-9\s.,#]+$/.test(direccion)) {
+                allFieldsValid = false;
+            }
+        
+            // Toggle button state based on validation
+            toggleSiguienteButtonSeccion2(allFieldsValid);
+        }
+        
+        function toggleSiguienteButtonSeccion2(isEnabled) {
+            const nextButton = $('.registro-btn-siguiente');
+        
+            if (isEnabled) {
+                nextButton.prop('disabled', false).removeClass('disabled').addClass('enabled'); // Turn orange and enable
+            } else {
+                nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled'); // Keep gray and disabled
+            }
+        }        
+
+
+        $(document).ready(function() {
+            const nextButton = $('.registro-btn-siguiente');
+            
+            // Set the initial button state to gray and disabled
+            nextButton.prop('disabled', true).addClass('disabled').removeClass('enabled');
+        
+            // Attach real-time validation to Section 2 fields
+            $('#id_departamento_fk').on('change', validarFormularioSeccion2);
+            $('#id_provincia_fk').on('change', validarFormularioSeccion2);
+            $('#id_municipio_fk').on('change', validarFormularioSeccion2);
+            $('#id_direccion_1').on('input', validarFormularioSeccion2);
+        });
+        
+
+        function validarSeccion2() {
+            let departamento = document.getElementById("id_departamento_fk").value;
+            let provincia = document.getElementById("id_provincia_fk").value;
+            let municipio = document.getElementById("id_municipio_fk").value;
+            let direccion1 = document.getElementById("id_direccion_1").value;
+
+            let error = false;
+            // Validación de departamento
+            if (!departamento) {
+                document.getElementById("error-departamento").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-departamento").innerText = "";
+            }
+            // Validación de provincia
+            if (!provincia) {
+                document.getElementById("error-provincia").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-provincia").innerText = "";
+            }
+            // Validación de municipio
+            if (!municipio) {
+                document.getElementById("error-municipio").innerText = "Campo Obligatorio";
+                error = true;
+            } else {
+                document.getElementById("error-municipio").innerText = "";
+            }
+            // Validación de dirección
+            if (direccion1.trim() === "") {
+                document.getElementById("error-direccion_1").innerText = "Campo Obligatorio";
+                error = true;
+            } else if (!/^[A-Za-z0-9\s.,#]+$/.test(direccion1)) {
+                document.getElementById("error-direccion_1").innerText = "No se permiten caracteres especiales (Excepto ',' '.' y '#')";
+                error = true;
+            } else {
+                document.getElementById("error-direccion_1").innerText = ""; // Clear error if valid
+            }
+            // Si no hay errores, avanza a la siguiente sección
+            if (!error) {
+                seccionActual++;
+                mostrarSeccion(seccionActual);
+            }
+        }
+        function siguienteSeccion() {
+            if (seccionActual === 1) {
+            validarSeccion1();
+            } else if (seccionActual === 2) {
+            validarSeccion2();
+            } else if (seccionActual < 3) {
+            seccionActual++;
+            mostrarSeccion(seccionActual);
+            }
+        } 
+
+        function anteriorSeccion() {
+            if (seccionActual > 1) {
+                seccionActual--;
+                mostrarSeccion(seccionActual);
+            }
+        }
+    </script>
+    <style>
+        .disabled {
+            background-color: #bbbbbb; 
+            cursor: not-allowed;
+        }
+    
+        .enabled {
+            background-color: #ef6605;  
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}YouBuild | Home {% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'resultadosVacios.css' %}" /> 
+<link rel="stylesheet" href="{% static 'style.css' %}" /> 
+<link rel="stylesheet" href="{% static 'listaProduct.css' %}" /> 
+<link rel="stylesheet" href="{% static 'topbar.css' %}" /> 
+<link rel="stylesheet" href="{% static 'filtros.css' %}" />
+<link rel="stylesheet" href="{% static 'Categorias.css' %}" />
+<link rel="stylesheet" href="{% static 'CarruselOfert.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body {
+      font-family: 'Comfortaa', sans-serif;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+  <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+    {% csrf_token %}
+    <div class="filtros">
+      <select id="categoria" name="categoria">
+          <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+          <option value="">Todas las categorías</option>
+          {% for categoria in categorias %}
+              <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+          {% endfor %}
+      </select>
+  
+      <select id="precio" name="precio" onchange="updatePrices()">
+          <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+          <option value="0-50">Bs 0 - Bs 50</option>
+          <option value="51-100">Bs 51 - Bs 100</option>
+          <option value="101-200">Bs 101 - Bs 200</option>
+          <option value="201-500">Bs 201 - Bs 500</option>
+          <option value="500-">Bs +500</option>
+      </select>
+      <input type="hidden" id="precio_min" name="precio_min">
+      <input type="hidden" id="precio_max" name="precio_max">
+  
+      <select id="ordenar" name="ordenar">
+          <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+          <option value="relevantes">Más relevantes</option>
+          <option value="menor">Menor Precio</option>
+          <option value="mayor">Mayor Precio</option>
+      </select>
+  
+      <button id ="aplicar-filtros" type="submit">Aplicar</button>
+      <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
+    </div>
+  </form>
+
+  <div class="carousel-container">
+    <div class="carousel">
+      {% for carrusel_item in carrusel %}
+      <div class="carousel-item">
+        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-button prev">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-button next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+
+  <div class="carousel-dots"></div>
+
+ <!-- Sección de categorías con botones redondos -->
+<div class="categories-section">
+  <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+    {% csrf_token %}
+    <div class="categories-container">
+      {% for categoria in categorias %}
+        <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
+          <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
+          <p class="category-name">{{ categoria.nombre }}</p>
+        </button>
+      {% endfor %}
+    </div>
+  </form>
+</div>
+
+<div class="super-offers-carousel">
+  <div class="super-offers-header">
+      <span class="super-offers-title">Super Ofertas</span>
+      <a href="#" class="super-offers-view-all">Ver todas</a>
+  </div>
+
+  <div class="super-offers-content">
+      <button class="super-offers-btn super-offers-left-btn">&#10094;</button>
+
+      {% if productos_oferta %}
+          {% for producto in productos_oferta %}
+              {% if producto.estado == "promocion" %}
+                  <div class="super-offers-item">
+                      {% if producto.imagenes.exists %}
+                          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
+                      {% else %}
+                          <img src="{% static 'path/to/default_image.jpg' %}" alt="{{ producto.nombre }}">
+                      {% endif %}
+                      <div class="super-offers-details">
+                          <h3>{{ producto.nombre }}</h3>
+                          <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
+                          <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
+                          <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
+                          <button class="super-offers-details-btn">Ver Detalles</button>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      {% else %}
+          <div class="super-offers-no-products">
+              <p>No hay productos disponibles en promoción</p>
+          </div>
+      {% endif %}
+
+      <button class="super-offers-btn super-offers-right-btn">&#10095;</button>
+  </div>
+</div>
+
+
+
+  <!-- Lista de productos disponibles -->
+  <h2 class="products-title">Productos Disponibles</h2>
+  <div class="products-container">
+    {% for producto in producto %}
+    <div class="product">
+      <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />
+      <h3>{{ producto.nombre }}</h3>
+      <p>Bs {{ producto.precio }}</p>
+      <div class="buttons-container">
+        <div class="button-row">
+          <button class="btn buy-now">Comprar Ahora</button>
+          <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
+            <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+          </button>
+        </div>
+        <div class="button-row">
+          <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">
+            <i class="fas fa-eye"></i> Ver Detalles
+          </button>
+          <button 
+                      class="btn add-to-list" 
+                      onclick="agregarAFavoritos({{ producto.id }})"
+                      id="favorito-btn-{{ producto.id }}">
+                      <i class="fas fa-heart"></i>
+                      {% if producto.id in favoritos_ids %}
+                          En Favoritos
+                      {% else %}
+                          Agregar a Lista
+                      {% endif %}
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="mi-no-results">
+      <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+      <p>No se encontraron productos relacionados con tu búsqueda.</p>
+      <div class="mi-button-row">
+        <a href="{% url 'index' %}" class="mi-btn">Volver a la Página de Inicio</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'script.js' %}"></script>
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const leftButton = document.querySelector('.super-offers-left-btn');
+    const rightButton = document.querySelector('.super-offers-right-btn');
+    const carouselContent = document.querySelector('.super-offers-content');
+    const items = document.querySelectorAll('.super-offers-item');
+    const itemsPerPage = 4;  // Número de productos visibles por página (ajusta según lo que necesites)
+
+    let currentIndex = 0; // Índice de la primera imagen visible
+
+    // Mover el carrusel a la izquierda
+    leftButton.addEventListener('click', function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    });
+
+    // Mover el carrusel a la derecha
+    rightButton.addEventListener('click', function() {
+        if (currentIndex < items.length - itemsPerPage) {
+            currentIndex++;
+            updateCarousel();
+        }
+    });
+
+    // Actualizar la posición del carrusel
+    function updateCarousel() {
+        // Calcular el desplazamiento total del carrusel
+        const offset = -(currentIndex * (items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight)));
+        carouselContent.style.transform = `translateX(${offset}px)`;
+    }
+});
+
+  function filtrarPorCategoria(categoriaId) {
+    // Establece el valor de la categoría en el primer formulario
+    document.getElementById('categoria').value = categoriaId;
+
+    // Simula un clic en el botón 'aplicar-filtros' del primer formulario
+    document.getElementById('aplicar-filtros').click();
+  }
+  function agregarAlCarrito(productId) {
+    // Usamos fetch para enviar la solicitud POST al servidor
+    fetch(`/agregar-al-carrito/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  // Añadir el CSRF token para la protección
+        },
+        body: JSON.stringify({})  // Cuerpo vacío ya que no necesitamos pasar datos adicionales
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Si la respuesta tiene redirección, el carrito fue actualizado correctamente
+            window.location.href = response.url;  // Redirigir a la página de carrito o la página original
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.success) {
+            // Si la respuesta JSON indica éxito, mostrar un mensaje
+            alert(data.message || 'Producto agregado correctamente al carrito');
+        } else if (data && data.message) {
+            // En caso de error, mostrar el mensaje de error
+            alert(data.message || 'Error al agregar el producto al carrito');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al agregar al carrito');
+    });
+  }
+  
+  function agregarAFavoritos(productoId) {
+    fetch(`/lista-favoritos/agregar/${productoId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',  // Asegúrate de incluir el token CSRF
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const btn = document.getElementById(`favorito-btn-${productoId}`);
+        if (data.enFavoritos) {
+            btn.innerHTML = '<i class="fas fa-heart"></i> En Favoritos';
+            alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+        } else {
+            btn.innerHTML = '<i class="fas fa-heart"></i> Agregar a Lista';
+            alert("El producto ha sido eliminado de tu lista de deseos.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Hubo un error al intentar actualizar la lista de deseos.");
+    });
+  }
+
+  function reestablecerFiltros() {
+    document.getElementById('categoria').value = '';
+    document.getElementById('precio').value = '';
+    document.getElementById('ordenar').value = '';
+  }
+
+  function updatePrices() {
+    var select = document.getElementById("precio");
+    var value = select.value;
+    var minMax = value.split('-');
+
+    document.getElementById("precio_min").value = minMax[0] || '';
+    document.getElementById("precio_max").value = minMax[1] || '';
+  }
+
+  document.getElementById('filtro-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+    const formData = new FormData(this);
+    
+    // Mensaje de carga
+    const productsContainer = document.querySelector('.products-container');
+    productsContainer.innerHTML = '<p>Cargando...</p>';
+
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        productsContainer.innerHTML = ''; // Limpiar contenedor antes de agregar productos
+
+        if (data.products && data.products.length > 0) {
+            data.products.forEach(producto => {
+                productsContainer.innerHTML += `
+                    <div class="product">
+                        <img src="${producto.imagen}" alt="${producto.nombre}" />
+                        <h3>${producto.nombre}</h3>
+                        <p>Bs ${producto.precio}</p>
+                        <div class="buttons-container">
+                            <div class="button-row">
+                                <button class="btn buy-now">Comprar Ahora</button>
+                                <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
+                                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                                </button>
+                            </div>
+                            <div class="button-row">
+                                <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </button>
+                                <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
+                                    <i class="fas fa-heart"></i> Agregar a Lista
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        } else {
+            productsContainer.innerHTML = `
+                <div class="mi-no-results">
+                    <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+                    <p>No se encontraron productos relacionados con tu búsqueda.</p>
+                    <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
+                    <div class="mi-button-row">
+                        <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
+                    </div>
+                </div>`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        productsContainer.innerHTML = '<p>Error al buscar productos.</p>'; // Mostrar error en el contenedor
+    });
+  });
+  function reestablecerFiltros() {
+    location.reload();
+  }
+</script>
+{% endblock %}

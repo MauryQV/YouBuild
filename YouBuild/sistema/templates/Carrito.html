@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block extra_styles %}
+<!-- Dependencias personalizadas -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'Carrito.css' %}" />
+<style>
+    body {
+        font-family: 'Comfortaa', sans-serif;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Carrito de Compras</h1>
+    <div class="cart-container">
+        <!-- Tabla con productos seleccionados -->
+        <div class="cart-products">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ELIMINAR</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO</th>
+                        <th>CANTIDAD</th>
+                        <th>SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Mostrar productos en el carrito -->
+                    {% for item in carrito_productos %}
+                    <tr>
+                        <td>
+                            <form action="{% url 'eliminar_producto' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="product-info">
+                                <img src="{{ item.producto_fk.imagenes.first.imagen.url }}" alt="{{ item.producto_fk.nombre }}" class="product-image">
+                                <span>{{ item.producto_fk.nombre }}</span>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.producto_fk.precio }}</td>
+                        <td>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn decrement">-</button>
+                                <input type="text"
+                                       value="{{ item.cantidad }}"
+                                       maxlength="3"
+                                       data-item-id="{{ item.id }}"
+                                       data-stock="{{ item.producto_fk.cantidad }}" />
+                                <button class="quantity-btn increment">+</button>
+                            </div>
+                        </td>
+                        <td>Bs {{ item.calcular_subtotal }}</td>  <!-- Cambio para mostrar correctamente el subtotal -->
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No hay productos en el carrito.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'index' %}" class="btn-seguir-comprando">Seguir comprando</a>
+        </div>
+
+        <!-- Resumen del carrito -->
+        <div class="cart-summary">
+            <h2>TOTALES DEL CARRITO</h2>
+            <div class="summary-item">
+                <span>Subtotal</span>
+                <span>Bs {{carrito_subtotal}}</span>  <!-- Mostrar correctamente el subtotal -->
+            </div>
+            <div class="summary-item">
+                <span>Envío</span>
+                <span>Gratis</span>
+            </div>
+            <div class="summary-item">
+                <span>Total</span>
+                <span>Bs {{carrito_total}}</span>  <!-- Mostrar correctamente el total -->
+            </div>
+            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script>
+
+    // Function to update the cart icon count
+    function updateCartIconCount() {
+        fetch('/get_cart_count/')
+            .then(response => response.json())
+            .then(data => {
+                const cartCountElement = document.querySelector('.cart-count');
+                if (cartCountElement) {
+                    cartCountElement.textContent = data.cart_count;
+                }
+            })
+            .catch(error => console.error('Error fetching cart count:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        const updateCart = (itemId, quantity, callback) => {
+            fetch("{% url 'update_cart_quantity' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ item_id: itemId, quantity: quantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                    updateCartIconCount();  // Update the cart icon count after modifying the cart
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar el carrito:', error);
+            });
+        };
+    
+        const updateSubtotalAndTotal = (itemRow, subtotal, total) => {
+            // Actualiza el subtotal del producto
+            const subtotalElement = itemRow.querySelector('td:last-child');
+            subtotalElement.textContent = `Bs ${subtotal}`;
+    
+            // Actualiza el total general del carrito
+            document.querySelector('.summary-item span:last-child').textContent = `Bs ${total}`;
+        };
+    
+        document.querySelectorAll('.quantity-btn.increment').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const itemId = input.dataset.itemId;
+                let quantity = parseInt(input.value);
+                const stock = parseInt(input.dataset.stock);
+                const itemRow = this.closest('tr');
+    
+                if (quantity < stock) {
+                    input.value = quantity + 1;
+                    updateCart(itemId, quantity + 1, (data) => {
+                        updateSubtotalAndTotal(itemRow, data.subtotal, data.total);
+                    });
+                } else {
+                    alert("No hay más unidades disponibles de este producto.");
+                }
+            });
+        });
+    
+        document.querySelectorAll('.quantity-btn.decrement').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.nextElementSibling;
+                const itemId = input.dataset.itemId;
+                let quantity = parseInt(input.value);
+                const itemRow = this.closest('tr');
+    
+                if (quantity > 1) {
+                    input.value = quantity - 1;
+                    updateCart(itemId, quantity - 1, (data) => {
+                        updateSubtotalAndTotal(itemRow, data.subtotal, data.total);
+                    });
+                } else {
+                    if (confirm("¿Deseas eliminar este producto del carrito?")) {
+                        updateCart(itemId, 0, () => {
+                            // Remover la fila del producto si es eliminado
+                            itemRow.remove();
+                            // Recargar el total del carrito
+                            location.reload(); // En este caso, recargamos para actualizar el carrito
+                            updateCartIconCount(); // Update the cart icon count after removal
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+</script>
+{% endblock %}

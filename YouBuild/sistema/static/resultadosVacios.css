@@ -1,0 +1,54 @@
+/* Estilos para cuando no hay resultados */
+.mi-no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente los elementos */
+    justify-content: center; /* Centra verticalmente los elementos */
+    margin: 50px auto; /* Margen superior e inferior de 50px, y auto para centrar horizontalmente */
+    text-align: center;
+    min-height: 80vh; /* Asegura que el contenedor ocupe al menos el 80% de la altura de la ventana */
+}
+
+/* Ajustar el tamaño y centrado de la imagen */
+.mi-no-results img {
+    width: 125px;
+    margin-bottom: 20px; /* Espacio debajo de la imagen */
+}
+
+/* Estilos para el mensaje de "No se encontraron productos" */
+.mi-no-results p {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 20px; /* Espacio entre el mensaje y los botones */
+}
+
+/* Estilos de la fila de botones */
+.mi-button-row {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+}
+
+/* Botón "Volver a la Página de Inicio" */
+.mi-button-row .mi-btn {
+    background-color: #ef6605; /* Color de fondo */
+    color: white; /* Color de texto */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none; /* Elimina el subrayado */
+    font-size: 1em;
+    margin: 0 5px; /* Espacio entre botones si hay más de uno */
+}
+
+/* Hover del botón */
+.mi-button-row .mi-btn:hover {
+    background-color: #ba7730;
+}
+
+/* Eliminar el subrayado del botón */
+.mi-button-row .mi-btn:link, 
+.mi-button-row .mi-btn:visited {
+    text-decoration: none; /* Asegura que no haya subrayado */
+}
