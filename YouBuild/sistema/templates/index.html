@@ -179,39 +179,37 @@
 {% block extra_scripts %}
 <script src="{% static 'script.js' %}"></script>
 <script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const leftButton = document.querySelector('.super-offers-left-btn');
-    const rightButton = document.querySelector('.super-offers-right-btn');
+  document.addEventListener("DOMContentLoaded", () => {
     const carouselContent = document.querySelector('.super-offers-content');
     const items = document.querySelectorAll('.super-offers-item');
-    const itemsPerPage = 4;  // Número de productos visibles por página (ajusta según lo que necesites)
+    const btnLeft = document.querySelector('.super-offers-left-btn');
+    const btnRight = document.querySelector('.super-offers-right-btn');
 
-    let currentIndex = 0; // Índice de la primera imagen visible
+    // Ancho de un elemento del carrusel (incluye el margen)
+    const itemWidth = items[0]?.offsetWidth || 600; 
+    let scrollPosition = 0;
 
-    // Mover el carrusel a la izquierda
-    leftButton.addEventListener('click', function() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
+    // Función para manejar el clic en el botón izquierdo
+    btnLeft.addEventListener('click', () => {
+        scrollPosition = Math.max(scrollPosition - itemWidth, 0); // Evita desplazarse más allá del inicio
+        carouselContent.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth' // Movimiento suave
+        });
     });
 
-    // Mover el carrusel a la derecha
-    rightButton.addEventListener('click', function() {
-        if (currentIndex < items.length - itemsPerPage) {
-            currentIndex++;
-            updateCarousel();
-        }
+    // Función para manejar el clic en el botón derecho
+    btnRight.addEventListener('click', () => {
+        const maxScroll = carouselContent.scrollWidth - carouselContent.clientWidth; // Límite derecho
+        scrollPosition = Math.min(scrollPosition + itemWidth, maxScroll); // Evita desplazarse más allá del final
+        carouselContent.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth' // Movimiento suave
+        });
     });
-
-    // Actualizar la posición del carrusel
-    function updateCarousel() {
-        // Calcular el desplazamiento total del carrusel
-        const offset = -(currentIndex * (items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight)));
-        carouselContent.style.transform = `translateX(${offset}px)`;
-    }
 });
+
+
 
   function filtrarPorCategoria(categoriaId) {
     // Establece el valor de la categoría en el primer formulario
