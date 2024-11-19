@@ -499,3 +499,57 @@ class ActualizarPublicacionAPIView(APIView):
         # Responder con los datos actualizados
         serializer = ProductoSerializer(producto)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class CrearPromocionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, producto_id):
+        usuario = request.user.usuariodb
+        try:
+            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
+
+            # Validar que no haya una promoción activa
+            if producto.esta_en_promocion():
+                return Response({"error": "El producto ya tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Extraer datos del body
+            descuento = request.data.get('descuento')
+            fecha_inicio_promocion = request.data.get('fecha_inicio_promocion')
+            fecha_fin_promocion = request.data.get('fecha_fin_promocion')
+
+            # Validar los campos
+            if not descuento or not fecha_inicio_promocion or not fecha_fin_promocion:
+                return Response({"error": "Todos los campos son obligatorios."}, status=status.HTTP_400_BAD_REQUEST)
+
+            producto.descuento = descuento
+            producto.fecha_inicio_promocion = fecha_inicio_promocion
+            producto.fecha_fin_promocion = fecha_fin_promocion
+            producto.estado = 'promocion'
+            producto.save()
+
+            return Response({"message": "Promoción creada exitosamente."}, status=status.HTTP_201_CREATED)
+        except ProductoDb.DoesNotExist:
+            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class FinalizarPromocionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, producto_id):
+        usuario = request.user.usuariodb
+        try:
+            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
+
+            # Validar que haya una promoción activa
+            if not producto.esta_en_promocion():
+                return Response({"error": "El producto no tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Restaurar el estado y precio original
+            producto.descuento = 0.0
+            producto.fecha_inicio_promocion = None
+            producto.fecha_fin_promocion = None
+            producto.estado = 'disponible'
+            producto.save()
+
+            return Response({"message": "Promoción finalizada y precio original restaurado."}, status=status.HTTP_200_OK)
+        except ProductoDb.DoesNotExist:
+            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)

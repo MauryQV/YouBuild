@@ -38,7 +38,10 @@ urlpatterns = [
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
     path('api/publicaciones/', PublicacionesUsuarioAPIView.as_view(), name='publicaciones_usuario'),
     path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
-     path('productos/', views.product_list, name='product_list'),
+    path('productos/', views.product_list, name='product_list'),
+
+    path('promocion/<int:producto_id>/crear/', CrearPromocionAPIView.as_view(), name='crear-promocion'),
+    path('promocion/<int:producto_id>/finalizar/', FinalizarPromocionAPIView.as_view(), name='finalizar-promocion'),
 
 ]
 
