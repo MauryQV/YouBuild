@@ -42,7 +42,8 @@ urlpatterns = [
 
     path('promocion/<int:producto_id>/crear/', CrearPromocionAPIView.as_view(), name='crear-promocion'),
     path('promocion/<int:producto_id>/finalizar/', FinalizarPromocionAPIView.as_view(), name='finalizar-promocion'),
-
+    path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+    path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
 ]
 
 if settings.DEBUG:

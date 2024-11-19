@@ -1,0 +1,187 @@
+/* General */
+body {
+    font-family: 'Comfortaa', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f4ef;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Contenedor del título */
+.titulo-container {
+    background-color: #ff6f61; /* Color del fondo */
+    padding: 15px 10px;
+    border-radius: 10px; /* Bordes redondeados */
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle relieve */
+}
+
+.titulo {
+    font-size: 1.5rem;
+    color: #fff; /* Texto blanco */
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Grid de productos */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Tarjeta del producto */
+.producto-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.producto-card:hover {
+    transform: scale(1.05);
+}
+
+/* Descuento dentro de la imagen */
+.producto-descuento {
+    background-color: #ffc107;
+    color: #010101;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.producto-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Información del producto */
+.producto-info {
+    padding: 15px;
+}
+
+.producto-nombre {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* Precios */
+.producto-precio {
+    font-size: 1rem;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start; /* Alinea los elementos al inicio (izquierda) */
+    text-align: left; /* Asegura que el texto se alinee a la izquierda */
+    width: 100%; /* Asegura que los elementos ocupen el ancho completo */
+}
+
+.producto-precio .precio-descuento {
+    color: #FF0000;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.producto-precio .precio-original {
+    text-decoration: line-through;
+    text-decoration-color: #F2690D;
+    color: #010101;
+    font-size: 0.7rem;
+}
+
+/* Botones */
+.botones {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-detalles, .btn-carrito {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 25px; /* Bordes redondeados */
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Botón de detalles */
+.btn-detalles {
+    background-color: #fff;
+    font-size: 10px;
+    color: #F2690D;
+    border: 1px solid #F2690D;
+}
+
+.btn-detalles:hover {
+    background-color: #F2690D;
+    color: #fff;
+    font-size: 10px;
+}
+
+/* Botón de carrito */
+.btn-carrito {
+    background-color: #F2690D;
+    font-size: 10px;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-carrito:hover {
+    font-size: 10px; /* Tamaño de letra específico para estos botones */
+    background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
+    color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
+}
+
+
+/* Mensaje de no productos */
+.productos-grid p {
+    text-align: center;
+    color: #999;
+    font-size: 1rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.breadcrumb a {
+    color: #666;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb .breadcrumb-current {
+    color: #000000;
+    font-weight: bold;
+}
+
+
