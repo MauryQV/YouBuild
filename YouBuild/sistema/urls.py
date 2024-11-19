@@ -45,3 +45,36 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('api/product-images/<int:product_id>/', views.get_product_images, name='product_images'),
+    path('api/add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('api/add-to-list/<int:product_id>/', views.add_to_list, name='add_to_list'),
+    path('api/buy-now/<int:product_id>/', views.buy_now, name='buy_now'),
+    path('productos/', views.product_list, name='product_list'),
+]

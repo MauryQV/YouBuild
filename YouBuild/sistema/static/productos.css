@@ -1,0 +1,162 @@
+body {
+    font-family: 'Comfortaa', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.vendor {
+    margin-bottom: 10px;
+}
+
+.vendor strong {
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.image-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#main-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.image-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    color: #ff6600;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.image-nav.left {
+    left: 5px;
+}
+
+.image-nav.right {
+    right: 5px;
+}
+
+.image-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #ff6600;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 0.8em;
+    flex: 1;
+    margin: 0 5px;
+    font-weight: 700;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.price-comparison {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.old-price, .new-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.price-label {
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+    text-decoration-color: #ff6600;
+    color: #000;
+    font-size: 1.5em;
+}
+
+.current-price {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #ff0000;
+}
+
+.discount-badge {
+    background-color: #ffcc00;
+    color: #664400;
+    padding: 2px 5px;
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}

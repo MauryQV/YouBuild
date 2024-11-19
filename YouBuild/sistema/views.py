@@ -499,3 +499,88 @@ class ActualizarPublicacionAPIView(APIView):
         # Responder con los datos actualizados
         serializer = ProductoSerializer(producto)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.shortcuts import render
+from .models import ProductoDb
+
+def product_list(request):
+    productos = ProductoDb.objects.all()
+    return render(request, 'productos.html', {'productos': productos})
+
+def product_detail(request, product_id):
+    producto = get_object_or_404(ProductoDb, id=product_id)
+    context = {
+        'product': producto,
+        'images': producto.imagenes.all(),
+    }
+    return render(request, 'productos.html', context)
+
+def get_product_images(request, product_id):
+    producto = get_object_or_404(ProductoDb, id=product_id)
+    images = [{'id': img.id, 'url': img.imagen.url} for img in producto.imagenes.all()]
+    return JsonResponse({'images': images})
+
+@login_required
+def add_to_cart(request, product_id):
+    if request.method == 'POST':
+        producto = get_object_or_404(ProductoDb, id=product_id)
+        carrito, _ = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
+        cantidad = int(request.POST.get('cantidad', 1))
+        carrito.agregar_producto(producto, cantidad)
+        return JsonResponse({'status': 'success', 'message': 'Producto añadido al carrito'})
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
+@login_required
+def add_to_list(request, product_id):
+    if request.method == 'POST':
+        producto = get_object_or_404(ProductoDb, id=product_id)
+        favorito, created = ListaFavoritosDB.objects.get_or_create(
+            usuario=request.user.usuariodb,
+            producto=producto
+        )
+        message = 'Producto añadido a favoritos' if created else 'Producto eliminado de favoritos'
+        return JsonResponse({'status': 'success', 'message': message})
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
+@login_required
+def buy_now(request, product_id):
+    if request.method == 'POST':
+        producto = get_object_or_404(ProductoDb, id=product_id)
+        # Aquí iría la lógica para la compra inmediata
+        return JsonResponse({'status': 'success', 'message': 'Compra iniciada'})
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

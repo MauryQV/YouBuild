@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Detalle del Producto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'productos.css' %}">
+</head>
+<body>
+    <main class="container">
+        <div class="product-grid">
+            <div class="product-info">
+                <div class="vendor">
+                    <strong>Vendedor:</strong><br>
+                    <strong id="vendor-name">{{ product.vendor }}</strong>
+                </div>
+                <h1 id="product-name">{{ product.name }}</h1>
+                <div class="image-container">
+                    <button class="image-nav left" aria-label="Imagen anterior">&lt;</button>
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" id="main-image">
+                    <button class="image-nav right" aria-label="Imagen siguiente">&gt;</button>
+                </div>
+                <div class="image-dots" id="image-dots">
+                    {% for image in product.images.all %}
+                        <span class="dot {% if forloop.first %}active{% endif %}" data-image="{{ image.image.url }}"></span>
+                    {% endfor %}
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" id="buy-now" data-product-id="{{ product.id }}">Comprar Ahora</button>
+                    <button class="btn" id="add-to-cart" data-product-id="{{ product.id }}">Agregar al Carrito</button>
+                    <button class="btn" id="add-to-list" data-product-id="{{ product.id }}">Agregar a la Lista</button>
+                </div>
+            </div>
+            <div class="product-details">
+                <section>
+                    <h2 class="section-title">Descripcion:</h2>
+                    <p id="product-description"><strong>{{ product.description }}</strong></p>
+                </section>
+                <section class="price">
+                    <h3 class="section-title">Precio c/u:</h3>
+                    <div class="price-comparison">
+                        <div class="old-price">
+                            <span class="price-label"><strong>Antes</strong></span>
+                            <span class="strikethrough" id="original-price"><strong>Bs {{ product.original_price }}</strong></span>
+                        </div>
+                        <div class="new-price">
+                            <span class="price-label"><strong>Ahora</strong></span>
+                            <span class="current-price" id="current-price"><strong>Bs {{ product.current_price }}</strong></span>
+                        </div>
+                    </div>
+                </section>
+                <section class="discount">
+                    <h3 class="section-title">Detalle de Descuento Aplicado:</h3>
+                    <span class="discount-badge" id="discount-percentage"><strong>{{ product.discount_percentage }} % OFF</strong></span>
+                </section>
+                <section class="time-left">
+                    <h3 class="section-title">Finaliza en</h3>
+                    <span id="countdown" data-end-time="{{ product.end_time|date:'U' }}"><strong>{{ remaining_time }}</strong></span>
+                </section>
+                <section class="location">
+                    <h3 class="section-title">Ubicacion:</h3>
+                    <p id="product-location"><strong>{{ product.location }}</strong></p>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script src="{% static 'productos.js' %}"></script>
+</body>
+</html>
