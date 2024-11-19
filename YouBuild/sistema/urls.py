@@ -36,9 +36,10 @@ urlpatterns = [
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
 
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
-    
     path('api/publicaciones/', PublicacionesUsuarioAPIView.as_view(), name='publicaciones_usuario'),
     path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
+     path('productos/', views.product_list, name='product_list'),
+
 ]
 
 if settings.DEBUG:

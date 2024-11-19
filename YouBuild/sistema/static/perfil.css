@@ -1,3 +1,12 @@
+/* Ensure no underline for topbar icons */
+.topbar a {
+    text-decoration: none !important;
+}
+
+.icon-btn {
+    text-decoration: none !important; /* Forces no underline */
+}
+
 .profile-container {
     display: flex;
     max-width: 1000px;
