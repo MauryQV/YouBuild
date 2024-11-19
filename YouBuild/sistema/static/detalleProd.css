@@ -110,6 +110,7 @@ body {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    font-size: 14px; /* Cambia este valor al tamaño deseado */
 }
 
 /* Botón Comprar - Naranja */
@@ -124,10 +125,12 @@ body {
     transition: background-color 0.3s;
     flex: 1; /* Hacer que ocupe el mismo tamaño */
     margin-right: 10px; /* Espacio entre botones */
+    
 }
 
 #btn-comprar:hover {
     background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
+    
 }
 
 /* Botón Volver a la lista */
@@ -143,33 +146,37 @@ body {
     max-width: fit-content;
     display: block; /* Allows margin auto to center */
     margin: 20px auto; /* Centers horizontally on the page */
+    
 }
 
 .btn.volver-a-lista:hover {
     background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
+    
 }
 
-/* Botones gris con borde y color de texto específicos */
+
 .btn.add-to-view,
 #btn-agregar-carrito,
 #btn-deseos {
-    background-color: #faf7f6; /* Fondo gris claro */
-    color: rgb(243, 174, 37); /* Texto en tono gris */
-    border: 1px solid rgb(243, 174, 37); /* Borde gris */
+    font-size: 14px; /* Tamaño de letra específico para estos botones */
+    background-color: #faf7f6; 
+    color: rgb(243, 174, 37); 
+    border: 1px solid rgb(243, 174, 37); 
     padding: 10px;
     border-radius: 5px;
-    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     flex: 1; /* Hacer que ocupe el mismo tamaño */
     margin-right: 10px; /* Espacio entre botones */
 }
 
+
 .btn.add-to-view:hover,
 #btn-agregar-carrito:hover,
 #btn-deseos:hover {
     background-color: #595450; /* Fondo gris oscuro al pasar el ratón */
     color: rgb(243, 174, 37); /* Texto gris oscuro */
+    font-size: 14px; /* Tamaño de letra específico para estos botones */
 }
 
 .button-row {
@@ -203,4 +210,8 @@ h3 {
 p {
     font-size: 1rem;
     line-height: 1.5;
+}
+
+.button-row .btn {
+    font-size: 14px; /* Cambia este valor al tamaño deseado */
 }

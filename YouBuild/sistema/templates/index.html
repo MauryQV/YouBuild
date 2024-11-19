@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="{% static 'topbar.css' %}" /> 
 <link rel="stylesheet" href="{% static 'filtros.css' %}" />
 <link rel="stylesheet" href="{% static 'Categorias.css' %}" />
+<link rel="stylesheet" href="{% static 'CarruselOfert.css' %}" />
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   body {
@@ -89,7 +90,45 @@
   </form>
 </div>
 
-  
+<div class="super-offers-carousel">
+  <div class="super-offers-header">
+      <span class="super-offers-title">Super Ofertas</span>
+      <a href="#" class="super-offers-view-all">Ver todas</a>
+  </div>
+
+  <div class="super-offers-content">
+      <button class="super-offers-btn super-offers-left-btn">&#10094;</button>
+
+      {% if productos_oferta %}
+          {% for producto in productos_oferta %}
+              {% if producto.estado == "promocion" %}
+                  <div class="super-offers-item">
+                      {% if producto.imagenes.exists %}
+                          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
+                      {% else %}
+                          <img src="{% static 'path/to/default_image.jpg' %}" alt="{{ producto.nombre }}">
+                      {% endif %}
+                      <div class="super-offers-details">
+                          <h3>{{ producto.nombre }}</h3>
+                          <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
+                          <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
+                          <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
+                          <button class="super-offers-details-btn">Ver Detalles</button>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      {% else %}
+          <div class="super-offers-no-products">
+              <p>No hay productos disponibles en promoción</p>
+          </div>
+      {% endif %}
+
+      <button class="super-offers-btn super-offers-right-btn">&#10095;</button>
+  </div>
+</div>
+
+
 
   <!-- Lista de productos disponibles -->
   <h2 class="products-title">Productos Disponibles</h2>
@@ -140,6 +179,40 @@
 {% block extra_scripts %}
 <script src="{% static 'script.js' %}"></script>
 <script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const leftButton = document.querySelector('.super-offers-left-btn');
+    const rightButton = document.querySelector('.super-offers-right-btn');
+    const carouselContent = document.querySelector('.super-offers-content');
+    const items = document.querySelectorAll('.super-offers-item');
+    const itemsPerPage = 4;  // Número de productos visibles por página (ajusta según lo que necesites)
+
+    let currentIndex = 0; // Índice de la primera imagen visible
+
+    // Mover el carrusel a la izquierda
+    leftButton.addEventListener('click', function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    });
+
+    // Mover el carrusel a la derecha
+    rightButton.addEventListener('click', function() {
+        if (currentIndex < items.length - itemsPerPage) {
+            currentIndex++;
+            updateCarousel();
+        }
+    });
+
+    // Actualizar la posición del carrusel
+    function updateCarousel() {
+        // Calcular el desplazamiento total del carrusel
+        const offset = -(currentIndex * (items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight)));
+        carouselContent.style.transform = `translateX(${offset}px)`;
+    }
+});
+
   function filtrarPorCategoria(categoriaId) {
     // Establece el valor de la categoría en el primer formulario
     document.getElementById('categoria').value = categoriaId;
