@@ -44,7 +44,7 @@ urlpatterns = [
     path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
 
     path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
-    #path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
+    path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
 
 ]
 
