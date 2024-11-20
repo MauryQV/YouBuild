@@ -145,6 +145,7 @@ def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
+    productoRel = ProductoDb.objects.filter(nombre__icontains=producto.nombre)
 
     # Calcular datos dinámicos
     precio_final = producto.precio_final()
@@ -164,6 +165,7 @@ def producto_view(request, id):
         "tiempo_restante": tiempo_restante,  # Tiempo en segundos para el frontend
         "template": template,
         "favoritos_ids": favoritos_ids,
+        "relacionados": productoRel,
     })
 # Buscar productos
 def buscar_view(request):
@@ -496,56 +498,18 @@ def editar_producto(request, producto_id):
 
     return render(request, 'edit_producto.html', {'form': form, 'editar': True, 'imagenes_actuales': imagenes_actuales})
 
-class CrearPromocionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, producto_id):
-        usuario = request.user.usuariodb
-        try:
-            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
-
-            # Validar que no haya una promoción activa
-            if producto.esta_en_promocion():
-                return Response({"error": "El producto ya tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Extraer datos del body
-            descuento = request.data.get('descuento')
-            fecha_inicio_promocion = request.data.get('fecha_inicio_promocion')
-            fecha_fin_promocion = request.data.get('fecha_fin_promocion')
-
-            # Validar los campos
-            if not descuento or not fecha_inicio_promocion or not fecha_fin_promocion:
-                return Response({"error": "Todos los campos son obligatorios."}, status=status.HTTP_400_BAD_REQUEST)
-
-            producto.descuento = descuento
-            producto.fecha_inicio_promocion = fecha_inicio_promocion
-            producto.fecha_fin_promocion = fecha_fin_promocion
+def crear_oferta_view(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    
+    if request.method == 'POST':
+        form = OfertaForm(request.POST, instance=producto)
+        if form.is_valid():
+            # Cambiar el estado del producto a 'promocion'
             producto.estado = 'promocion'
-            producto.save()
+            # Guardar la actualización del producto
+            form.save()
+            return redirect('nombre_de_la_vista_a_redirigir')  # Cambia esto a la vista a la cual quieres redirigir después de guardar
+    else:
+        form = OfertaForm(instance=producto)
 
-            return Response({"message": "Promoción creada exitosamente."}, status=status.HTTP_201_CREATED)
-        except ProductoDb.DoesNotExist:
-            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
-        
-class FinalizarPromocionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request, producto_id):
-        usuario = request.user.usuariodb
-        try:
-            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
-
-            # Validar que haya una promoción activa
-            if not producto.esta_en_promocion():
-                return Response({"error": "El producto no tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Restaurar el estado y precio original
-            producto.descuento = 0.0
-            producto.fecha_inicio_promocion = None
-            producto.fecha_fin_promocion = None
-            producto.estado = 'disponible'
-            producto.save()
-
-            return Response({"message": "Promoción finalizada y precio original restaurado."}, status=status.HTTP_200_OK)
-        except ProductoDb.DoesNotExist:
-            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    return render(request, 'crear_oferta.html', {'form': form, 'producto': producto})

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Crear una Oferta{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'oferta.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Crear una oferta para {{ producto.nombre }}</h1>
+    
+    <div class="producto-detalles">
+        <p>Precio: ${{ producto.precio }}</p>
+        <p>Estado: {{ producto.get_estado_display }}</p>
+        <!-- Muestra detalles adicionales del producto si es necesario -->
+    </div>
+
+    <div class="oferta-detalles">
+        <h2>Configurar detalles de la oferta</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

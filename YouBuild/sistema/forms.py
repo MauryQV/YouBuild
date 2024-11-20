@@ -376,3 +376,25 @@ class EditarProductoForm(forms.ModelForm):
                 self.fields['departamento_fk'].queryset = DepartamentoDB.objects.all()
             except (ValueError, TypeError, MunicipioDB.DoesNotExist):
                 pass
+
+class OfertaForm(forms.ModelForm):
+    class Meta:
+        model = ProductoDb
+        fields = ['nombre', 'descuento', 'fecha_inicio_promocion', 'fecha_fin_promocion']
+    
+    def clean_descuento(self):
+        descuento = self.cleaned_data['descuento']
+        if descuento < 0 or descuento > 100:
+            raise forms.ValidationError("El descuento debe estar entre 0 y 100.")
+        return descuento
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_inicio_promocion = cleaned_data.get("fecha_inicio_promocion")
+        fecha_fin_promocion = cleaned_data.get("fecha_fin_promocion")
+        
+        # Validar que la fecha de fin sea posterior a la fecha de inicio
+        if fecha_inicio_promocion and fecha_fin_promocion:
+            if fecha_fin_promocion <= fecha_inicio_promocion:
+                raise forms.ValidationError("La fecha de fin de promoción debe ser posterior a la fecha de inicio.")
+        return cleaned_data

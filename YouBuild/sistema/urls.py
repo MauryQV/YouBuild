@@ -38,14 +38,12 @@ urlpatterns = [
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
     path('productos/', views.producto_view, name='product_list'),
 
-    path('promocion/<int:producto_id>/crear/', CrearPromocionAPIView.as_view(), name='crear-promocion'),
-    path('promocion/<int:producto_id>/finalizar/', FinalizarPromocionAPIView.as_view(), name='finalizar-promocion'),
     path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
     path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
 
     path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
     path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
-
+    path('crear_oferta/<int:producto_id>/', views.crear_oferta_view, name='crear_oferta'),
 ]
 
 if settings.DEBUG:
