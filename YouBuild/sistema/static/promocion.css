@@ -31,7 +31,7 @@ body {
 }
 
 .column-right {
-    padding-left: 20px;
+    margin-bottom: 15px; /* Ajusta el espacio entre el título y los precios */
 }
 
 /* Estilos del carrusel */
@@ -119,18 +119,16 @@ body {
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 25px;
+    border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
     flex: 1; /* Hacer que ocupe el mismo tamaño */
     margin-right: 10px; /* Espacio entre botones */
-    
 }
 
 #btn-comprar:hover {
     background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
-    
 }
 
 /* Botón Volver a la lista */
@@ -139,21 +137,18 @@ body {
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 25px;
+    border-radius: 13px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
     max-width: fit-content;
     display: block; /* Allows margin auto to center */
     margin: 20px auto; /* Centers horizontally on the page */
-    
 }
 
 .btn.volver-a-lista:hover {
     background-color: #ba7730; /* Naranja más oscuro al pasar el ratón */
-    
 }
-
 
 .btn.add-to-view,
 #btn-agregar-carrito,
@@ -163,13 +158,12 @@ body {
     color: rgb(243, 174, 37); 
     border: 1px solid rgb(243, 174, 37); 
     padding: 10px;
-    border-radius: 25px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     flex: 1; /* Hacer que ocupe el mismo tamaño */
     margin-right: 10px; /* Espacio entre botones */
 }
-
 
 .btn.add-to-view:hover,
 #btn-agregar-carrito:hover,
@@ -214,4 +208,69 @@ p {
 
 .button-row .btn {
     font-size: 14px; /* Cambia este valor al tamaño deseado */
+}
+
+/* Precios antes y ahora - Alineados horizontalmente */
+.precio-contenedor {
+    display: flex; /* Alineación horizontal */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: flex-start; /* Alinear hacia la izquierda */
+    gap: 30px; /* Espacio entre "Antes" y "Ahora" */
+}
+
+.precio-item {
+    text-align: center; /* Centrar texto dentro de cada bloque */
+}
+
+/* Precio original (Antes) */
+.precio-original {
+    font-size: 1.7rem;
+    color: #777; /* Gris para el precio anterior */
+    text-decoration: line-through; /* Línea para tachar */
+    font-weight: bold; /* Negrita */
+}
+
+/* Precio con descuento (Ahora) */
+.precio-descuento {
+    font-size: 1.7rem;
+    color: #FF0000; /* Rojo para el precio con descuento */
+    font-weight: bold; /* Negrita */
+    background-color: #ffffff; /* Fondo claro para resaltar */
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block; /* Asegura que se comporta como un bloque */
+}
+/* Detalle del descuento aplicado */
+.detalle-descuento {
+    font-size: 1rem;
+    font-weight: bold; /* Negrita para el texto */
+    color: #333; /* Texto oscuro */
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column; /* Alinea verticalmente los elementos dentro */
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
+    gap: 10px; /* Espacio entre el texto y el badge */
+}
+
+/* Badge del descuento aplicado */
+.badge-descuento {
+    display: inline-block;
+    background-color: #F2B90D; /* Fondo amarillo */
+    color: #000; /* Texto negro */
+    font-weight: bold; /* Negrita */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 5px; /* Espaciado extra si es necesario */
+}
+
+/* Contador (sin cambios) */
+.tiempo-restante {
+    background-color: #ffe6e6; /* Fondo suave */
+    padding: 5px 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    display: inline-block; /* Ajusta el ancho al contenido */
+    color: #e53935; /* Rojo */
+    font-size: 1.1rem; /* Tamaño de letra */
+    width: fit-content; /* Ancho ajustado al texto */
 }

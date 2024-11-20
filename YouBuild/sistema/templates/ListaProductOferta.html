@@ -49,11 +49,21 @@
         {% if productos %}
             {% for producto in productos %}
             <div class="producto-card">
+                {% if producto.estado == "promocion" %}
+                <div class="producto-descuento">
+                    {{ producto.descuento }}% OFF
+                </div>
+                {% endif %}
                 <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
                 <div class="producto-info">
                     <h3 class="producto-nombre">{{ producto.nombre }}</h3>
                     <p class="producto-precio">
-                        Bs {{ producto.precio }}
+                        {% if producto.estado == "promocion" %}
+                            <span class="precio-descuento">Bs {{ producto.precio_final }}</span>
+                            <span class="precio-original">Bs {{ producto.precio }}</span>
+                        {% else %}
+                            Bs {{ producto.precio }}
+                        {% endif %}
                     </p>
                     <div class="botones">
                         <button class="btn-detalles">Ver Detalles</button>
@@ -66,5 +76,6 @@
             <p>No hay productos disponibles en este momento.</p>
         {% endif %}
     </div>
+    
 </div>
 {% endblock %}
