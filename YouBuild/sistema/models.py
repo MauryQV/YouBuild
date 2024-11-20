@@ -303,3 +303,23 @@ class ListaFavoritosDB(models.Model):
 
     def contar_productos(self):
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
+    
+class BitacoraTransaccionDB(models.Model):
+    TIPO_TRANSACCION = [
+        ('compra', 'Compra'),
+        ('venta', 'Venta'),
+    ]
+
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, verbose_name="Usuario relacionado")
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, verbose_name="Producto")
+    tipo = models.CharField(max_length=10, choices=TIPO_TRANSACCION, verbose_name="Tipo de transacción")
+    fecha = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de transacción")
+    monto_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total")
+    detalles = models.TextField(null=True, blank=True, verbose_name="Detalles adicionales")
+
+    class Meta:
+        verbose_name = "Bitácora de Transacción"
+        verbose_name_plural = "Bitácoras de Transacciones"
+
+    def __str__(self):
+        return f"{self.tipo.capitalize()} - {self.producto.nombre} por {self.usuario.user.username}"
