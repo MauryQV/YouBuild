@@ -9,12 +9,14 @@
 
 .profile-container {
     display: flex;
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px 0px;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    height: 100vh; /* Opcional: ocupa toda la altura de la pantalla */
+    margin: 0; /* Elimina márgenes automáticos */
+    padding: 20px;
     gap: 20px;
     background-color: #f4f6f9;
     border-radius: 10px;
+    box-sizing: border-box; /* Asegura que padding no afecte las dimensiones totales */
 }
 /* Sidebar (izquierda) */
 .profile-sidebar {
@@ -190,7 +192,7 @@
 .profile-sidebar, .profile-main {
     background: #ffffff;
     padding: 25px;
-    border: 2px solid black; /* Borde negro */
+    /*border: 2px solid black; /* Borde negro */
     border-radius: 15px; /* Esquinas redondeadas */
     
 }
