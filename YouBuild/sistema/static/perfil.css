@@ -11,16 +11,14 @@
     display: flex;
     max-width: 1000px;
     margin: auto;
-    padding: 20px;
+    padding: 20px 0px;
     gap: 20px;
     background-color: #f4f6f9;
     border-radius: 10px;
-    flex-wrap: wrap; /* Permite que el contenido se ajuste automáticamente */
 }
-
-/* Estilos del sidebar izquierdo */
+/* Sidebar (izquierda) */
 .profile-sidebar {
-    flex: 1;
+   /* flex: 1; */
     background: #ffffff;
     padding: 25px;
     border: 1px solid #e0e0e0;
@@ -39,14 +37,15 @@
 
 /* Estilo de la imagen de perfil */
 .profile-photo {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
+    border: 2px solid #ff6b00;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ff6b00;
+   
 }
 
 /* Estilo de la imagen de perfil */
@@ -106,13 +105,14 @@
 
 /* Estilos de la sección principal derecha */
 .profile-main {
-    flex: 2;
+    /* flex: 3; Más ancho que el sidebar */
     background: #ffffff;
     padding: 30px;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 }
+
 
 .profile-main h2 {
     font-size: 24px;
@@ -184,15 +184,7 @@
     outline: none;
 }
 
-.profile-container {
-    display: flex;
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px;
-    gap: 20px;
-    background-color: #f4f6f9;
-    border-radius: 10px;
-}
+
 
 /* Estilos para los contenedores con borde negro curvo */
 .profile-sidebar, .profile-main {
@@ -203,17 +195,6 @@
     
 }
 /* Responsividad para pantallas medianas y pequeñas */
-@media (max-width: 768px) {
-    .profile-container {
-        flex-direction: column;
-        padding: 15px;
-    }
-    
-    .profile-sidebar, .profile-main {
-        width: 100%;
-    }
-}
-
 @media (max-width: 576px) {
     .profile-main h2 {
         font-size: 20px;
@@ -273,4 +254,26 @@
     margin-top: 10px;
     font-size: 0.95rem;
     text-align: left;
+}
+
+.btn-mis-publicaciones {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    background-color: white; /* Fondo blanco */
+    color: black; /* Texto negro */
+    border: 1px solid #ccc; /* Borde sutil */
+    padding: 10px; /* Espaciado interno */
+    text-align: center; /* Centra el texto */
+    font-size: 16px; /* Tamaño de fuente */
+    font-weight: bold; /* Texto negrita */
+    cursor: pointer; /* Cambia el cursor a "pointer" */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+.btn-mis-publicaciones:hover {
+    background-color: #f0f0f0; /* Color de fondo gris claro al pasar el mouse */
+    color: #333; /* Color del texto más oscuro */
+}
+
+.profile-actions {
+    margin-top: 20px; /* Separación del contenido superior */
 }

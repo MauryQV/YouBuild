@@ -61,16 +61,72 @@
     <div class="column column-right flex-column">
         <h3>Descripción</h3>
         <p>{{ producto.detalle }}</p>
-        <div class="sub-container">
-            <div class="subcolumn1 flex-column column-left">
-                <h3>Precio c/u</h3>
-                <p class="aux">{{ producto.precio }} Bs.</p>
-            </div>
-            <div class="subcolumn2 flex-column column-right">
-                <h3>Cantidad Disponible</h3>
-                <p class="aux">{{ producto.cantidad }}</p>
-            </div>
+        
+        <h3>Precio c/u:</h3>
+
+        {% if producto.esta_en_promocion %}
+        <!-- Contenedor de precios -->
+        <div class="precio-contenedor">
+            <!-- Precio original -->
+            <div class="subtitulo"><h3>Antes:</h3></div>
+            <div class="valor"><p class="precio-original">Bs {{ producto.precio }}</p></div>
+            
+            <!-- Precio con descuento -->
+            <div class="subtitulo"><h3>Ahora:</h3></div>
+            <div class="valor"><p class="precio-descuento">Bs {{ precio_final|floatformat:2 }}</p></div>
         </div>
+
+        <!-- Contenedor de descuento -->
+        <p class="detalle-descuento">
+            Detalle del Descuento Aplicado:
+            <span class="badge-descuento">{{ descuento_aplicado }}% OFF</span>
+        </p>
+
+        <!-- Contador -->
+        <p id="contador" class="tiempo-restante">
+            Finaliza en: 
+            <span id="time-remaining"></span>
+        </p>
+
+        <!-- Script para manejar el contador -->
+        <script>
+            // Tiempo restante en segundos desde el backend
+            let tiempoRestante = {{ tiempo_restante }};
+
+            function iniciarContador(tiempo, elementoId) {
+                const elemento = document.getElementById(elementoId);
+                function actualizarContador() {
+                    if (tiempo <= 0) {
+                        elemento.innerText = "¡Promoción finalizada!";
+                        clearInterval(intervalo);
+                        return;
+                    }
+
+                    // Cálculo de días, horas, minutos y segundos
+                    const dias = Math.floor(tiempo / (24 * 3600));
+                    const horas = Math.floor((tiempo % (24 * 3600)) / 3600);
+                    const minutos = Math.floor((tiempo % 3600) / 60);
+                    const segundos = tiempo % 60;
+
+                    // Mostrar en el elemento
+                    elemento.innerText = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
+                    // Restar 1 segundo
+                    tiempo--;
+                }
+
+                // Actualizar el contador cada segundo
+                const intervalo = setInterval(actualizarContador, 1000);
+                actualizarContador(); // Ejecutar inmediatamente al cargar
+            }
+
+            // Iniciar el contador
+            iniciarContador(tiempoRestante, "time-remaining");
+        </script>
+    {% else %}
+        <p class="precio-sin-promocion">Bs {{ producto.precio }}</p>
+    {% endif %}
+        
         <h3>Ubicación</h3>
         <p>
             {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
@@ -78,6 +134,7 @@
             {{ producto.usuario_fk.municipio_fk }}
         </p>
     </div>
+    
 </div>
 <button class="btn volver-a-lista" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
     productos</button>
@@ -153,6 +210,8 @@
             alert("Hubo un error al intentar actualizar la lista de deseos.");
         });
     }
+
+
 </script>
 {% endblock %}
 
