@@ -1,0 +1,126 @@
+/* Estilos generales para la página de publicaciones */
+.publicaciones-container {
+    width: 80%;
+    margin: auto;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+h2 {
+    text-align: left;
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Tabla de publicaciones */
+.tabla-publicaciones {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-publicaciones th,
+.tabla-publicaciones td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-publicaciones th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.tabla-publicaciones td {
+    font-size: 0.95em;
+    color: #555;
+}
+
+.tabla-publicaciones tr:hover {
+    background-color: #f1f1f1;
+}
+
+.tabla-publicaciones td.descripcion {
+    max-width: 200px; /* Ajusta el ancho máximo según tus necesidades */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para las imágenes */
+.imagen-producto {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Estilos para el estado del producto */
+.estado {
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    font-size: 0.9em;
+}
+
+.estado.disponible {
+    background-color: #d4edda;
+    color: #28a745;
+}
+
+.estado.vendido {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+/* Botones de acciones */
+.botones-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+    margin-top: 20px;
+}
+
+.botones-acciones button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.9em;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.btn-eliminar {
+    background-color: #F2690D;
+}
+
+.btn-eliminar:hover {
+    background-color: #FF8C00;
+}
+
+.btn-editar {
+    background-color: #F2690D;
+}
+
+.btn-editar:hover {
+    background-color: #FF8C00;
+}
+
+.btn-oferta {
+    background-color: #F2690D;
+}
+
+.btn-oferta:hover {
+    background-color: #e36a0a;
+}
+
+.fila-publicacion.seleccionado {
+    background-color: #f3cc98; /* Fondo resaltado */
+    border: 2px solid #f3e69a; /* Borde resaltado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para más énfasis */
+}

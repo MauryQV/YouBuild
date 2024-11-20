@@ -16,9 +16,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import ProductoSerializer
 from django.utils import timezone
 from django.shortcuts import render, redirect
+import secrets
 
 # Vista principal
 @login_required
@@ -193,18 +193,18 @@ def filtro_productos_view(request):
         productos = ProductoDb.objects.all().order_by('-visitas')
     
     categorias = CategoriaDb.objects.all()
+
     # Obtener parámetros de búsqueda del POST
     categoria = request.POST.get('categoria', '')
     precio_min = request.POST.get('precio_min', None)
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
- 
+    oferta = request.POST.get('oferta', '')  # El filtro de solo ofertas
+
+    # Filtrar por categoría si es que se seleccionó una
     if categoria:
         productos = productos.filter(categoria_fk=categoria)
         print("Productos después de filtrar por categoría:", productos)
-
-    print("Valor de precio_min recibido:", precio_min)
-    print("Valor de precio_max recibido:", precio_max)
 
     # Filtrar por rango de precio
     if precio_min:
@@ -215,7 +215,13 @@ def filtro_productos_view(request):
         productos = productos.filter(precio__lte=float(precio_max))
         print("Productos después de filtrar por precio máximo:", productos)
 
-    print("Ordenar recibido:", ordenar)
+    # Filtrar por "oferta" (productos en promoción)
+    if oferta == 'si':
+        productos = productos.filter(estado='promocion')  # Filtramos solo productos en promoción
+        print("Productos después de filtrar por solo ofertas:", productos)
+    elif oferta == 'no':
+        # No aplicar ningún filtro de oferta, mostramos todos los productos
+        pass
 
     # Ordenar productos
     if ordenar == 'mayor':
@@ -224,9 +230,11 @@ def filtro_productos_view(request):
         productos = productos.order_by('precio')
     elif ordenar == 'relevantes':
         productos = productos.order_by('-visitas')
+    
     print("Productos después de filtrar y ordenar:", productos)
 
-    if categoria==None and precio_min==None and precio_max and ordenar==None:
+    # Si no se seleccionó ningún filtro, mostrar todos los productos
+    if categoria == '' and precio_min is None and precio_max is None and ordenar == 'asc' and oferta == '':
         productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
@@ -251,6 +259,7 @@ def filtro_productos_view(request):
         'productos': productos,
         'categorias': categorias,
     })
+
 
 # Carrito de compras
 @login_required
@@ -461,68 +470,91 @@ def eliminar_de_lista_favoritos(request, producto_id):
 def confirmacion_producto(request):
     return render(request, 'confirmacion_producto.html')
 
-class PublicacionesUsuarioAPIView(APIView):
+@login_required
+def publicaciones_usuario_view(request):
+    usuario = request.user.usuariodb  # Obtiene el perfil de usuario
+    productos = ProductoDb.objects.filter(usuario_fk=usuario)
+    
+    return render(request, "Mis_publiccaciones.html", {
+        'mis_productos': productos,
+        'usuario': usuario  
+    })
+    
+@login_required
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
+    imagenes_actuales = ImagenProductoDB.objects.filter(producto_fk=producto)
+    
+    if request.method == 'POST':
+        form = EditarProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            producto = form.save(commit=False)
+            producto.usuario_fk = request.user.usuariodb  # Asegurarse de que el producto pertenezca al usuario
+            producto.save()
+            
+            # Si se suben nuevas imágenes, las eliminamos y las guardamos
+            if 'imagenes' in request.FILES:
+                ImagenProductoDB.objects.filter(producto_fk=producto).delete()  # Eliminar las imágenes previas
+                imagenes = request.FILES.getlist('imagenes')
+                for imagen in imagenes:
+                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+
+            return redirect('confirmacion_producto')  # Redirigir a la página de confirmación
+    else:
+        form = EditarProductoForm(instance=producto)
+
+    return render(request, 'edit_producto.html', {'form': form, 'editar': True, 'imagenes_actuales': imagenes_actuales})
+
+class CrearPromocionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def post(self, request, producto_id):
         usuario = request.user.usuariodb
-        estado = request.query_params.get('estado', None)
-        productos = ProductoDb.objects.filter(usuario_fk=usuario)
+        try:
+            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
 
-        if estado:
-            productos = productos.filter(estado=estado)
+            # Validar que no haya una promoción activa
+            if producto.esta_en_promocion():
+                return Response({"error": "El producto ya tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not productos.exists():
-            return Response({"mensaje": "No tienes publicaciones."}, status=status.HTTP_200_OK)
+            # Extraer datos del body
+            descuento = request.data.get('descuento')
+            fecha_inicio_promocion = request.data.get('fecha_inicio_promocion')
+            fecha_fin_promocion = request.data.get('fecha_fin_promocion')
 
-        data = []
-        for producto in productos:
-            foto_principal = producto.imagenes.first()
-            data.append({
-                "nombre": producto.nombre,
-                "detalle": producto.detalle,
-                "precio": producto.precio_final(),
-                "foto_principal": foto_principal.imagen.url if foto_principal else None,
-                "estado": producto.estado,
-            })
+            # Validar los campos
+            if not descuento or not fecha_inicio_promocion or not fecha_fin_promocion:
+                return Response({"error": "Todos los campos son obligatorios."}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(data, status=status.HTTP_200_OK)
-    
-@login_required  # Asegúrate de que solo usuarios autenticados puedan ver esta página
-def publicaciones(request):
-    return render(request, 'publicaciones.html')
-    
-class ActualizarPublicacionAPIView(APIView):
+            producto.descuento = descuento
+            producto.fecha_inicio_promocion = fecha_inicio_promocion
+            producto.fecha_fin_promocion = fecha_fin_promocion
+            producto.estado = 'promocion'
+            producto.save()
+
+            return Response({"message": "Promoción creada exitosamente."}, status=status.HTTP_201_CREATED)
+        except ProductoDb.DoesNotExist:
+            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class FinalizarPromocionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, id):
-        # Obtener la publicación del usuario autenticado
+    def delete(self, request, producto_id):
         usuario = request.user.usuariodb
-        producto = get_object_or_404(ProductoDb, id=id, usuario_fk=usuario)
+        try:
+            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
 
-        # Validar y actualizar los datos recibidos
-        nombre = request.data.get('nombre', producto.nombre)
-        detalle = request.data.get('detalle', producto.detalle)
-        precio = request.data.get('precio', producto.precio)
+            # Validar que haya una promoción activa
+            if not producto.esta_en_promocion():
+                return Response({"error": "El producto no tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if precio is not None and float(precio) <= 0:
-            return Response({"error": "El precio debe ser mayor a 0."}, status=status.HTTP_400_BAD_REQUEST)
+            # Restaurar el estado y precio original
+            producto.descuento = 0.0
+            producto.fecha_inicio_promocion = None
+            producto.fecha_fin_promocion = None
+            producto.estado = 'disponible'
+            producto.save()
 
-        # Actualizar campos básicos
-        producto.nombre = nombre
-        producto.detalle = detalle
-        producto.precio = precio
-        producto.save()
-
-        # Manejo de fotos (opcional)
-        fotos = request.FILES.getlist('fotos')
-        if fotos:
-            # Eliminar imágenes existentes
-            producto.imagenes.all().delete()
-            # Subir nuevas imágenes
-            for foto in fotos:
-                ImagenProductoDB.objects.create(producto_fk=producto, imagen=foto)
-
-        # Responder con los datos actualizados
-        serializer = ProductoSerializer(producto)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"message": "Promoción finalizada y precio original restaurado."}, status=status.HTTP_200_OK)
+        except ProductoDb.DoesNotExist:
+            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
