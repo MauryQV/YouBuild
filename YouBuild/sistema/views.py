@@ -193,18 +193,18 @@ def filtro_productos_view(request):
         productos = ProductoDb.objects.all().order_by('-visitas')
     
     categorias = CategoriaDb.objects.all()
+
     # Obtener parámetros de búsqueda del POST
     categoria = request.POST.get('categoria', '')
     precio_min = request.POST.get('precio_min', None)
     precio_max = request.POST.get('precio_max', None)
     ordenar = request.POST.get('ordenar', 'asc')
- 
+    oferta = request.POST.get('oferta', '')  # El filtro de solo ofertas
+
+    # Filtrar por categoría si es que se seleccionó una
     if categoria:
         productos = productos.filter(categoria_fk=categoria)
         print("Productos después de filtrar por categoría:", productos)
-
-    print("Valor de precio_min recibido:", precio_min)
-    print("Valor de precio_max recibido:", precio_max)
 
     # Filtrar por rango de precio
     if precio_min:
@@ -215,7 +215,13 @@ def filtro_productos_view(request):
         productos = productos.filter(precio__lte=float(precio_max))
         print("Productos después de filtrar por precio máximo:", productos)
 
-    print("Ordenar recibido:", ordenar)
+    # Filtrar por "oferta" (productos en promoción)
+    if oferta == 'si':
+        productos = productos.filter(estado='promocion')  # Filtramos solo productos en promoción
+        print("Productos después de filtrar por solo ofertas:", productos)
+    elif oferta == 'no':
+        # No aplicar ningún filtro de oferta, mostramos todos los productos
+        pass
 
     # Ordenar productos
     if ordenar == 'mayor':
@@ -224,9 +230,11 @@ def filtro_productos_view(request):
         productos = productos.order_by('precio')
     elif ordenar == 'relevantes':
         productos = productos.order_by('-visitas')
+    
     print("Productos después de filtrar y ordenar:", productos)
 
-    if categoria==None and precio_min==None and precio_max and ordenar==None:
+    # Si no se seleccionó ningún filtro, mostrar todos los productos
+    if categoria == '' and precio_min is None and precio_max is None and ordenar == 'asc' and oferta == '':
         productos = ProductoDb.objects.all().order_by('-visitas')
 
     # Si es una solicitud AJAX, devolver solo los datos de productos en JSON
@@ -251,6 +259,7 @@ def filtro_productos_view(request):
         'productos': productos,
         'categorias': categorias,
     })
+
 
 # Carrito de compras
 @login_required
