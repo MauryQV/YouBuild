@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Transacciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'transacciones.css' %}">
+</head>
+<body>
+    <main class="container">
+        <h1>Historial de Transacciones</h1>
+        
+        <form method="get" class="filter-form">
+            {{ form.as_p }}
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="todas">Todas</button>
+            <button class="tab-btn" data-tab="compras">Compras</button>
+            <button class="tab-btn" data-tab="ventas">Ventas</button>
+        </div>
+
+        <div class="tab-content active" id="todas">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Monto</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaccion in transacciones %}
+                    <tr>
+                        <td>{{ transaccion.get_tipo_display }}</td>
+                        <td>{{ transaccion.fecha|date:"d/m/Y H:i" }}</td>
+                        <td class="product-cell">
+                            <img src="{{ transaccion.producto.imagen_principal.url }}" alt="{{ transaccion.producto.nombre }}">
+                            <span>{{ transaccion.producto.nombre }}</span>
+                        </td>
+                        <td>{{ transaccion.monto }} Bs</td>
+                        <td>
+                            <a href="{% url 'detalle_transaccion' transaccion.id %}" class="ver-detalles">Ver detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="compras">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Monto</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in compras %}
+                    <tr>
+                        <td>{{ compra.fecha|date:"d/m/Y H:i" }}</td>
+                        <td class="product-cell">
+                            <img src="{{ compra.producto.imagen_principal.url }}" alt="{{ compra.producto.nombre }}">
+                            <span>{{ compra.producto.nombre }}</span>
+                        </td>
+                        <td>{{ compra.monto }} Bs</td>
+                        <td>
+                            <a href="{% url 'detalle_transaccion' compra.id %}" class="ver-detalles">Ver detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="ventas">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Monto</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                    <tr>
+                        <td>{{ venta.fecha|date:"d/m/Y H:i" }}</td>
+                        <td class="product-cell">
+                            <img src="{{ venta.producto.imagen_principal.url }}" alt="{{ venta.producto.nombre }}">
+                            <span>{{ venta.producto.nombre }}</span>
+                        </td>
+                        <td>{{ venta.monto }} Bs</td>
+                        <td>
+                            <a href="{% url 'detalle_transaccion' venta.id %}" class="ver-detalles">Ver detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script src="{% static 'transacciones.js' %}"></script>
+</body>
+</html>

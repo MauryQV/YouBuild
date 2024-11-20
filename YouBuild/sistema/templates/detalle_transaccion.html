@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Transacción</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/transacciones.css' %}">
+</head>
+<body>
+    <main class="container">
+        <h1>Detalle de Transacción</h1>
+        <div class="transaction-detail">
+            <p><strong>Tipo:</strong> {{ transaccion.get_tipo_display }}</p>
+            <p><strong>Fecha:</strong> {{ transaccion.fecha|date:"d/m/Y H:i" }}</p>
+            <p><strong>Producto:</strong> {{ transaccion.producto.nombre }}</p>
+            <p><strong>Monto:</strong> {{ transaccion.monto }} Bs</p>
+            <p><strong>Comprador:</strong> {{ transaccion.comprador.nombre }}</p>
+            <p><strong>Vendedor:</strong> {{ transaccion.vendedor.nombre }}</p>
+            <p><strong>Estado:</strong> {{ transaccion.get_estado_display }}</p>
+            {% if transaccion.detalles %}
+                <p><strong>Detalles adicionales:</strong> {{ transaccion.detalles }}</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'transacciones' %}" class="back-button">Volver al listado</a>
+    </main>
+</body>
+</html>

@@ -584,3 +584,36 @@ def buy_now(request, product_id):
         # Aquí iría la lógica para la compra inmediata
         return JsonResponse({'status': 'success', 'message': 'Compra iniciada'})
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def transacciones_view(request):
+    return render(request, 'transacciones.html')
