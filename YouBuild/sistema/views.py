@@ -56,6 +56,8 @@ def perfil_view(request):
     })
 
 
+
+
 def custom_logout_view(request):
     logout(request)
     return redirect('index')
@@ -143,19 +145,26 @@ def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
+
+    # Calcular datos dinámicos
+    precio_final = producto.precio_final()
+    descuento_aplicado = producto.descuento if producto.esta_en_promocion() else 0
+    tiempo_restante = producto.tiempo_restante_promocion()  # Tiempo restante en segundos
+
     favoritos_ids = []
     if request.user.is_authenticated:
         favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
-        print("Productos en favoritos:", list(favoritos_ids))
 
     template = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
     
     return render(request, "detalle_producto.html", {
         "producto": producto,
+        "precio_final": precio_final,
+        "descuento_aplicado": descuento_aplicado,
+        "tiempo_restante": tiempo_restante,  # Tiempo en segundos para el frontend
         "template": template,
         "favoritos_ids": favoritos_ids,
     })
-
 # Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
@@ -457,13 +466,14 @@ class PublicacionesUsuarioAPIView(APIView):
 
     def get(self, request):
         usuario = request.user.usuariodb
-
         estado = request.query_params.get('estado', None)
-
         productos = ProductoDb.objects.filter(usuario_fk=usuario)
 
         if estado:
             productos = productos.filter(estado=estado)
+
+        if not productos.exists():
+            return Response({"mensaje": "No tienes publicaciones."}, status=status.HTTP_200_OK)
 
         data = []
         for producto in productos:
@@ -477,6 +487,10 @@ class PublicacionesUsuarioAPIView(APIView):
             })
 
         return Response(data, status=status.HTTP_200_OK)
+    
+@login_required  # Asegúrate de que solo usuarios autenticados puedan ver esta página
+def publicaciones(request):
+    return render(request, 'publicaciones.html')
     
 class ActualizarPublicacionAPIView(APIView):
     permission_classes = [IsAuthenticated]

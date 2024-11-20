@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Publicaciones</title>
+    <link rel="stylesheet" href="/static/css/styles.css"> <!-- Enlace a tu archivo CSS -->
+</head>
+<body>
+    <h1>Mis Publicaciones</h1>
+    <div id="productos-container">
+        <!-- Aquí se cargarán las publicaciones dinámicamente -->
+    </div>
+
+    <!-- Script para cargar las publicaciones -->
+    <script>
+        const API_URL = '/api/publicaciones/'; // URL de tu API
+
+        async function cargarProductos() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}', // Si necesitas CSRF token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al cargar los productos');
+                }
+
+                const productos = await response.json();
+                const container = document.getElementById('productos-container');
+                container.innerHTML = '';
+
+                // Comprobar si no hay publicaciones
+                if (productos.length === 0) {
+                    container.innerHTML = `<p class="no-publicaciones">No tienes publicaciones disponibles.</p>`;
+                    return;
+                }
+
+                // Mostrar publicaciones
+                productos.forEach(producto => {
+                    const productoHTML = `
+                        <div class="producto">
+                            <img src="${producto.foto_principal || '/static/images/default.jpg'}" alt="${producto.nombre}" class="producto-img">
+                            <h2 class="producto-nombre">${producto.nombre}</h2>
+                            <p class="producto-detalle">${producto.detalle}</p>
+                            <p class="producto-precio">Precio: ${producto.precio}</p>
+                            <span class="producto-estado">Estado: ${producto.estado}</span>
+                        </div>
+                    `;
+                    container.innerHTML += productoHTML;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                const container = document.getElementById('productos-container');
+                container.innerHTML = `<p class="error-carga">Ocurrió un error al cargar las publicaciones.</p>`;
+            }
+        }
+
+        // Llamar a la función cuando se cargue la página
+        window.onload = cargarProductos;
+    </script>
+
+    <!-- Estilos opcionales -->
+    <style>
+        .no-publicaciones {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error-carga {
+            font-size: 18px;
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .producto {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .producto-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .producto-nombre {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .producto-detalle {
+            font-size: 16px;
+        }
+        .producto-precio {
+            font-size: 16px;
+            color: green;
+        }
+        .producto-estado {
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+</body>
+</html>
