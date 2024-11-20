@@ -1,0 +1,70 @@
+{% extends layout_template %}
+{% load static %}
+
+{% block content %}
+<!-- Link a los estilos específicos de esta vista -->
+<link rel="stylesheet" href="{% static 'ListaOferta.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+
+<div class="container">
+    <nav class="breadcrumb">
+        <a href="{% url 'index' %}" class="breadcrumb-link">Página Principal</a> / <span class="breadcrumb-current">Super Ofertas</span>
+    </nav>
+    <div class="titulo-container">
+        <h1 class="titulo">Super Ofertas</h1>
+    </div>
+
+    <!-- Productos en oferta -->
+    <div class="productos-grid">
+        {% if productos_oferta %}
+            {% for producto in productos_oferta %}
+            <div class="producto-card">
+                <div class="producto-descuento">
+                    {{ producto.descuento }}% OFF
+                </div>
+                <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
+                <div class="producto-info">
+                    <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+                    <p class="producto-precio">
+                        <span class="precio-descuento">Bs {{ producto.precio_final }}</span>
+                        <span class="precio-original">Bs {{ producto.precio }}</span>
+                    </p>
+                    <div class="botones">
+                        <button class="btn-detalles">Ver Detalles</button>
+                        <button class="btn-carrito">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos en oferta disponibles en este momento.</p>
+        {% endif %}
+    </div>
+    <div class="titulo-container">
+    <h1 class="titulo">Productos Populares</h1>
+    </div>
+
+    <!-- Productos generales -->
+    <div class="productos-grid">
+        {% if productos %}
+            {% for producto in productos %}
+            <div class="producto-card">
+                <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}">
+                <div class="producto-info">
+                    <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+                    <p class="producto-precio">
+                        Bs {{ producto.precio }}
+                    </p>
+                    <div class="botones">
+                        <button class="btn-detalles">Ver Detalles</button>
+                        <button class="btn-carrito">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos disponibles en este momento.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
