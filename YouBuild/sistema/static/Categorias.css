@@ -14,7 +14,7 @@
     align-items: center;
     text-align: center;
     background-color: transparent;
-    border: none;
+    border-radius: 25px;
     cursor: pointer;
     width: 120px;
   }
