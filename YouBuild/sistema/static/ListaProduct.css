@@ -1,10 +1,11 @@
 /* Estilos generales */
 .titulo {
     text-align: center;
+    font-family: 'Comfortaa', sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Comfortaa', sans-serif;
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
@@ -18,14 +19,15 @@ body {
     margin-left: 20px;
 }
 
-/* Estilos de productos */
 .products-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    margin: 10px;
-    z-index: 0;
+    justify-content: center; /* Centrar los productos */
+    gap: 10px; /* Espacio entre productos */
+    padding: 20px; /* Espacio alrededor del contenedor */
+    box-sizing: border-box; /* Incluir padding en el ancho total */
 }
+
 
 .product {
     background-color: white;
@@ -56,7 +58,7 @@ body {
 .product h3 {
     font-size: 0.9em; /* Tamaño del nombre del producto */
     margin: 5px 0; /* Reducir el margen para acercar al precio */
-    color: #444;
+    color: #100f0f;
 }
 
 .product p {
@@ -102,6 +104,7 @@ body {
 .btn.add-to-list,
 .btn.add-to-view,
 .btn.add-to-cart {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
     background-color: #faf7f6; /* Color de fondo gris */
     color: rgb(243, 174, 37); /* Color de texto gris */
     border: 1px solid rgb(243, 174, 37); /* Borde gris */
@@ -110,6 +113,7 @@ body {
 .btn.add-to-list:hover,
 .btn.add-to-view:hover,
 .btn.add-to-cart:hover {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
     background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
     color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
 }

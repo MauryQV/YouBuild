@@ -12,8 +12,7 @@ class ProductoAdmin(admin.ModelAdmin):
 # El resto de los modelos registrados
 @admin.register(CategoriaDb)
 class CategoriaAdmin(admin.ModelAdmin):
-    fields = ["nombre"]
-    list_display = ["nombre"]
+    list_display = ['nombre', 'imagen']  # Agrega 'imagen' aquí si deseas verlo en la lista
 
 @admin.register(DepartamentoDB)
 class DepartamentoAdmin(admin.ModelAdmin):
@@ -36,6 +35,8 @@ admin.site.register(TipoPagoDB)
 admin.site.register(PagoDB)
 admin.site.register(CarritoProductoDB)
 admin.site.register(CarruselDB)
+admin.site.register(SubcategoriaDB)
+
 
 # Finalmente, registra el modelo de imagen también
 

@@ -15,20 +15,30 @@
 
 /* Otros estilos del formulario */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Comfortaa', sans-serif;
   background-color: #fff;
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Asegura que el footer esté al final */
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+
+  overflow: auto; /* Controla el desbordamiento */
 }
 
+footer {
+  margin-top: 50px; /* Aumenta este valor si es necesario */
+
+}
+
+
+/* Estilos para centrar el título */
 h2.registro-titulo {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+  width: 100%; /* Asegura que el título ocupe todo el ancho disponible */
 }
 
 .registro-container {
@@ -38,18 +48,20 @@ h2.registro-titulo {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   width: 100%;
-  margin: auto;
+  margin: 30px auto; /* Centra el contenedor */
+  overflow: auto; /* Permite que el contenedor maneje su propio desbordamiento */
 }
 
+/* Barra de progreso de pasos */
 .registro-progreso {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0px; /* Sin espacio entre los botones */
   margin-bottom: 20px;
-  gap: 8px;
 }
 
-.registro-progreso .paso {
+.paso {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -62,12 +74,12 @@ h2.registro-titulo {
   transition: background-color 0.3s ease;
 }
 
-.registro-progreso .paso.activo {
+.paso.activo {
   background-color: #ef6605;
 }
 
 .registro-progreso .linea {
-  width: 40px;
+  width: 10px; /* Reduce el ancho de la línea entre pasos */
   height: 4px;
   background-color: #ccc;
   transition: background-color 0.3s ease;
@@ -102,6 +114,7 @@ h2.registro-titulo {
   box-sizing: border-box;
 }
 
+/* Button Styles */
 .registro-btn-siguiente,
 .registro-btn-anterior,
 .registro-btn-submit {
@@ -121,6 +134,22 @@ h2.registro-titulo {
 .registro-btn-anterior:hover,
 .registro-btn-submit:hover {
   background-color: #d67a0b;
+}
+
+/* Styles for Disabled 'Crear una Cuenta' Button */
+.registro-btn-submit.disabled {
+  background-color: #e0e0e0; /* Gray color for disabled state */
+  color: #333;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
+}
+
+/* Styles for Enabled 'Crear una Cuenta' Button */
+.registro-btn-submit.enabled {
+  background-color: #ef6605; /* Orange color when enabled */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .registro-btn-anterior {
@@ -148,71 +177,54 @@ h2.registro-titulo {
 }
 
 .imagen-preview {
-  position: relative; /* Permite posicionar la "X" sobre la imagen */
-  margin-top: 10px; /* Espacio arriba de la vista previa */
-  width: 100px; /* Establece el ancho del contenedor de la imagen */
-  height: 100px; /* Establece la altura del contenedor de la imagen */
-  overflow: hidden; /* Oculta la parte de la imagen que sobrepase el contenedor */
-  border: 1px solid #ddd; /* Opción para agregar un borde */
-  border-radius: 8px; /* Bordes redondeados */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  margin-left: auto; /* Centra el contenedor horizontalmente en su padre */
-  margin-right: auto; /* Centra el contenedor horizontalmente en su padre */
+  position: relative;
+  margin-top: 10px;
+  width: 130px;
+  height: 130px;
+  overflow: hidden;
+  border: 1px solid #ededed;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e3e3e3;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .imagen-preview img {
-  max-width: 100%; /* La imagen ocupa el 100% del ancho del contenedor */
-  max-height: 100%; /* La imagen ocupa el 100% del alto del contenedor */
-  object-fit: cover; /* Mantiene la proporción de la imagen y cubre el contenedor */
-  display: block; /* Asegura que la imagen ocupe el bloque */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hidden-remove {
+  display: none;
 }
 
 .remove {
-  position: absolute; /* Posiciona la "X" en la esquina superior derecha de la imagen */
-  top: 5px; /* Ajusta la posición superior de la "X" */
-  right: 5px; /* Ajusta la posición derecha de la "X" */
-  background-color: #ef4444; /* Color de fondo rojo */
-  color: white; /* Color del texto */
-  border: none; /* Sin borde */
-  border-radius: 50%; /* Bordes redondeados para hacerla circular */
-  width: 24px; /* Ancho de la "X" */
-  height: 24px; /* Altura de la "X" */
-  display: flex; /* Usar flex para centrar el contenido */
-  align-items: center; /* Alinear verticalmente al centro */
-  justify-content: center; /* Alinear horizontalmente al centro */
-  cursor: pointer; /* Cambia el cursor al pasar sobre la "X" */
-  font-size: 14px; /* Tamaño de la fuente */
-  line-height: 1; /* Altura de línea para el texto */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para un efecto de profundidad */
-}
-
-/* Barra de progreso de pasos */
-.registro-progreso {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.paso {
-  width: 30px;
-  height: 30px;
-  background-color: #ccc;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #afafaf;
+  color: white;
+  border: none;
   border-radius: 50%;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-.paso.activo {
-  background-color: #4CAF50;
-  color: #fff;
-}
+
 /* Mensajes de error */
 .error {
-  color: red;
+  color: rgb(217, 0, 0);
   font-size: 0.9em;
-  margin-top: 5px;
-}
-.oculto {
-  display: none;
+  margin-top: 5px;
 }

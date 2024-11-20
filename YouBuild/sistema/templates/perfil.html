@@ -1,11 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hola</h1>
-</body>
-</html>
+{% extends "layoutReg.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block extra_styles %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'perfil.css' %}">
+<style>
+    body {
+        font-family: 'Comfortaa', sans-serif;
+    }
+    .icon-btn {
+        padding: 8px; 
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        border-radius: 50%;
+        text-decoration: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Sidebar de la izquierda -->
+    <div class="profile-sidebar">
+        <h1>Mi Foto</h1>
+        <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
+            {% csrf_token %}
+            <div class="profile-photo-container">
+                <label for="imagen_perfil">
+                    <div class="profile-photo">
+                        <img src="{{ user.usuariodb.imagen_perfil.url }}" alt="Imagen de perfil" class="profile-image">
+                    </div>
+                    <div class="camera-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </label>
+                <input type="file" id="imagen_perfil" name="imagen_perfil" accept="image/*" class="d-none" onchange="document.getElementById('profile-photo-form').submit();">
+            </div>
+        </form>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <p class="profile-name">{{ user.usuariodb.nombre_completo }}</p>
+        <div class="profile-contact-info">
+            <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
+            <p><strong>Correo:</strong><br>{{ user.email }}</p>
+        </div>
+        <div class="profile-actions">
+            <button class="btn-mis-publicaciones">Mis publicaciones</button>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="profile-main">
+        <h1>Mis Datos Personales</h1>
+        <form method="POST" enctype="multipart/form-data" id="profileForm">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="profile_update">
+            {{ u_form|crispy }}
+            {{ p_form|crispy }}
+            <button type="submit" id="submitButton" class="btn-primario" disabled>Guardar Cambios</button>
+        </form>
+        <h2 class="mt-4">Cambiar Contraseña</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="password_change">
+            {{ password_form|crispy }}
+            <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
+                Cambiar Contraseña
+            </button>
+            {% if user.usuariodb.esta_bloqueado %}
+            <p class="lockout-message">Demasiados intentos fallidos, inténtelo nuevamente en 24 hrs.</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById('profileForm');
+        const submitButton = document.getElementById('submitButton');
+
+        // Función para habilitar el botón de submit
+        function enableSubmit() {
+            submitButton.disabled = false;
+        }
+
+        // Agregar un evento a cada campo del formulario para detectar cambios
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('change', enableSubmit);
+            input.addEventListener('input', enableSubmit);  // Para cambios en tiempo real
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById('profileForm');
+        let isFormDirty = false;
+
+        // Marcar el formulario como "sucio" si hay cambios
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => { isFormDirty = true; });
+            input.addEventListener('input', () => { isFormDirty = true; }); // Para cambios en tiempo real
+        });
+
+        // Limpiar el estado de "sucio" si el formulario se envía
+        form.addEventListener('submit', () => {
+            isFormDirty = false;
+        });
+
+        // Advertencia al intentar cerrar o recargar la página si hay cambios sin guardar
+        window.addEventListener('beforeunload', function(event) {
+            if (isFormDirty) {
+                event.preventDefault();
+                // Establece el mensaje para navegadores modernos
+                event.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?';
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const passwordChangeBtn = document.getElementById("password-change-btn");
+        const bloqueoHasta = "{{ user.usuariodb.bloqueo_password_hasta|date:'U' }}";  // timestamp en segundos
+    
+        if (bloqueoHasta) {
+            const desbloqueoTimestamp = parseInt(bloqueoHasta) * 1000;  // Convertir a milisegundos
+            const now = new Date().getTime();
+    
+            // Si el tiempo de desbloqueo aún no ha pasado, configurar un temporizador
+            if (desbloqueoTimestamp > now) {
+                passwordChangeBtn.disabled = true;
+                const tiempoRestante = desbloqueoTimestamp - now;
+    
+                setTimeout(() => {
+                    passwordChangeBtn.disabled = false;
+                    passwordChangeBtn.style.backgroundColor = "";  // Restaurar el color original
+                }, tiempoRestante);
+            }
+        }
+    });
+
+   
+    document.querySelector('.btn-mis-publicaciones').addEventListener('click', () => {
+        window.location.href = "{% url 'publicaciones' %}";
+    });
+</script>
+
+
+{% endblock %}

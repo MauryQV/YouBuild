@@ -1,10 +1,13 @@
 .topbar-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 20px;
+    padding: 13px 0px;
     background-color: #FFFFFF;
+    margin: 0 2cm; 
     position: relative;
+    font-size: 16px;
 }
 
 .topbar-container::after {
@@ -12,9 +15,11 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
     height: 1px;
     background-color: #ef6605;
+    margin-left: -2cm; /* Centers the underline within the topbar container */
+    margin-right: 0cm; 
 }
 
 /* Íconos de la derecha */
@@ -25,19 +30,23 @@
 
 /* Estilo de los íconos con círculo */
 .icon-btn {
-    position: relative;
-    padding: 10px 15px;
+    width: 25px; /* Ajusta el ancho del círculo */
+    height: 25px; /* Ajusta la altura del círculo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: white;
     border: 2px solid #ef6605;
-    border-radius: 25px;
+    border-radius: 25%; /* Mantiene el botón circular */
     color: #ef6605;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .icon-btn i {
-    font-size: 18px;
+    font-size: 25px;
 }
 
 /* Circulo del contador en el carrito */
@@ -48,8 +57,8 @@
     background-color: orange;
     color: white;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 25px;
+    height: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,7 +69,7 @@
 /* Estilo de la imagen de perfil (sin círculo) */
 .profile-icon .profile-pic {
     width: 50px;
-    height: 55px;
+    height: 50  px;
     border-radius: 50%;
 }
 
@@ -81,7 +90,7 @@
 .btn-sell i {
     background-color: transparent;
     border: 1px solid white;
-    border-radius: 50%;
+    border-radius: 40%;
     padding: 5px;
     margin-right: 10px;
     font-size: 16px;

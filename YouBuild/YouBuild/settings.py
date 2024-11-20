@@ -17,6 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -28,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
 
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     #mis apps
     'sistema.apps.SistemaConfig',
     'rest_framework',
+    'crispy_forms',
+    "crispy_bootstrap5",
 ]
 
 LOGIN_REDIRECT_URL = '/'
@@ -70,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'sistema.context_processors.cart_count',
+                'sistema.context_processors.user_profile',
                 
             ],
         },
@@ -78,7 +83,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'YouBuild.wsgi.application'
 
-
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -124,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/La_Paz'
 
 USE_I18N = True
 

@@ -4,15 +4,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}
-        Mi Tienda
-      {% endblock %}
+    <title>{% block title %}Mi Tienda{% endblock %}
     </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="stylesheet" href="{% static 'layoutReg.css' %}" />
-
+    <link rel="stylesheet" href="{% static 'topbar.css' %}">
+    <style>
+      body {
+          font-family: 'Comfortaa', sans-serif;
+      }
+    </style>
     {% block extra_styles %}
 
     {% endblock %}
@@ -20,31 +23,29 @@
 
   <body>
     <header>
+      <div class="topbar-background">
       <div class="topbar-container">
         <div class="topbar-left">
           <a href="/home " class="logo"><img src="{% static 'logo.jpeg' %}" alt="Logo" width="125" /></a>
         </div>
         <div class="topbar-center">
-          <form action="{% url 'buscar' %}" method="GET">
+          <!-- Aquí está el formulario con las restricciones necesarias -->
+          <form action="{% url 'buscar' %}" method="GET" onsubmit="return validateSearch()">
             <div class="search-box">
-              <input type="text" placeholder="Buscar" name="q" />
+              <input type="text" placeholder="Buscar" name="q" maxlength="20" pattern="[A-Za-z0-9\s]+" required>
               <button><i class="fa fa-search"></i></button>
             </div>
           </form>
         </div>
         <div class="topbar-right">
           <!-- Icono de Corazón -->
-          <a href="#" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+          <a href="{% url 'listaFavoritos' %}" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
           <!-- Carrito de Compras -->
           <a href="{% url 'Carrito' %}" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="cart-count">{{ cart_count }}</span></a>
           <!-- Icono de Foto de Perfil -->
           <div class="profile-menu-container">
             <a href="#" class="profile-icon" onclick="toggleMenu(event)">
-              {% if usuario.imagen_perfil %}
                 <img src="{{ usuario.imagen_perfil.url }}" alt="Foto de Perfil" class="profile-pic" />
-              {% else %}
-                <img src="{% static 'perfil/perfil.png' %}" alt="Foto de Perfil" class="profile-pic" />
-              {% endif %}
             </a>
             <!-- Menú desplegable -->
             <div class="dropdown-menu hidden" id="profileDropdown">
@@ -53,7 +54,9 @@
             </div>
           </div>
           <!-- Botón de Vender -->
-          <a href="/ " class="btn-sell"><i class="fas fa-plus"></i> Vender</a>
+          <a href="{% url 'vender' %}" class="btn-sell">
+            <i class="fas fa-plus"></i> Vender
+          </a>
         </div>
       </div>
     </header>
@@ -106,7 +109,6 @@
         var menu = document.getElementById('profileDropdown')
         menu.classList.toggle('visible')
       }
-      
       // Cerrar el menú si se hace clic fuera de él
       window.onclick = function (event) {
         var menu = document.getElementById('profileDropdown')
@@ -118,6 +120,7 @@
     {% block extra_scripts %}
       <!-- COLOCAR SUS SCRIPTS AQUI -->
       <script src="{% static 'script.js' %}"></script>
+      <script src="{% static 'js/validaciones.js' %}"></script>
     {% endblock %}
   </body>
 </html>

@@ -1,121 +1,218 @@
 <!DOCTYPE html>
-{% extends 'layout.html' %}
+{% extends template %}
 {% load static %}
 {% block title %}Detalles del producto{% endblock %}
-    {% block extra_styles %}
-    <!--colocar sus dependencias personalizadas/STATIC-->
-    <link rel="stylesheet" href="{% static 'listaProduct.css' %}" /> 
-    {% endblock %}
-    {% block content %}
-    <div class="titulo">
-        <h1> {{ producto.nombre }} </h1>
-      </div>
-    <div class="flex-container">
-        <div class="column column-left flex-column">
-            <h3>Vendedor</h3>
-            <p>{{ producto.usuario_fk.nombre_completo }} </p>
-            <h3 class="product-name">{{ producto.nombre }}</h3>
-            <!-- Mostrar todas las imágenes del producto en un carrusel -->
-            <div class="carousel-productos-container">
-                <button class="carousel-productos-button prev" onclick="changeSlide(-1)">&#10094;</button>
-                <div class="carousel-productos">
-                    {% for imagen in producto.imagenes.all %}
-                    <div class="carousel-productos-item">
-                        <img src="{{ imagen.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
-                    </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-productos-button next" onclick="changeSlide(1)">&#10095;</button>
-            </div>
-            <div class="carousel-productos-dots">
+{% block extra_styles %}
+<!-- Colocar sus dependencias personalizadas/STATIC -->
+<link rel="stylesheet" href="{% static 'detalleProd.css' %}" />
+<!-- Incluir Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMF0sS1PeRCXGFsWobgfJj7C0vNhT5W+VY0tZ4" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Comfortaa', sans-serif;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div class="titulo">
+    <h1> {{ producto.nombre }} </h1>
+</div>
+<div class="flex-container">
+    <div class="column column-left flex-column">
+        <h3>Vendedor</h3>
+        <p>{{ producto.usuario_fk.nombre_completo }} </p>
+        <h3 class="product-name">{{ producto.nombre }}</h3>
+        <!-- Mostrar todas las imágenes del producto en un carrusel -->
+        <div class="carousel-productos-container">
+            <button class="carousel-productos-button prev" onclick="changeSlide(-1)">&#10094;</button>
+            <div class="carousel-productos">
                 {% for imagen in producto.imagenes.all %}
-                <span class="dot" onclick="currentSlide({{ forloop.counter0 }})"></span>
+                <div class="carousel-productos-item">
+                    <img src="{{ imagen.imagen.url }}" alt="Imagen del producto" class="producto-imagen">
+                </div>
                 {% endfor %}
             </div>
-            <div class="botones button-row">
-                <button class="btn" id="btn-comprar" onclick="comprar({{ producto.id }})">Comprar</button>
-
-
-                
-                <button class="btn add-to-view" id=" btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">Agregar al Carrito</button>
-
-
-
-
-                <button class="btn add-to-view" id=" btn-deseos" onclick="agregarDeseos()">Agregar a
-                    Deseos</button>
-            </div>
+            <button class="carousel-productos-button next" onclick="changeSlide(1)">&#10095;</button>
         </div>
-        <div class="column column-right flex-column">
-            <h3>Descripción</h3>
-            <p>{{ producto.detalle }}</p>
-            <div class="sub-container">
-                <div class="subcolumn1 flex-column column-left">
-                    <h3>Precio c/u</h3>
-                    <p class="aux">{{ producto.precio }} Bs.</p>
-                </div>
-                <div class="subcolumn2 flex-column column-right">
-                    <h3>Cantidad Disponible</h3>
-                    <p class="aux">1 Unidad</p>
-                </div>
-            </div>
-            <h3>Ubicación</h3>
-            <p>
-                {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
-                {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
-                {{ producto.usuario_fk.municipio_fk }}
-            </p>
+        <div class="carousel-productos-dots">
+            {% for imagen in producto.imagenes.all %}
+            <span class="dot" onclick="currentSlide({{ forloop.counter0 }})"></span>
+            {% endfor %}
+        </div>
+        <div class="botones button-row">
+            <button class="btn" id="btn-comprar" onclick="comprar({{ producto.id }})">Comprar</button>
+            <button class="btn add-to-view" id="btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">
+                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+            </button>
+            <button 
+                      class="btn add-to-view" 
+                      onclick="agregarAFavoritos({{ producto.id }})"
+                      id="favorito-btn-{{ producto.id }}">
+                      <i class="fas fa-heart"></i>
+                      {% if producto.id in favoritos_ids %}
+                          En Favoritos
+                      {% else %}
+                          Agregar a Lista
+                      {% endif %}
+                  </button>
         </div>
     </div>
-      <button class="btn" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
-        productos</button>
-    <!--COLOCAR SU CONTENIDO-->
-      {% endblock %}
-           {% block extra_scripts %}
-            <script src="{% static 'carrouselproductos.js' %}"></script>
-            <script>
-                function agregarAlCarrito(productId) {
-                    fetch(`/agregar-al-carrito/${productId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'  
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message || 'Producto agregado correctamente al carrito');
-                        } else {
-                            alert(data.message || 'Error al agregar al carrito');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+    <div class="column column-right flex-column">
+        <h3>Descripción</h3>
+        <p>{{ producto.detalle }}</p>
+        
+        <h3>Precio c/u:</h3>
+
+        {% if producto.esta_en_promocion %}
+        <!-- Contenedor de precios -->
+        <div class="precio-contenedor">
+            <!-- Precio original -->
+            <div class="subtitulo"><h3>Antes:</h3></div>
+            <div class="valor"><p class="precio-original">Bs {{ producto.precio }}</p></div>
+            
+            <!-- Precio con descuento -->
+            <div class="subtitulo"><h3>Ahora:</h3></div>
+            <div class="valor"><p class="precio-descuento">Bs {{ precio_final|floatformat:2 }}</p></div>
+        </div>
+
+        <!-- Contenedor de descuento -->
+        <p class="detalle-descuento">
+            Detalle del Descuento Aplicado:
+            <span class="badge-descuento">{{ descuento_aplicado }}% OFF</span>
+        </p>
+
+        <!-- Contador -->
+        <p id="contador" class="tiempo-restante">
+            Finaliza en: 
+            <span id="time-remaining"></span>
+        </p>
+
+        <!-- Script para manejar el contador -->
+        <script>
+            // Tiempo restante en segundos desde el backend
+            let tiempoRestante = {{ tiempo_restante }};
+
+            function iniciarContador(tiempo, elementoId) {
+                const elemento = document.getElementById(elementoId);
+                function actualizarContador() {
+                    if (tiempo <= 0) {
+                        elemento.innerText = "¡Promoción finalizada!";
+                        clearInterval(intervalo);
+                        return;
+                    }
+
+                    // Cálculo de días, horas, minutos y segundos
+                    const dias = Math.floor(tiempo / (24 * 3600));
+                    const horas = Math.floor((tiempo % (24 * 3600)) / 3600);
+                    const minutos = Math.floor((tiempo % 3600) / 60);
+                    const segundos = tiempo % 60;
+
+                    // Mostrar en el elemento
+                    elemento.innerText = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
+                    // Restar 1 segundo
+                    tiempo--;
                 }
-                function comprar(productId) {
-                    fetch(`/comprar-directo/${productId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.href = '/confirmacion/';  // Redirige a la página de confirmación
-                        } else {
-                            alert(data.message || 'Error al realizar la compra');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
-                </script>
-           {% endblock %}
+
+                // Actualizar el contador cada segundo
+                const intervalo = setInterval(actualizarContador, 1000);
+                actualizarContador(); // Ejecutar inmediatamente al cargar
+            }
+
+            // Iniciar el contador
+            iniciarContador(tiempoRestante, "time-remaining");
+        </script>
+    {% else %}
+        <p class="precio-sin-promocion">Bs {{ producto.precio }}</p>
+    {% endif %}
+        
+        <h3>Ubicación</h3>
+        <p>
+            {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
+            {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
+            {{ producto.usuario_fk.municipio_fk }}
+        </p>
+    </div>
+    
+</div>
+<button class="btn volver-a-lista" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
+    productos</button>
+<!-- COLOCAR SU CONTENIDO -->
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'carrouselproductos.js' %}"></script>
+<script>
+    function agregarAlCarrito(productId) {
+        fetch(`/agregar-al-carrito/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message || 'Producto agregado correctamente al carrito');
+            } else {
+                alert(data.message || 'Error al agregar al carrito');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    function comprar(productId) {
+        fetch(`/comprar-directo/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/confirmacion/';  // Redirige a la página de confirmación
+            } else {
+                alert(data.message || 'Error al realizar la compra');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    function agregarAFavoritos(productoId) {
+        fetch(`/lista-favoritos/agregar/${productoId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',  // Asegúrate de incluir el token CSRF
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const btn = document.getElementById(`favorito-btn-${productoId}`);
+            if (data.enFavoritos) {
+                btn.innerHTML = '<i class="fas fa-heart"></i> En Favoritos';
+                alert("¡El producto ha sido agregado a tu lista de deseos correctamente!");
+            } else {
+                btn.innerHTML = '<i class="fas fa-heart"></i> Agregar a Lista';
+                alert("El producto ha sido eliminado de tu lista de deseos.");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Hubo un error al intentar actualizar la lista de deseos.");
+        });
+    }
+
+
+</script>
+{% endblock %}
+
     

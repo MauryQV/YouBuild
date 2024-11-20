@@ -1,13 +1,23 @@
+.topbar-background {
+    background-color: #FFFFFF;  /* White background */
+    width: 100%;  /* Full width */
+    position: relative;  /* To make sure the content layers on top */
+}
 /* Estilo general del topbar */
 .topbar-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 20px;
+    padding: 13px 0px;
     background-color: #FFFFFF;
-    margin-top: auto;
+    margin: 0 2cm; 
     position: relative;
-    /* Necesario para posicionar el pseudo-elemento */
+    font-size: 16px;
+    
+}
+.icon-btn {
+    text-decoration: none !important; /* Removes underline */
 }
 
 /* Franja naranja en la parte inferior del topbar */
@@ -16,55 +26,62 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
     height: 1px;
-    /* Ajusta la altura según sea necesario */
     background-color: #ef6605;
-    /* Color naranja brillante */
+    margin-left: -2cm; /* Centers the underline within the topbar container */
+    margin-right: 0cm; /* Centers the underline within the topbar container */
 }
 
 /* Sección izquierda (Logo) */
+.topbar-left .logo {
+    display: flex;
+    align-items: center;
+}
+
 .topbar-left .logo img {
     vertical-align: middle;
+    width: 170px; /* Aumentar tamaño fijo del logo */
+    height: auto;
 }
 
 /* Sección centro (Búsqueda) */
 .topbar-center {
     flex-grow: 1;
     text-align: center;
+    margin: 5px 0;
 }
 
 .search-box {
     display: inline-flex;
     background-color: #f8f7f5;
     border: 2px solid #ef6605;
-    /* Añadido borde */
-    border-radius: 10px;
+    border-radius: 25px; /* Valor de border-radius igual al de los botones */
     padding: 5px;
-    /* Ajustado el padding para tener espacio interior */
-    width: 800px;
-    /* Aumentar el ancho según lo necesites */
+    width: 80%;
+    max-width: 700px;
+    margin: 10px auto;
 }
 
+/* Ajustar el tamaño de fuente en el campo de búsqueda */
 .search-box input {
     border: none;
     background-color: transparent;
     outline: none;
     flex-grow: 1;
-    /* Hace que el input ocupe todo el espacio disponible */
     padding: 5px;
-    /* Espacio interior del input */
+    padding-left: 12px; /* Espacio a la izquierda */
+    font-size: inherit;
 }
 
+
+/* Ajuste para el botón de búsqueda */
 .search-box button {
     background-color: transparent;
     border: none;
     color: #ED8C2B;
     cursor: pointer;
-}
-
-.search-box button i {
-    font-size: 18px;
+    margin-right: 6px; /* Espacio a la derecha para alejar la lupa del borde */
 }
 
 /* Sección derecha (Botones) */
@@ -72,10 +89,16 @@
     display: flex;
     gap: 10px;
 }
+.topbar-right .icon-btn i {
+    font-size: 18px; /* Adjust as needed */
+}
 
 /* Estilo de los botones de enlace e icono */
 .btn-link,
 .icon-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px 15px;
     background-color: white;
     border: 2px solid #ef6605;
@@ -84,11 +107,12 @@
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: inherit;
 }
 
 /* Estilo del ícono en el botón icon-btn */
 .icon-btn i {
-    font-size: 18px;
+    font-size: 25px !important;   
 }
 
 /* Hover (Cambios al acercar el cursor) */
@@ -108,9 +132,7 @@
 .cart-count {
     position: absolute;
     bottom: -5px;
-    /* Moves the number outside the cart icon */
     right: -5px;
-    /* Adjusts the number slightly to the right */
     background-color: orange;
     color: white;
     border-radius: 50%;
@@ -122,14 +144,12 @@
     font-size: 12px;
     line-height: 18px;
     border: 2px solid white;
-    /* Optional: border for better visibility */
 }
 
 /* Ensure the icon-btn is relatively positioned */
 .icon-btn {
     position: relative;
-    /* Allows the .cart-count to be positioned correctly */
-    padding: 10px 15px;
+    padding: 10px 10px;
     background-color: white;
     border: 2px solid #ef6605;
     border-radius: 25px;
@@ -139,32 +159,83 @@
     transition: all 0.3s ease;
 }
 
+
+/* Botón para vender */
 .btn-sell {
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
     align-items: center;
     background-color: #ef6605;
-    /* Color naranja */
     color: white;
     border: none;
     border-radius: 25px;
-    /* Bordes curvos */
     padding: 10px 20px;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s;
+    font-size: inherit;
+    text-decoration: none !important; /* Ensure no underline */
 }
 
 .btn-sell i {
     background-color: transparent;
     border: 1px solid white;
     border-radius: 50%;
-    /* Círculo alrededor del "+" */
     padding: 5px;
     margin-right: 10px;
     font-size: 16px;
+    text-decoration: none !important; /* Ensure no underline */
 }
 
 .btn-sell:hover {
     background-color: #ea580c;
-    /* Fondo más oscuro al pasar el ratón */
+    text-decoration: none !important; /* Ensure no underline */
+}
+
+/* Media Queries para diseño responsivo */
+@media (max-width: 768px) {
+    .topbar-container {
+        margin: 0; /* Remove margin for smaller screens */
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .topbar-left .logo img {
+        width: 150px;
+    }
+
+    .search-box {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .topbar-right {
+        flex-wrap: nowrap;
+        width: auto;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .btn-link,
+    .icon-btn,
+    .btn-sell {
+        margin: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar-left .logo img {
+        margin: 0; /* Remove margin for mobile view */
+        width: 120px;
+    }
+
+    .search-box {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .topbar-container {
+        padding: 10px;
+    }
 }
