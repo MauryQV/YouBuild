@@ -14,21 +14,19 @@
         font-family: 'Comfortaa', sans-serif;
     }
     .icon-btn {
-        padding: 8px; /* Smaller padding for perfil page */
+        padding: 8px; 
         width: 50px;
         height: 50px;
-        font-size: 18px; /* Adjust icon size as needed */
-        border-radius: 50%; /* Ensure circular shape */
-        text-decoration: none; !important;  /* Prevent underline */  
+        font-size: 18px;
+        border-radius: 50%;
+        text-decoration: none !important;
     }
-  </style>
-  
- 
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="profile-container">
-    <!-- Bloque para mostrar mensajes de éxito o error -->
+    <!-- Sidebar de la izquierda -->
     <div class="profile-sidebar">
         <h1>Mi Foto</h1>
         <form id="profile-photo-form" method="POST" enctype="multipart/form-data" action="{% url 'profile_photo_update' %}">
@@ -59,10 +57,12 @@
             <p><strong>Número de celular:</strong><br>{{ user.usuariodb.telefono }}</p>
             <p><strong>Correo:</strong><br>{{ user.email }}</p>
         </div>
+        <div class="profile-actions">
+            <button class="btn-mis-publicaciones">Mis publicaciones</button>
+        </div>
     </div>
 
-    <!-- Formulario de actualización de datos personales -->
-    
+    <!-- Contenedor principal -->
     <div class="profile-main">
         <h1>Mis Datos Personales</h1>
         <form method="POST" enctype="multipart/form-data" id="profileForm">
@@ -80,15 +80,14 @@
             <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
                 Cambiar Contraseña
             </button>
-            
-            <!-- Mostrar el mensaje de bloqueo si el usuario está bloqueado -->
             {% if user.usuariodb.esta_bloqueado %}
             <p class="lockout-message">Demasiados intentos fallidos, inténtelo nuevamente en 24 hrs.</p>
             {% endif %}
         </form>
-
     </div>
+</div>
 {% endblock %}
+
 
 {% block extra_scripts %}
 <script>
@@ -157,6 +156,9 @@
     });
 
    
+    document.querySelector('.btn-mis-publicaciones').addEventListener('click', () => {
+        window.location.href = "{% url 'publicaciones' %}";
+    });
 </script>
 
 

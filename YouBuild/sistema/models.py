@@ -212,6 +212,13 @@ class ProductoDb(models.Model):
             delta = self.fecha_fin_promocion - ahora
             return delta.days
         return 0
+    
+    def tiempo_restante_promocion(self):
+        ahora = timezone.now()
+        if self.esta_en_promocion() and self.fecha_fin_promocion:
+           delta = self.fecha_fin_promocion - ahora
+           return int(delta.total_seconds())
+        return 0
 
 
 # ImagenProducto
