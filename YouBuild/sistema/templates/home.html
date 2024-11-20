@@ -49,11 +49,17 @@
             <option value="menor">Menor Precio</option>
             <option value="mayor">Mayor Precio</option>
         </select>
-    
-        <button id ="aplicar-filtros" type="submit">Aplicar</button>
-        <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
-    </div>
-  </form>
+        <!-- Filtro de ofertas como combo box -->
+      <select id="oferta" name="oferta">
+        <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="si">Solo ofertas</option>
+        <option value="no">Mostrar todos</option>
+    </select>
+
+    <button id="aplicar-filtros" type="submit">Aplicar</button>
+    <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
+  </div>
+</form>
 
   <div class="carousel-container">
     <div class="carousel">

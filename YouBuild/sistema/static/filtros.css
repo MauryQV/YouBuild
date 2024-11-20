@@ -87,7 +87,7 @@ button {
     border: 1px solid #ef6605; /* Borde delgado naranja */
     padding: 8px 20px;
     font-size: 14px;
-    border-radius: 10px;
+    border-radius: 25px;
     cursor: pointer;
     margin-left: 77px; /* Spacing to separate buttons from the selects */
     margin-right: -70px;
