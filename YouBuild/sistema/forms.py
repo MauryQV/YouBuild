@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from .models import UsuarioDB, ProductoDb, CategoriaDb, DepartamentoDB, ProvinciaDB, MunicipioDB, ImagenProductoDB
+from .models import UsuarioDB, ProductoDb, CategoriaDb, DepartamentoDB, ProvinciaDB, MunicipioDB, ImagenProductoDB, SubcategoriaDB
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 import re
@@ -272,3 +272,107 @@ class RegistroProductoForm(forms.ModelForm):
             for imagen in self.cleaned_data.get('imagenes'):
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
         return producto
+    
+class EditarProductoForm(forms.ModelForm):
+    nombre = forms.CharField(
+        max_length=50,
+        required=True,
+        label="Nombre del producto",
+        widget=forms.TextInput(attrs={'placeholder': '--Modifica el nombre del producto--'})
+    )
+    detalle = forms.CharField(
+        max_length=500,
+        required=True,
+        label="Descripción",
+        widget=forms.Textarea(attrs={'placeholder': '--Modifica la descripción del producto--'})
+    )
+    precio = forms.FloatField(
+        required=True,
+        label="Precio",
+        widget=forms.NumberInput(attrs={'placeholder': '00.00'})
+    )
+    categoria_fk = forms.ModelChoiceField(
+        queryset=CategoriaDb.objects.all(),
+        required=True,
+        label="Categoría",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona una categoría'})
+    )
+    subcategoria_fk = forms.ModelChoiceField(
+        queryset=SubcategoriaDB.objects.all(),
+        required=True,
+        label="Subcategoría",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona una subcategoría'})
+    )
+    departamento_fk = forms.ModelChoiceField(
+        queryset=DepartamentoDB.objects.all(),
+        required=True,
+        label="Departamento",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona un departamento'})
+    )
+    provincia_fk = forms.ModelChoiceField(
+        queryset=ProvinciaDB.objects.none(),
+        required=True,
+        label="Provincia",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona una provincia'})
+    )
+    municipio_fk = forms.ModelChoiceField(
+        queryset=MunicipioDB.objects.none(),
+        required=True,
+        label="Municipio",
+        widget=forms.Select(attrs={'placeholder': 'Selecciona un municipio'})
+    )
+    direccion_1 = forms.CharField(
+        max_length=255,
+        required=True,
+        label="Dirección",
+        widget=forms.TextInput(attrs={'placeholder': '--Modifica la dirección del producto--'})
+    )
+    cantidad = forms.IntegerField(
+        required=True,
+        label="Cantidad",
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingresa la cantidad del producto'})
+    )
+    imagenes = forms.FileField(
+        required=True,
+        widget=forms.ClearableFileInput(),  # No uses multiple=True aquí
+        label="Imágenes"
+    )
+
+    class Meta:
+        model = ProductoDb
+        fields = [
+            'nombre', 'detalle', 'precio', 'categoria_fk', 'subcategoria_fk', 
+            'departamento_fk', 'provincia_fk', 'municipio_fk', 'direccion_1', 
+            'cantidad', 'imagenes'
+        ]
+
+    def clean_imagenes(self):
+        imagenes = self.files.getlist('imagenes')
+        if imagenes and not (1 <= len(imagenes) <= 4):
+            raise forms.ValidationError("Debes subir entre 1 y 4 imágenes.")
+        if imagenes and not all(img.name.lower().endswith(('.png', '.jpg', '.jpeg')) for img in imagenes):
+            raise forms.ValidationError("Solo se permiten archivos con formato .png, .jpg, o .jpeg.")
+        return imagenes
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            # Obtener municipio, provincia y departamento relacionados
+            municipio = self.instance.municipio_fk
+            if municipio:
+                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=municipio.provincia_fk.departamento_fk)
+                self.fields['departamento_fk'].queryset = DepartamentoDB.objects.all()
+
+                # Establecer el departamento y la provincia al producto actual
+                self.instance.provincia_fk = municipio.provincia_fk
+                self.instance.departamento_fk = municipio.provincia_fk.departamento_fk
+
+        # Si se está enviando datos, actualizar los campos de provincia y municipio
+        if 'municipio_fk' in self.data:
+            try:
+                municipio_id = int(self.data.get('municipio_fk'))
+                municipio = MunicipioDB.objects.get(id=municipio_id)
+                self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=municipio.provincia_fk.departamento_fk)
+                self.fields['departamento_fk'].queryset = DepartamentoDB.objects.all()
+            except (ValueError, TypeError, MunicipioDB.DoesNotExist):
+                pass
