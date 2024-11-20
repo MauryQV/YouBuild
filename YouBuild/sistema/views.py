@@ -56,6 +56,8 @@ def perfil_view(request):
     })
 
 
+
+
 def custom_logout_view(request):
     logout(request)
     return redirect('index')
@@ -464,13 +466,14 @@ class PublicacionesUsuarioAPIView(APIView):
 
     def get(self, request):
         usuario = request.user.usuariodb
-
         estado = request.query_params.get('estado', None)
-
         productos = ProductoDb.objects.filter(usuario_fk=usuario)
 
         if estado:
             productos = productos.filter(estado=estado)
+
+        if not productos.exists():
+            return Response({"mensaje": "No tienes publicaciones."}, status=status.HTTP_200_OK)
 
         data = []
         for producto in productos:
@@ -484,6 +487,10 @@ class PublicacionesUsuarioAPIView(APIView):
             })
 
         return Response(data, status=status.HTTP_200_OK)
+    
+@login_required  # Asegúrate de que solo usuarios autenticados puedan ver esta página
+def publicaciones(request):
+    return render(request, 'publicaciones.html')
     
 class ActualizarPublicacionAPIView(APIView):
     permission_classes = [IsAuthenticated]

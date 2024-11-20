@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
      path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
      path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+     path('publicaciones/', publicaciones, name='publicaciones'),
 
 ]
 
