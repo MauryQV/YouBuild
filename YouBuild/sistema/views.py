@@ -289,7 +289,6 @@ def carrito_view(request):
         'carrito_total': total,
     })
 
-
 @login_required
 def eliminar_producto(request, producto_id):
     print(f"Received request to delete product ID: {producto_id}")  # Debugging
@@ -301,8 +300,6 @@ def eliminar_producto(request, producto_id):
     print("Invalid request method.")  # Debugging
     return render(request, 'deleteProduct.html', {'usuario': request.user.usuariodb})
 
-def confirmacion_producto(request):
-    return render(request, 'confirmacion_producto.html')
 
 
 @login_required
