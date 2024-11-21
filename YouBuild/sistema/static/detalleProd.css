@@ -111,6 +111,7 @@ body {
     justify-content: space-between;
     margin-top: 20px;
     font-size: 14px; /* Cambia este valor al tamaño deseado */
+    border-radius: 25px;
 }
 
 /* Botón Comprar - Naranja */
