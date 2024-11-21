@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import render, redirect
+from datetime import datetime, timedelta
 import secrets
 
 # Vista principal
@@ -139,17 +140,25 @@ def lista_productosOfert(request):
         'layout_template': layout_template,  # Pasamos el layout base según el estado del usuario
     })
 
-
-
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
 
+    # Filtrar productos relacionados por categoría y excluir el producto actual
+    productoRel = ProductoDb.objects.filter(
+        categoria_fk=producto.categoria_fk
+    ).exclude(id=producto.id).select_related('categoria_fk').prefetch_related('imagenes')[:6]
+
     # Calcular datos dinámicos
     precio_final = producto.precio_final()
     descuento_aplicado = producto.descuento if producto.esta_en_promocion() else 0
     tiempo_restante = producto.tiempo_restante_promocion()  # Tiempo restante en segundos
+
+    # Productos relacionados (misma categoría, excluyendo el producto actual)
+    productos_relacionados = ProductoDb.objects.filter(
+        categoria_fk=producto.categoria_fk, disponible=True
+    ).exclude(id=producto.id)[:4]  # Mostrar hasta 4 productos
 
     favoritos_ids = []
     if request.user.is_authenticated:
@@ -164,7 +173,9 @@ def producto_view(request, id):
         "tiempo_restante": tiempo_restante,  # Tiempo en segundos para el frontend
         "template": template,
         "favoritos_ids": favoritos_ids,
+        "productos_relacionados": productos_relacionados,  # Pasar productos relacionados al template
     })
+
 # Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
@@ -244,13 +255,16 @@ def filtro_productos_view(request):
                 'id': producto.id,
                 'nombre': producto.nombre,
                 'precio': producto.precio,
+                'precio_final': producto.precio_final(),  # Llamar al método para obtener el precio con descuento
                 'imagen': producto.imagenes.first().imagen.url if producto.imagenes.exists() else None,
+                'estado': producto.estado,  # Puedes incluir el estado para identificar si está en promoción
+                'descuento': producto.descuento,  # Incluir el porcentaje de descuento si deseas usarlo en el frontend
             }
             for producto in productos
         ]
         
         # Imprimir los datos de productos que se enviarán como respuesta JSON
-        print("Datos de productos para respuesta JSON:", productos_data)
+    
 
         return JsonResponse({'products': productos_data})
 
@@ -277,10 +291,18 @@ def carrito_view(request):
 
 
 @login_required
-def eliminar_producto(request, item_id):
-    carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
-    carrito_producto.delete()
-    return redirect('Carrito')
+def eliminar_producto(request, producto_id):
+    print(f"Received request to delete product ID: {producto_id}")  # Debugging
+    if request.method == 'POST':  # Ensure it's a POST request
+        producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
+        print(f"Deleting product: {producto}")  # Debugging
+        producto.delete()
+        return JsonResponse({'success': True})
+    print("Invalid request method.")  # Debugging
+    return render(request, 'deleteProduct.html', {'usuario': request.user.usuariodb})
+
+def confirmacion_producto(request):
+    return render(request, 'confirmacion_producto.html')
 
 
 @login_required
@@ -479,82 +501,253 @@ def publicaciones_usuario_view(request):
         'mis_productos': productos,
         'usuario': usuario  
     })
-    
+
 @login_required
 def editar_producto(request, producto_id):
+    print(f"Fetching product with ID: {producto_id}")
     producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    imagenes_actuales = ImagenProductoDB.objects.filter(producto_fk=producto)
-    
+    print(f"Product fetched: {producto}")
+
+    imagenes_actuales = producto.imagenes.all()
+    print(f"Existing images: {imagenes_actuales}")
+
     if request.method == 'POST':
+        print(f"Received POST request with data: {request.POST}")
         form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
+            print("Form is valid, saving product.")
             producto = form.save(commit=False)
-            producto.usuario_fk = request.user.usuariodb  # Asegurarse de que el producto pertenezca al usuario
+            producto.usuario_fk = request.user.usuariodb
             producto.save()
-            
-            # Si se suben nuevas imágenes, las eliminamos y las guardamos
+
             if 'imagenes' in request.FILES:
-                ImagenProductoDB.objects.filter(producto_fk=producto).delete()  # Eliminar las imágenes previas
                 imagenes = request.FILES.getlist('imagenes')
+                print(f"New images uploaded: {imagenes}")
                 for imagen in imagenes:
                     ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
 
-            return redirect('confirmacion_producto')  # Redirigir a la página de confirmación
+            return redirect('confirmacion_producto')
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = EditarProductoForm(instance=producto)
+        form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
+        form.fields['provincia_fk'].initial = producto.municipio_fk.provincia_fk.id if producto.municipio_fk else None
+        form.fields['municipio_fk'].initial = producto.municipio_fk.id if producto.municipio_fk else None
 
-    return render(request, 'edit_producto.html', {'form': form, 'editar': True, 'imagenes_actuales': imagenes_actuales})
+    return render(request, 'edit_producto.html', {
+        'form': form,
+        'editar': True,
+        'imagenes_actuales': imagenes_actuales,
+    })
 
-class CrearPromocionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
 
-    def post(self, request, producto_id):
-        usuario = request.user.usuariodb
+@login_required
+def actualizar_descuento_view(request):
+    # Asegurarse de que el usuario tiene productos asociados
+    usuario = request.user.usuariodb
+    productos = ProductoDb.objects.filter(usuario_fk=usuario)  # Productos del usuario
+
+    if request.method == 'POST':
+        # Recuperar el id del producto, descuento y fechas desde el POST
+        producto_id = request.POST.get('producto_id')
+        descuento = request.POST.get('descuento')
+        fecha_inicio = request.POST.get('fecha_inicio_promocion')
+        fecha_fin = request.POST.get('fecha_fin_promocion')
+
+        if not producto_id or not descuento:
+            return render(request, 'crear_oferta.html', {
+                'productos': productos,
+                'error': 'Debe seleccionar un producto y un descuento.'
+            })
+
+        # Asegurarse de que el descuento sea un número válido
         try:
-            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
+            descuento = float(descuento)
+        except ValueError:
+            return render(request, 'crear_oferta.html', {
+                'productos': productos,
+                'error': 'El descuento debe ser un número válido.'
+            })
 
-            # Validar que no haya una promoción activa
-            if producto.esta_en_promocion():
-                return Response({"error": "El producto ya tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
+        if descuento < 0 or descuento > 100:
+            return render(request, 'crear_oferta.html', {
+                'productos': productos,
+                'error': 'El descuento debe estar entre 0 y 100.'
+            })
 
-            # Extraer datos del body
-            descuento = request.data.get('descuento')
-            fecha_inicio_promocion = request.data.get('fecha_inicio_promocion')
-            fecha_fin_promocion = request.data.get('fecha_fin_promocion')
-
-            # Validar los campos
-            if not descuento or not fecha_inicio_promocion or not fecha_fin_promocion:
-                return Response({"error": "Todos los campos son obligatorios."}, status=status.HTTP_400_BAD_REQUEST)
-
-            producto.descuento = descuento
-            producto.fecha_inicio_promocion = fecha_inicio_promocion
-            producto.fecha_fin_promocion = fecha_fin_promocion
-            producto.estado = 'promocion'
-            producto.save()
-
-            return Response({"message": "Promoción creada exitosamente."}, status=status.HTTP_201_CREATED)
-        except ProductoDb.DoesNotExist:
-            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
-        
-class FinalizarPromocionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request, producto_id):
-        usuario = request.user.usuariodb
+        # Validar las fechas
         try:
-            producto = ProductoDb.objects.get(id=producto_id, usuario_fk=usuario)
+            if fecha_inicio:
+                fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M')  # Asegúrate de que el formato coincida
+            if fecha_fin:
+                fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d %H:%M')  # Asegúrate de que el formato coincida
+        except ValueError:
+            return render(request, 'crear_oferta.html', {
+                'productos': productos,
+                'error': 'Las fechas deben tener un formato válido (YYYY-MM-DD HH:MM).'
+            })
 
-            # Validar que haya una promoción activa
-            if not producto.esta_en_promocion():
-                return Response({"error": "El producto no tiene una promoción activa."}, status=status.HTTP_400_BAD_REQUEST)
+        # Actualizar el producto con descuento y fechas
+        producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=usuario)
+        producto.descuento = descuento
+        producto.fecha_inicio_promocion = fecha_inicio
+        producto.fecha_fin_promocion = fecha_fin
+        producto.save()
 
-            # Restaurar el estado y precio original
-            producto.descuento = 0.0
-            producto.fecha_inicio_promocion = None
-            producto.fecha_fin_promocion = None
-            producto.estado = 'disponible'
-            producto.save()
+        messages.success(request, 'Descuento y fechas de promoción actualizados con éxito.')
 
-            return Response({"message": "Promoción finalizada y precio original restaurado."}, status=status.HTTP_200_OK)
-        except ProductoDb.DoesNotExist:
-            return Response({"error": "Producto no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        # Redirigir a "mis publicaciones"
+        return redirect('mis_publicaciones')
+
+    return render(request, 'crear_oferta.html', {'productos': productos})
+
+@transaction.atomic
+def procesar_transaccion(request):
+    if request.method == "POST":
+        tipo = request.POST.get('tipo')  # Compra o Venta
+        producto_id = request.POST.get('producto_id')
+        cantidad = int(request.POST.get('cantidad'))
+        detalles = request.POST.get('detalles', '')
+
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+
+        try:
+            # Ajustar el stock utilizando el método del modelo
+            if tipo == 'Compra':
+                producto.ajustar_stock(cantidad, operacion='restar')
+            elif tipo == 'Venta':
+                producto.ajustar_stock(cantidad, operacion='sumar')
+
+            # Crear la transacción
+            nueva_transaccion = Transaccion.objects.create(
+                tipo=tipo,
+                usuario=request.user,
+                producto=producto,
+                cantidad=cantidad,
+                detalles=detalles
+            )
+
+            return JsonResponse({
+                'message': 'Transacción procesada con éxito',
+                'precio_total': nueva_transaccion.precio_total
+            })
+
+        except ValueError as e:
+            # Manejo de errores si el stock es insuficiente u ocurre algo en ajustar_stock
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
+
+def generar_codigo_qr(url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return ContentFile(buffer.getvalue())
+
+def confirmar_compra(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes usar datos dinámicos
+
+    qr_image_url = generar_codigo_qr(producto)  # Lógica para generar el QR
+
+    return render(request, 'compra.html', {
+        'producto': producto,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def proceder_pago_carrito(request):
+    productos_carrito = obtener_productos_carrito(request)  # Tu lógica de carrito
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes hacerla dinámica
+    qr_image_url = generar_codigo_qr_para_carrito(productos_carrito)  # Lógica del QR
+
+    return render(request, 'proceder_pago_carrito.html', {
+        'productos_carrito': productos_carrito,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def ajustar_stock(self, cantidad, operacion='restar'):
+    if operacion == 'restar' and self.stock < cantidad:
+        raise ValueError("Stock insuficiente para realizar esta operación")
+    elif operacion == 'sumar':
+        self.stock += cantidad
+    else:
+        self.stock -= cantidad
+    self.save()
+
+def obtener_productos_carrito(request):
+    # Verifica que el usuario esté autenticado
+    if not request.user.is_authenticated:
+        return None  # O maneja carritos anónimos si lo prefieres
+
+    # Obtén el carrito activo del usuario
+    carrito, creado = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb, activo=True)
+
+    # Obtén los productos en el carrito
+    productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    return productos_carrito
+
+def generar_codigo_qr_para_carrito(productos_carrito):
+    # Construye un texto con la información de los productos
+    texto_qr = "Carrito de compras:\n"
+    for item in productos_carrito:
+        texto_qr += f"{item.producto_fk.nombre} - Cantidad: {item.cantidad} - Subtotal: Bs {item.calcular_subtotal()}\n"
+    
+    # Genera el código QR
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(texto_qr)
+    qr.make(fit=True)
+
+    # Crea una imagen del QR
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Guarda la imagen en memoria para devolverla
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+    return ContentFile(buffer.getvalue(), name="carrito_qr.png")
+
+def historial_transacciones_view(request):
+    usuario = request.user  # Usuario autenticado
+    transacciones = Transaccion.objects.filter(usuario=usuario)  # Todas las transacciones del usuario
+    compras = transacciones.filter(tipo='Compra')  # Solo compras
+    ventas = transacciones.filter(tipo='Venta')  # Solo ventas
+
+    # Preparar datos enriquecidos para el contexto
+    transacciones_enriquecidas = []
+    for transaccion in transacciones:
+        producto = transaccion.producto
+        # Determinar la URL de la imagen
+        if producto.imagenes.exists():
+            imagen_url = producto.imagenes.first().imagen.url
+        else:
+            imagen_url = 'path/to/default-image.jpg'  # Ruta de la imagen por defecto
+        # Añadir la transacción con datos extra
+        transacciones_enriquecidas.append({
+            'transaccion': transaccion,
+            'compras': compras,
+            'ventas': ventas,
+            'imagen_url': imagen_url,
+        })
+
+    context = {
+        'transacciones': transacciones_enriquecidas,
+    }
+    return render(request, 'Historial.html', context)

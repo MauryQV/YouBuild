@@ -303,42 +303,54 @@
     .then(data => {
         productsContainer.innerHTML = ''; // Limpiar contenedor antes de agregar productos
 
+        // Verificar que la respuesta contenga productos
         if (data.products && data.products.length > 0) {
-            data.products.forEach(producto => {
-                productsContainer.innerHTML += `
-                    <div class="product">
-                        <img src="${producto.imagen}" alt="${producto.nombre}" />
-                        <h3>${producto.nombre}</h3>
-                        <p>Bs ${producto.precio}</p>
-                        <div class="buttons-container">
-                            <div class="button-row">
-                                <button class="btn buy-now">Comprar Ahora</button>
-                                <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
-                                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                                </button>
-                            </div>
-                            <div class="button-row">
-                                <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                                <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
-                                    <i class="fas fa-heart"></i> Agregar a Lista
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-            });
+          data.products.forEach(producto => {
+              // Añadir el HTML del producto al contenedor
+              productsContainer.innerHTML += `
+                  <div class="product">
+                      ${producto.estado === "promocion" ? `<div class="discount-badge">${producto.descuento}% OFF</div>` : ''}
+                      <img src="${producto.imagen || 'default-image.jpg'}" alt="${producto.nombre}" />
+                      <h3>${producto.nombre}</h3>
+                      
+                      ${producto.precio_final !== producto.precio ? `
+                          <p class="discounted-price">Bs ${producto.precio_final}</p>
+                          <p class="original-price"><s>Bs ${producto.precio}</s></p>
+                      ` : `
+                          <p>Bs ${producto.precio}</p>
+                      `}
+                      
+                      <div class="buttons-container">
+                          <div class="button-row">
+                              <button class="btn buy-now">Comprar Ahora</button>
+                              <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
+                                  <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                              </button>
+                          </div>
+                          <div class="button-row">
+                              <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
+                                  <i class="fas fa-eye"></i> Ver Detalles
+                              </button>
+                              <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
+                                  <i class="fas fa-heart"></i> Agregar a Lista
+                              </button>
+                          </div>
+                      </div>
+                  </div>`;
+          });
         } else {
-            productsContainer.innerHTML = `
-                <div class="mi-no-results">
-                    <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
-                    <p>No se encontraron productos relacionados con tu búsqueda.</p>
-                    <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
-                    <div class="mi-button-row">
-                        <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
-                    </div>
-                </div>`;
+          // Si no hay productos, mostrar mensaje
+          productsContainer.innerHTML = `
+              <div class="mi-no-results">
+                  <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+                  <p>No se encontraron productos relacionados con tu búsqueda.</p>
+                  <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
+                  <div class="mi-button-row">
+                      <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
+                  </div>
+              </div>`;
         }
+
     })
     .catch(error => {
         console.error('Error:', error);

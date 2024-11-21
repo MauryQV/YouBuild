@@ -219,6 +219,18 @@ class ProductoDb(models.Model):
            delta = self.fecha_fin_promocion - ahora
            return int(delta.total_seconds())
         return 0
+    
+    def ajustar_stock(self, cantidad, operacion='restar'):
+        """
+        Ajusta el stock del producto. Valida si hay suficiente stock para restar.
+        """
+        if operacion == 'restar':
+            if self.stock < cantidad:
+                raise ValueError("Stock insuficiente para realizar esta operación.")
+            self.stock -= cantidad
+        elif operacion == 'sumar':
+            self.stock += cantidad
+        self.save()
 
 
 # ImagenProducto
@@ -232,7 +244,6 @@ class ImagenProductoDB(models.Model):
 
     def __str__(self):
         return self.producto_fk.nombre
-
 
 # TipoPago
 class TipoPagoDB(models.Model):
@@ -311,22 +322,25 @@ class ListaFavoritosDB(models.Model):
     def contar_productos(self):
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
     
-class BitacoraTransaccionDB(models.Model):
-    TIPO_TRANSACCION = [
-        ('compra', 'Compra'),
-        ('venta', 'Venta'),
+class Transaccion(models.Model):
+    TIPO_CHOICES = [
+        ('Compra', 'Compra'),
+        ('Venta', 'Venta'),
     ]
 
-    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE, verbose_name="Usuario relacionado")
-    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, verbose_name="Producto")
-    tipo = models.CharField(max_length=10, choices=TIPO_TRANSACCION, verbose_name="Tipo de transacción")
-    fecha = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de transacción")
-    monto_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total")
-    detalles = models.TextField(null=True, blank=True, verbose_name="Detalles adicionales")
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    detalles = models.TextField(blank=True, null=True)
+    fecha = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        verbose_name = "Bitácora de Transacción"
-        verbose_name_plural = "Bitácoras de Transacciones"
+    def calcular_precio_total(self):
+        return self.cantidad * self.producto.precio
+
+    @property
+    def precio_total(self):
+        return self.calcular_precio_total()
 
     def __str__(self):
-        return f"{self.tipo.capitalize()} - {self.producto.nombre} por {self.usuario.user.username}"
+        return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
