@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Historial de Transacciones{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'historial.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="historial-container">
+    <h1>Historial de Transacciones</h1>
+    <div class="tabs">
+        <button class="tab-button active" data-tab="todos">Todas</button>
+        <button class="tab-button" data-tab="compras">Mis Compras</button>
+        <button class="tab-button" data-tab="ventas">Mis Ventas</button>
+    </div>
+
+    <!-- Todas las transacciones -->
+    <div class="tab-content active" id="todos">
+        <table class="transacciones-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th>Detalles Adicionales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaccion in transacciones %}
+                <tr>
+                    <td>{{ transaccion.tipo }}</td>
+                    <td>{{ transaccion.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <div class="producto-info">
+                            {% if transaccion.producto.imagenes.exists %}
+                                <img src="{{ transaccion.producto.imagenes.first.imagen.url }}" alt="{{ transaccion.producto.nombre }}">
+                            {% else %}
+                                <img src="{% static 'path/to/default-image.jpg' %}" alt="Imagen por defecto">
+                            {% endif %}
+                            <span>{{ transaccion.producto.nombre }}</span>
+                        </div>
+                    </td>
+                    <td>{{ transaccion.precio_total|floatformat:2 }} Bs</td>
+                    <td>{{ transaccion.detalles|default:"Sin detalles" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No se encontraron transacciones.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mis Compras -->
+    <div class="tab-content" id="compras">
+        <table class="transacciones-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th>Detalles Adicionales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for compra in compras %}
+                <tr>
+                    <td>{{ compra.tipo }}</td>
+                    <td>{{ compra.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <div class="producto-info">
+                            {% if compra.producto.imagenes.exists %}
+                                <img src="{{ compra.producto.imagenes.first.imagen.url }}" alt="{{ compra.producto.nombre }}">
+                            {% else %}
+                                <img src="{% static 'path/to/default-image.jpg' %}" alt="Imagen por defecto">
+                            {% endif %}
+                            <span>{{ compra.producto.nombre }}</span>
+                        </div>
+                    </td>
+                    <td>{{ compra.precio_total|floatformat:2 }} Bs</td>
+                    <td>{{ compra.detalles|default:"Sin detalles" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No se encontraron compras.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mis Ventas -->
+    <div class="tab-content" id="ventas">
+        <table class="transacciones-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th>Detalles Adicionales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.tipo }}</td>
+                    <td>{{ venta.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <div class="producto-info">
+                            {% if venta.producto.imagenes.exists %}
+                                <img src="{{ venta.producto.imagenes.first.imagen.url }}" alt="{{ venta.producto.nombre }}">
+                            {% else %}
+                                <img src="{% static 'path/to/default-image.jpg' %}" alt="Imagen por defecto">
+                            {% endif %}
+                            <span>{{ venta.producto.nombre }}</span>
+                        </div>
+                    </td>
+                    <td>{{ venta.precio_total|floatformat:2 }} Bs</td>
+                    <td>{{ venta.detalles|default:"Sin detalles" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No se encontraron ventas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'index' %}" class="btn-volver">Volver</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+    
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const tab = this.getAttribute('data-tab');
+    
+                // Cambiar pestaña activa
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+    
+                // Mostrar contenido correspondiente
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tab) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+    });
+    
+</script>
+{% endblock %}

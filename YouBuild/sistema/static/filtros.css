@@ -128,9 +128,65 @@ select:active {
     background-color: transparent;
 }
 
-/* Estilo cuando el mouse pasa sobre el select */
-select:hover {
-    border-color: #ef6605;
+.producto-item {
+    position: relative; /* Para que la etiqueta de descuento se posicione dentro del contenedor */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.producto-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.producto-item h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.producto-item .discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     background-color: #ef6605;
-    color: #ffffff;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.producto-item .discounted-price {
+    color: #28a745; /* Verde para precios con descuento */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.producto-item .original-price {
+    color: #888;
+    font-size: 14px;
+    text-decoration: line-through;
+}
+
+.producto-item a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ef6605;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.producto-item a:hover {
+    background-color: #d65404;
 }
