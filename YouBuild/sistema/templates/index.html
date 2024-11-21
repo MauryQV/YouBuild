@@ -22,67 +22,8 @@
 
 {% block content %}
 <main>
-  <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
-    {% csrf_token %}
-    <div class="filtros">
-      <select id="categoria" name="categoria">
-          <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="">Todas las categorías</option>
-          {% for categoria in categorias %}
-              <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-          {% endfor %}
-      </select>
   
-      <select id="precio" name="precio" onchange="updatePrices()">
-          <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="0-50">Bs 0 - Bs 50</option>
-          <option value="51-100">Bs 51 - Bs 100</option>
-          <option value="101-200">Bs 101 - Bs 200</option>
-          <option value="201-500">Bs 201 - Bs 500</option>
-          <option value="500-">Bs +500</option>
-      </select>
-      <input type="hidden" id="precio_min" name="precio_min">
-      <input type="hidden" id="precio_max" name="precio_max">
-  
-      <select id="ordenar" name="ordenar">
-          <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="relevantes">Más relevantes</option>
-          <option value="menor">Menor Precio</option>
-          <option value="mayor">Mayor Precio</option>
-      </select>
 
-      <!-- Filtro de ofertas como combo box -->
-      <select id="oferta" name="oferta">
-          <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="si">Solo ofertas</option>
-          <option value="no">Mostrar todos</option>
-      </select>
-
-      <button id="aplicar-filtros" type="submit">Aplicar</button>
-      <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
-    </div>
-</form>
-
-
-
-  <div class="carousel-container">
-    <div class="carousel">
-      {% for carrusel_item in carrusel %}
-      <div class="carousel-item">
-        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
-      </div>
-      {% endfor %}
-    </div>
-    <button class="carousel-button prev">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-button next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-
-
-  <div class="carousel-dots"></div>
 
  <!-- Sección de categorías con botones redondos -->
 <div class="categories-section">
@@ -98,6 +39,46 @@
     </div>
   </form>
 </div>
+<form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+  {% csrf_token %}
+  <div class="filtros">
+    <select id="categoria" name="categoria">
+        <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="">Todas las categorías</option>
+        {% for categoria in categorias %}
+            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="precio" name="precio" onchange="updatePrices()">
+        <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="0-50">Bs 0 - Bs 50</option>
+        <option value="51-100">Bs 51 - Bs 100</option>
+        <option value="101-200">Bs 101 - Bs 200</option>
+        <option value="201-500">Bs 201 - Bs 500</option>
+        <option value="500-">Bs +500</option>
+    </select>
+    <input type="hidden" id="precio_min" name="precio_min">
+    <input type="hidden" id="precio_max" name="precio_max">
+
+    <select id="ordenar" name="ordenar">
+        <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="relevantes">Más relevantes</option>
+        <option value="menor">Menor Precio</option>
+        <option value="mayor">Mayor Precio</option>
+    </select>
+
+    <!-- Filtro de ofertas como combo box -->
+    <select id="oferta" name="oferta">
+        <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="si">Solo ofertas</option>
+        <option value="no">Mostrar todos</option>
+    </select>
+
+    <button id="aplicar-filtros" type="submit">Aplicar</button>
+    <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
+  </div>
+</form>
 
 <div class="super-offers-carousel">
   <div class="super-offers-header">

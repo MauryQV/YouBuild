@@ -10,25 +10,23 @@ button {
 /* Estilos generales para la sección de filtros */
 .filtros {
     font-family: 'Comfortaa', sans-serif;
-    width: 100vw; /* Full viewport width */
-    margin-left: calc(-50vw + 50%); /* Center align full-width */
+    width: 90vw; /* Mantiene el ancho completo de la ventana */
     display: flex;
     flex-wrap: nowrap;
     position: relative;
     justify-content: flex-start;
     align-items: center;
-    gap: 10px; /* Space between elements */
-    padding: 10px 2cm; /* 2cm padding on left and right */
+    gap: 10px; /* Espaciado entre los elementos */
+    padding: 10px 2cm; /* 2cm de relleno a la izquierda y derecha */
     background-color: #ffffff;
     border-radius: 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Correct shadow format */
-    box-sizing: border-box; /* Ensures padding is within the width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Formato de sombra */
+    box-sizing: border-box; /* Asegura que el relleno esté dentro del ancho */
     font-family: 'Comfortaa', sans-serif;
+    margin-top: 15vh; /* Ajusta la distancia desde la parte superior, 70% de la altura de la ventana */
 }
 
-.carousel-container {
-    margin-top: 20px; /* Adds more space above the carousel */
-}
+
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
     /*width: 180px;*/
@@ -102,10 +100,6 @@ button {
     width: auto; /* Dynamic width based on content */
 }
 
-/* Evitar choque con el carrusel */
-.carousel {
-    margin-top: 0px; /* Aumentar el margen superior del carrusel */
-}
 
 /* Estilo por defecto del select */
 select {

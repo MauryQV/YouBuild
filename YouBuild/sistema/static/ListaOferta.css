@@ -12,7 +12,11 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    background-color: rgba(247, 243, 239, 0.9); /* Color #F7F3EF con opacidad de 50% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
 }
+
+
 
 /* Contenedor del título */
 .titulo-container {
@@ -134,9 +138,9 @@ body {
 }
 
 .btn-detalles:hover {
-    background-color: #F2690D;
-    color: #fff;
     font-size: 10px;
+    background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
+    color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
 }
 
 /* Botón de carrito */
@@ -149,8 +153,8 @@ body {
 
 .btn-carrito:hover {
     font-size: 10px; /* Tamaño de letra específico para estos botones */
-    background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
-    color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
+    background-color: #f2610d;
+    color: #fff;
 }
 
 
@@ -170,7 +174,7 @@ body {
 }
 
 .breadcrumb a {
-    color: #666;
+    color: #464444;
     text-decoration: none;
     font-weight: bold;
 }

@@ -10,17 +10,6 @@
     font-size: 16px;
 }
 
-.topbar-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
-    height: 1px;
-    background-color: #ef6605;
-    margin-left: -2cm; /* Centers the underline within the topbar container */
-    margin-right: 0cm; 
-}
 
 /* Íconos de la derecha */
 .topbar-right {
