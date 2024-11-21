@@ -378,10 +378,12 @@ class EditarProductoForm(forms.ModelForm):
                 pass
 
 class OfertaForm(forms.ModelForm):
+    producto_id = forms.IntegerField(widget=forms.HiddenInput(), required=True)  # Campo oculto para el ID del producto
+
     class Meta:
         model = ProductoDb
-        fields = ['nombre', 'descuento', 'fecha_inicio_promocion', 'fecha_fin_promocion']
-    
+        fields = ['descuento']  # Solo el descuento se va a modificar
+
     def clean_descuento(self):
         descuento = self.cleaned_data['descuento']
         if descuento < 0 or descuento > 100:
@@ -390,11 +392,15 @@ class OfertaForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        fecha_inicio_promocion = cleaned_data.get("fecha_inicio_promocion")
-        fecha_fin_promocion = cleaned_data.get("fecha_fin_promocion")
         
-        # Validar que la fecha de fin sea posterior a la fecha de inicio
-        if fecha_inicio_promocion and fecha_fin_promocion:
-            if fecha_fin_promocion <= fecha_inicio_promocion:
-                raise forms.ValidationError("La fecha de fin de promoción debe ser posterior a la fecha de inicio.")
+        # Validación para asegurarse de que producto_id es válido
+        producto_id = cleaned_data.get("producto_id")
+        if producto_id:
+            try:
+                producto = ProductoDb.objects.get(id=producto_id)
+                if producto.estado != 'disponible':
+                    raise forms.ValidationError("El producto debe estar disponible para crear una oferta.")
+            except ProductoDb.DoesNotExist:
+                raise forms.ValidationError("El producto seleccionado no existe.")
+        
         return cleaned_data

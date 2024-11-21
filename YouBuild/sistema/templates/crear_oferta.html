@@ -1,32 +1,111 @@
-<!DOCTYPE html>
 {% extends 'layoutReg.html' %}
 {% load static %}
 
 {% block title %}Crear una Oferta{% endblock %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<link rel="stylesheet" href="{% static 'oferta.css' %}" />
-<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Agregar Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="{% static 'oferta.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Crear una oferta para {{ producto.nombre }}</h1>
+    <h1 class="titulo-oferta">Crear una oferta</h1>
     
-    <div class="producto-detalles">
-        <p>Precio: ${{ producto.precio }}</p>
-        <p>Estado: {{ producto.get_estado_display }}</p>
-        <!-- Muestra detalles adicionales del producto si es necesario -->
+    <!-- Selección de producto -->
+    <div class="producto-seleccion">
+        <h2>Selecciona un producto</h2>
+        <div class="productos-grid">
+            {% for producto in productos %}
+            <div class="producto-card">
+                <label>
+                    <input type="radio" name="producto_id" value="{{ producto.id }}" class="producto-input" 
+                           data-nombre="{{ producto.nombre }}">
+                    <div class="producto-info">
+                        <div class="imagen-contenedor">
+                            <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen">
+                        </div>
+                        <p class="producto-nombre">{{ producto.nombre }}</p>
+                        <p class="producto-precio">${{ producto.precio }}</p>
+                    </div>
+                </label>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-
+    
+    <!-- Configuración de la oferta -->
     <div class="oferta-detalles">
         <h2>Configurar detalles de la oferta</h2>
         <form method="POST" action="">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <div class="form-group">
+                <label for="producto_nombre">Producto seleccionado</label>
+                <input type="text" id="producto_nombre" class="form-control" readonly> <!-- Este campo solo es de lectura -->
+            </div>
+
+            <div class="form-group">
+                <label for="descuento">Descuento (%)</label>
+                <input type="number" id="descuento" name="descuento" min="1" max="100" step="1" class="form-control" value="{{ producto.descuento }}" required>
+                <small>Debe ser un número entero entre 1 y 100.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="fecha_inicio_promocion">Inicio de Promoción</label>
+                <input type="text" id="fecha_inicio_promocion" name="fecha_inicio_promocion" class="form-control" value="{{ producto.fecha_inicio_promocion|date:'Y-m-d H:i' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_fin_promocion">Fin de Promoción</label>
+                <input type="text" id="fecha_fin_promocion" name="fecha_fin_promocion" class="form-control" value="{{ producto.fecha_fin_promocion|date:'Y-m-d H:i' }}">
+            </div>
+
+            <!-- Campo oculto para el ID del producto -->
+            <input type="hidden" name="producto_id" id="producto_id" value="{{ producto.id }}">
+
+            <button type="submit" class="btn-guardar">Guardar</button>
         </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if success %}
+            <p class="success">{{ success }}</p>
+        {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const productoRadios = document.querySelectorAll(".producto-input");
+            const inputProductoId = document.getElementById("producto_id"); // Campo oculto para producto_id
+            const inputProductoNombre = document.getElementById("producto_nombre"); // Campo para nombre del producto
+
+            flatpickr("#fecha_inicio_promocion", {
+                enableTime: true,   // Habilitar selección de hora
+                dateFormat: "Y-m-d H:i",  // Formato de fecha y hora
+                minDate: "today",  // Evitar fechas pasadas
+            });
+
+            flatpickr("#fecha_fin_promocion", {
+                enableTime: true,   // Habilitar selección de hora
+                dateFormat: "Y-m-d H:i",  // Formato de fecha y hora
+                minDate: "today",  // Evitar fechas pasadas
+            });
+
+            // Asignar el id del producto al campo oculto cuando se seleccione
+            productoRadios.forEach((radio) => {
+                radio.addEventListener("click", function () {
+                    // Cuando se selecciona un producto, actualiza el nombre y el id en los campos correspondientes
+                    const productoNombre = this.getAttribute("data-nombre");
+                    inputProductoNombre.value = productoNombre; // Actualiza el campo de nombre
+                    inputProductoId.value = this.value; // Actualiza el campo oculto con el ID del producto
+                });
+            });
+        });
+    </script>
 {% endblock %}

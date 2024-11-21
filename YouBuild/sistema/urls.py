@@ -43,7 +43,7 @@ urlpatterns = [
 
     path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
     path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
-    path('crear_oferta/<int:producto_id>/', views.crear_oferta_view, name='crear_oferta'),
+    path('crear_oferta/', actualizar_descuento_view, name='crear_oferta'),
 ]
 
 if settings.DEBUG:
