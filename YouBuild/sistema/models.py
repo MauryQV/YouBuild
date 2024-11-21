@@ -233,7 +233,6 @@ class ImagenProductoDB(models.Model):
     def __str__(self):
         return self.producto_fk.nombre
 
-
 # TipoPago
 class TipoPagoDB(models.Model):
     nombre = models.CharField(max_length=30, verbose_name="Nombre_tipo_de_pago")
