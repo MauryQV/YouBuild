@@ -42,6 +42,7 @@ urlpatterns = [
     path('confirmar-compra/<int:producto_id>/', views.confirmar_compra, name='confirmar_compra'),
     path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
     path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
+    path('historial/', historial_transacciones_view, name='historial_transacciones'),
 
 ]
 

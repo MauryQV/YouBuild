@@ -709,3 +709,30 @@ def generar_codigo_qr_para_carrito(productos_carrito):
     buffer.seek(0)
     return ContentFile(buffer.getvalue(), name="carrito_qr.png")
 
+def historial_transacciones_view(request):
+    usuario = request.user  # Usuario autenticado
+    transacciones = Transaccion.objects.filter(usuario=usuario)  # Todas las transacciones del usuario
+    compras = transacciones.filter(tipo='Compra')  # Solo compras
+    ventas = transacciones.filter(tipo='Venta')  # Solo ventas
+
+    # Preparar datos enriquecidos para el contexto
+    transacciones_enriquecidas = []
+    for transaccion in transacciones:
+        producto = transaccion.producto
+        # Determinar la URL de la imagen
+        if producto.imagenes.exists():
+            imagen_url = producto.imagenes.first().imagen.url
+        else:
+            imagen_url = 'path/to/default-image.jpg'  # Ruta de la imagen por defecto
+        # Añadir la transacción con datos extra
+        transacciones_enriquecidas.append({
+            'transaccion': transaccion,
+            'compras': compras,
+            'ventas': ventas,
+            'imagen_url': imagen_url,
+        })
+
+    context = {
+        'transacciones': transacciones_enriquecidas,
+    }
+    return render(request, 'Historial.html', context)
