@@ -247,13 +247,15 @@ body {
   }
   
   .welcome-section h1 {
-    font-size: 5em;
-    color: #ffffff; /* Naranja principal */
+    font-size: 5em; /* Incrementa el tamaño */
+    font-weight: 1000; /* Aumenta el grosor (700 es bold, 800 es extra-bold) */
+    color: #ffffff; /* Color blanco */
     margin-bottom: 10px;
   }
   
   .welcome-section p {
     font-size: 1.2em;
     color: #ffffff; /* Color gris oscuro */
+    font-weight: 800;
   }
   
