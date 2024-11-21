@@ -7,6 +7,8 @@
     margin: 50px auto; /* Margen superior e inferior de 50px, y auto para centrar horizontalmente */
     text-align: center;
     min-height: 80vh; /* Asegura que el contenedor ocupe al menos el 80% de la altura de la ventana */
+    background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
 }
 
 /* Ajustar el tamaño y centrado de la imagen */

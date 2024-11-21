@@ -637,7 +637,7 @@ def procesar_transaccion(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-import qrcode
+import qrcode 
 from io import BytesIO
 from django.core.files.base import ContentFile
 

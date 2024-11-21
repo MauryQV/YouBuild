@@ -1,7 +1,7 @@
 /* Aplica la imagen de fondo al body y limita su altura a un 50% de la pantalla */
 body {
-    background-image: url("/static/FondoYB.jpg") !important; /* Manteniendo la ruta tal como la tienes */
-    background-size: 100% 70%; /* Establece que la imagen ocupe el 100% del ancho y el 70% de la altura */
+    background-image: url("/static/FondoYB.jpeg") !important; /* Manteniendo la ruta tal como la tienes */
+    background-size: 100% 80%; /* Establece que la imagen ocupe el 100% del ancho y el 70% de la altura */
     background-position: top center; /* La imagen se posiciona en la parte superior */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
     background-attachment: fixed; /* La imagen se mantiene fija al hacer scroll */
@@ -239,3 +239,21 @@ body {
     }
 }
 
+.welcome-section {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px 10px;
+    color: #1c1c0d; /* Color de texto principal */
+  }
+  
+  .welcome-section h1 {
+    font-size: 5em;
+    color: #ffffff; /* Naranja principal */
+    margin-bottom: 10px;
+  }
+  
+  .welcome-section p {
+    font-size: 1.2em;
+    color: #ffffff; /* Color gris oscuro */
+  }
+  

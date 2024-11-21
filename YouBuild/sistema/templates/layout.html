@@ -49,11 +49,19 @@
           </a>  
         </div>
       </div>
+      <div class="welcome-section">
+        {% if request.resolver_match.url_name == "index" %}
+          <h1>Bienvenido a YouBuild!</h1>
+          <p>Una plataforma que facilita la compra y venta de materiales de construcción.</p>
+        {% endif %}
+      </div>
+      
     </header>
     
     <div>
       {% block content %}
-      <!--COLOCAR SU CONTENIDO-->
+      
+      
       {% endblock %}
     </div>
 
