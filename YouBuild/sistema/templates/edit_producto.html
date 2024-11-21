@@ -40,6 +40,7 @@
 
         <form id="formulario-producto" method="POST" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
+            {{ form.as_p }}
 
             <!-- Información del Producto -->
             <fieldset class="section">

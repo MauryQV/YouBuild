@@ -291,10 +291,18 @@ def carrito_view(request):
 
 
 @login_required
-def eliminar_producto(request, item_id):
-    carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
-    carrito_producto.delete()
-    return redirect('Carrito')
+def eliminar_producto(request, producto_id):
+    print(f"Received request to delete product ID: {producto_id}")  # Debugging
+    if request.method == 'POST':  # Ensure it's a POST request
+        producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
+        print(f"Deleting product: {producto}")  # Debugging
+        producto.delete()
+        return JsonResponse({'success': True})
+    print("Invalid request method.")  # Debugging
+    return render(request, 'deleteProduct.html', {'usuario': request.user.usuariodb})
+
+def confirmacion_producto(request):
+    return render(request, 'confirmacion_producto.html')
 
 
 @login_required
@@ -496,24 +504,31 @@ def publicaciones_usuario_view(request):
 
 @login_required
 def editar_producto(request, producto_id):
+    print(f"Fetching product with ID: {producto_id}")
     producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    imagenes_actuales = producto.imagenes.all()  # Fetch related images using the related_name
+    print(f"Product fetched: {producto}")
+
+    imagenes_actuales = producto.imagenes.all()
+    print(f"Existing images: {imagenes_actuales}")
 
     if request.method == 'POST':
+        print(f"Received POST request with data: {request.POST}")
         form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
+            print("Form is valid, saving product.")
             producto = form.save(commit=False)
             producto.usuario_fk = request.user.usuariodb
             producto.save()
 
-            # Handle new image uploads without deleting old images
             if 'imagenes' in request.FILES:
                 imagenes = request.FILES.getlist('imagenes')
+                print(f"New images uploaded: {imagenes}")
                 for imagen in imagenes:
-                     ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
-
+                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
 
             return redirect('confirmacion_producto')
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = EditarProductoForm(instance=producto)
         form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
