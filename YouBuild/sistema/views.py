@@ -176,22 +176,30 @@ def producto_view(request, id):
         "productos_relacionados": productos_relacionados,  # Pasar productos relacionados al template
     })
 
-# Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
     productos = ProductoDb.objects.filter(nombre__icontains=q)
     categorias = CategoriaDb.objects.all()
     favoritos_ids = []
-    pag = 'index.html'
+    
+    # Seleccionar plantilla base dependiendo del estado de autenticación
+    templateB = 'layoutReg.html' if request.user.is_authenticated else 'layout.html'
+    
+    # Obtener los favoritos si el usuario está autenticado
     if request.user.is_authenticated:
-        pag = 'home.html'
         favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
         print("Productos en favoritos:", list(favoritos_ids))
 
     # Guardar los IDs de los productos de la búsqueda en la sesión
     request.session['productos_busqueda'] = [producto.id for producto in productos]
     
-    return render(request, pag, {'producto': productos, 'categorias': categorias, "favoritos_ids": favoritos_ids,})
+    return render(request, 'BuscarProd.html', {
+        'producto': productos,
+        'categorias': categorias,
+        "favoritos_ids": favoritos_ids,
+        'templateB': templateB,
+    })
+
 
 def filtro_productos_view(request):
     # Obtener los IDs de los productos de la búsqueda almacenados en la sesión
