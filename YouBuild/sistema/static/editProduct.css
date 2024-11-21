@@ -1,0 +1,246 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body and Container */
+body {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 55px auto 40px auto; /* Adjust margin to prevent overlapping */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+h1.title {
+    color: #333;
+    text-align: center;
+    font-size: 28px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Section Styles */
+.section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+legend {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Form Labels and Inputs */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+small {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Two Columns Layout */
+.two-columns {
+    display: flex;
+    gap: 20px;
+}
+
+.two-columns .form-group {
+    flex: 1;
+}
+
+/* Quantity Control */
+.cantidad-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-button {
+    background-color: #FF8C00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantity-button:hover {
+    opacity: 0.9;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Image Upload Section */
+.image-upload {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.image-upload label {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #999;
+    font-size: 24px;
+    flex-direction: column;
+    position: relative;
+}
+
+.image-upload input[type="file"] {
+    display: none;
+}
+
+.image-upload span {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+}
+
+/* Current Images Section */
+.current-images {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.image-container {
+    position: relative;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Remove Button for Uploaded Images */
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #cbcbcb;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* Buttons */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.discard-button,
+.submit-button {
+    background-color: #ef6605;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 48%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.discard-button:hover,
+.submit-button:hover {
+    opacity: 0.9;
+}
+
+/* Error messages */
+#error-nombre,
+#error-categoria,
+#error-detalle,
+#error-precio,
+#error-cantidad,
+#error-foto {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* Adjustments for Location Section */
+.location-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.location-group .form-group {
+    flex: 1;
+    min-width: 30%; /* Ensure proper responsiveness */
+}
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Confirmar Compra{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'compra.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="confirmar-compra">
+    <h2>Confirmar detalles de compra</h2>
+
+    <!-- Dirección de envío -->
+    <div class="direccion-envio">
+        <h3>Dirección de envío</h3>
+        <div class="direccion-box">
+            <p>{{ direccion_envio }}</p>
+        </div>
+    </div>
+
+    <!-- Métodos de pago -->
+    <div class="formas-pago">
+        <h3>Formas de pago</h3>
+        <div class="pago-qr">
+            <h4>Pago con QR</h4>
+            <div class="qr-container">
+                <img src="{{ qr_image_url }}" alt="Código QR de pago" class="qr-imagen" />
+            </div>
+            <p>Tu código vence en <strong>24 horas</strong></p>
+            <p>Escanea y paga</p>
+        </div>
+    </div>
+
+    <!-- Botón de confirmación -->
+    <div class="boton-container">
+        <button class="btn-confirmar" onclick="confirmarPago()">YA REALICÉ EL PAGO</button>
+    </div>
+</div>
+
+<script>
+    function confirmarPago() {
+        console.log("Enviando solicitud de pago...");
+        fetch('/procesar-transaccion/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                tipo: 'Compra',
+                producto_id: {{ producto.id }},
+                cantidad: 1, // Cambia según la cantidad seleccionada
+                detalles: 'Pago confirmado desde QR'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('Transacción procesada con éxito. Precio total: ' + data.precio_total);
+                // Redirigir a otra página si es necesario
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }    
+</script>
+{% endblock %}

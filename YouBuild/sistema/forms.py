@@ -272,7 +272,7 @@ class RegistroProductoForm(forms.ModelForm):
             for imagen in self.cleaned_data.get('imagenes'):
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
         return producto
-    
+
 class EditarProductoForm(forms.ModelForm):
     nombre = forms.CharField(
         max_length=50,
@@ -376,3 +376,31 @@ class EditarProductoForm(forms.ModelForm):
                 self.fields['departamento_fk'].queryset = DepartamentoDB.objects.all()
             except (ValueError, TypeError, MunicipioDB.DoesNotExist):
                 pass
+
+class OfertaForm(forms.ModelForm):
+    producto_id = forms.IntegerField(widget=forms.HiddenInput(), required=True)  # Campo oculto para el ID del producto
+
+    class Meta:
+        model = ProductoDb
+        fields = ['descuento']  # Solo el descuento se va a modificar
+
+    def clean_descuento(self):
+        descuento = self.cleaned_data['descuento']
+        if descuento < 0 or descuento > 100:
+            raise forms.ValidationError("El descuento debe estar entre 0 y 100.")
+        return descuento
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validación para asegurarse de que producto_id es válido
+        producto_id = cleaned_data.get("producto_id")
+        if producto_id:
+            try:
+                producto = ProductoDb.objects.get(id=producto_id)
+                if producto.estado != 'disponible':
+                    raise forms.ValidationError("El producto debe estar disponible para crear una oferta.")
+            except ProductoDb.DoesNotExist:
+                raise forms.ValidationError("El producto seleccionado no existe.")
+        
+        return cleaned_data

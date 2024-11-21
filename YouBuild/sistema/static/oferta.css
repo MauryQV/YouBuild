@@ -1,0 +1,182 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Comfortaa', sans-serif;
+    padding: 20px;
+}
+
+.titulo-oferta {
+    text-align: left;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2rem;
+}
+
+.producto-seleccion h2 {
+    margin-bottom: 15px;
+    text-align: left;
+    color: #555;
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.producto-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.producto-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.producto-input {
+    display: none;
+}
+
+.producto-input:checked + .producto-info {
+    border: 2px solid #ff6b00;
+    border-radius: 8px;
+}
+
+.producto-info {
+    text-align: center;
+}
+
+.imagen-contenedor {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+}
+
+.producto-imagen {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.producto-nombre {
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #333;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.producto-precio {
+    color: #666;
+    font-size: 1rem;
+}
+
+.oferta-detalles h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+/* Form Styles */
+.formulario-oferta {
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ff6b00;
+    box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+}
+
+.botones-acciones {
+    display: flex;
+    justify-content: center; /* Espacia los botones uniformemente */
+    gap: 80px; /* Espacio entre los botones */
+    margin-top: 20px; /* Separación del formulario */
+}
+
+.btn-guardar {
+    padding: 10px 20px;
+    background-color: #ff6b00;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.btn-guardar:hover {
+    background-color: #ff6b00;
+}
+
+/* Botón Descartar */
+.btn-descartar {
+    padding: 10px 20px;
+    background-color: #ff6b00;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.btn-descartar:hover {
+    background-color: #ff6b00;
+}
+
+.form-control {
+    max-width: 300px; /* Limitar el tamaño a 300px de ancho */
+}
+
+.form-group small {
+    display: block; /* Asegura que el texto esté debajo del input */
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px; /* Espaciado superior para que no se vea pegado */
+}
