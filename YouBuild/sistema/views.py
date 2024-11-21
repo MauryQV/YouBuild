@@ -55,9 +55,6 @@ def perfil_view(request):
       "usuario": usuario,       
     })
 
-
-
-
 def custom_logout_view(request):
     logout(request)
     return redirect('index')
@@ -170,6 +167,7 @@ def producto_view(request, id):
         "favoritos_ids": favoritos_ids,
         "productos_relacionados": productos_relacionados,  # Pasar productos relacionados al template
     })
+
 # Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
@@ -517,6 +515,19 @@ def editar_producto(request, producto_id):
         'imagenes_actuales': imagenes_actuales,
     })
 
+@login_required
+def eliminar_producto(request, producto_id):
+    print(f"Received request to delete product ID: {producto_id}")  # Debugging
+    if request.method == 'POST':  # Ensure it's a POST request
+        producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
+        print(f"Deleting product: {producto}")  # Debugging
+        producto.delete()
+        return JsonResponse({'success': True})
+    print("Invalid request method.")  # Debugging
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def confirmacion_producto(request):
+    return render(request, 'confirmacion_producto.html')
 
 class CrearPromocionAPIView(APIView):
     permission_classes = [IsAuthenticated]
