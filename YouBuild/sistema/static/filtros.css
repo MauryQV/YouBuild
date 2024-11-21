@@ -23,7 +23,7 @@ button {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Formato de sombra */
     box-sizing: border-box; /* Asegura que el relleno esté dentro del ancho */
     font-family: 'Comfortaa', sans-serif;
-    margin-top: 15vh; /* Ajusta la distancia desde la parte superior, 70% de la altura de la ventana */
+    margin-top: 65vh; /* Ajusta la distancia desde la parte superior, 70% de la altura de la ventana */
 }
 
 
@@ -56,7 +56,7 @@ button {
     width: 20px;
     height: 20px;
     background-color: #ffffff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");
+    /*background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");*/
     background-repeat: no-repeat;
     background-size: contain;
     pointer-events: none;

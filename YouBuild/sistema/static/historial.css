@@ -2,12 +2,15 @@ body {
     font-family: 'Comfortaa', sans-serif;
     margin: 0;
     padding: 0;
+    
 }
 
 .historial-container {
     margin: 20px auto;
     width: 90%;
     max-width: 1200px;
+    background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
 }
 
 .tabs {
@@ -28,7 +31,7 @@ body {
 }
 
 .tab-button.active {
-    background-color: orange;
+    background-color: #F2690D;
     color: white;
 }
 
@@ -69,7 +72,7 @@ body {
 }
 
 .btn-detalle {
-    background-color: orange;
+    background-color: #F2690D;
     color: white;
     padding: 5px 15px;
     border: none;
@@ -84,7 +87,7 @@ body {
 /* Estilo para el botón "Volver" */
 .btn-volver {
     display: inline-block;
-    background-color: orange; /* Color de fondo */
+    background-color: #F2690D; /* Color de fondo */
     color: white; /* Color del texto */
     text-decoration: none; /* Eliminar subrayado */
     font-size: 16px; /* Tamaño de la fuente */

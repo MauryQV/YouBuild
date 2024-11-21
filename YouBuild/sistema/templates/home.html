@@ -23,21 +23,6 @@
 <main>
   
   
-
-  <!-- Sección de categorías con botones redondos -->
-<div class="categories-section">
-    <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
-      {% csrf_token %}
-      <div class="categories-container">
-        {% for categoria in categorias %}
-          <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
-            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
-            <p class="category-name">{{ categoria.nombre }}</p>
-          </button>
-        {% endfor %}
-      </div>
-    </form>
-  </div>
   <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
     <div class="filtros">
@@ -77,6 +62,21 @@
     <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
   </div>
 </form>
+
+<!-- Sección de categorías con botones redondos -->
+<div class="categories-section">
+  <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+    {% csrf_token %}
+    <div class="categories-container">
+      {% for categoria in categorias %}
+        <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
+          <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
+          <p class="category-name">{{ categoria.nombre }}</p>
+        </button>
+      {% endfor %}
+    </div>
+  </form>
+</div>
 
   
   <div class="super-offers-carousel">
