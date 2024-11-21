@@ -155,6 +155,11 @@ def producto_view(request, id):
     descuento_aplicado = producto.descuento if producto.esta_en_promocion() else 0
     tiempo_restante = producto.tiempo_restante_promocion()  # Tiempo restante en segundos
 
+    # Productos relacionados (misma categoría, excluyendo el producto actual)
+    productos_relacionados = ProductoDb.objects.filter(
+        categoria_fk=producto.categoria_fk, disponible=True
+    ).exclude(id=producto.id)[:4]  # Mostrar hasta 4 productos
+
     favoritos_ids = []
     if request.user.is_authenticated:
         favoritos_ids = ListaFavoritosDB.objects.filter(usuario=request.user.usuariodb).values_list('producto_id', flat=True)
@@ -168,7 +173,7 @@ def producto_view(request, id):
         "tiempo_restante": tiempo_restante,  # Tiempo en segundos para el frontend
         "template": template,
         "favoritos_ids": favoritos_ids,
-        "relacionados": productoRel,
+        "productos_relacionados": productos_relacionados,  # Pasar productos relacionados al template
     })
 
 # Buscar productos
@@ -259,7 +264,7 @@ def filtro_productos_view(request):
         ]
         
         # Imprimir los datos de productos que se enviarán como respuesta JSON
-        print("Datos de productos para respuesta JSON:", productos_data)
+    
 
         return JsonResponse({'products': productos_data})
 
