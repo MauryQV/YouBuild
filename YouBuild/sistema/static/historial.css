@@ -2,7 +2,6 @@ body {
     font-family: 'Comfortaa', sans-serif;
     margin: 0;
     padding: 0;
-    
 }
 
 .historial-container {
@@ -11,14 +10,25 @@ body {
     max-width: 1200px;
     background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
     border-radius: 10px; /* Bordes redondeados opcionales */
+    padding: 20px; /* Espaciado interno */
 }
 
+/* Espaciado adicional para el título */
+.historial-container h1 {
+    margin-bottom: 20px; /* Separación del título hacia abajo */
+    font-size: 24px; /* Tamaño del título */
+    color: #1C1C0D; /* Color del título */
+    text-align: center; /* Centrar el texto (opcional) */
+}
+
+/* Espaciado adicional para los tabs */
 .tabs {
     display: flex;
     justify-content: start;
     margin-bottom: 20px;
 }
 
+/* Botones de tabs */
 .tab-button {
     background-color: #f0f0f0;
     border: none;
@@ -35,17 +45,21 @@ body {
     color: white;
 }
 
+/* Contenido dentro de los tabs */
 .tab-content {
     display: none;
 }
 
 .tab-content.active {
     display: block;
+    margin-top: 20px; /* Separación entre tabs y su contenido */
 }
 
+/* Estilo de la tabla */
 .transacciones-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px; /* Separación adicional entre contenido */
 }
 
 .transacciones-table th, .transacciones-table td {
@@ -71,6 +85,7 @@ body {
     align-items: center;
 }
 
+/* Botón de detalle */
 .btn-detalle {
     background-color: #F2690D;
     color: white;
@@ -84,7 +99,7 @@ body {
     background-color: darkorange;
 }
 
-/* Estilo para el botón "Volver" */
+/* Botón "Volver" */
 .btn-volver {
     display: inline-block;
     background-color: #F2690D; /* Color de fondo */
@@ -98,7 +113,7 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease; /* Animaciones */
 }
 
-/* Cambio de color al pasar el cursor */
+/* Hover en el botón "Volver" */
 .btn-volver:hover {
     background-color: orange; /* Color más oscuro en hover */
     transform: scale(1.05); /* Agrandar ligeramente el botón */
