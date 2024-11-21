@@ -204,7 +204,7 @@ class ProductoDb(models.Model):
             self.fecha_fin_promocion and
             self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion
         )
-
+        
     def dias_restantes_promocion(self):
        
         ahora = timezone.now()

@@ -482,27 +482,33 @@ def publicaciones_usuario_view(request):
         'mis_productos': productos,
         'usuario': usuario  
     })
-
 @login_required
 def editar_producto(request, producto_id):
+    print(f"Fetching product with ID: {producto_id}")
     producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    imagenes_actuales = producto.imagenes.all()  # Fetch related images using the related_name
+    print(f"Product fetched: {producto}")
+
+    imagenes_actuales = producto.imagenes.all()
+    print(f"Existing images: {imagenes_actuales}")
 
     if request.method == 'POST':
+        print(f"Received POST request with data: {request.POST}")
         form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
+            print("Form is valid, saving product.")
             producto = form.save(commit=False)
             producto.usuario_fk = request.user.usuariodb
             producto.save()
 
-            # Handle new image uploads without deleting old images
             if 'imagenes' in request.FILES:
                 imagenes = request.FILES.getlist('imagenes')
+                print(f"New images uploaded: {imagenes}")
                 for imagen in imagenes:
-                     ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
-
+                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
 
             return redirect('confirmacion_producto')
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = EditarProductoForm(instance=producto)
         form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
@@ -524,7 +530,7 @@ def eliminar_producto(request, producto_id):
         producto.delete()
         return JsonResponse({'success': True})
     print("Invalid request method.")  # Debugging
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    return render(request, 'deleteProduct.html', {'usuario': request.user.usuariodb})
 
 def confirmacion_producto(request):
     return render(request, 'confirmacion_producto.html')
