@@ -1,48 +1,58 @@
-.topbar-background {
-    background-color: #FFFFFF;  /* White background */
-    width: 100%;  /* Full width */
-    position: relative;  /* To make sure the content layers on top */
+/* Aplica la imagen de fondo al body y limita su altura a un 50% de la pantalla */
+body {
+    background-image: url("/static/FondoYB.jpg") !important; /* Manteniendo la ruta tal como la tienes */
+    background-size: 100% 70%; /* Establece que la imagen ocupe el 100% del ancho y el 70% de la altura */
+    background-position: top center; /* La imagen se posiciona en la parte superior */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* La imagen se mantiene fija al hacer scroll */
+    margin: 0; /* Elimina márgenes por defecto */
 }
-/* Estilo general del topbar */
+
+/* La topbar sigue teniendo su imagen como fondo */
+.topbar-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    position: relative;
+    height: 100px; /* Ajusta la altura de la topbar */
+}
+
+/* Mantener el estilo para la topbar-container */
 .topbar-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     padding: 13px 0px;
-    background-color: #FFFFFF;
-    margin: 0 2cm; 
+    background-color: transparent; /* Fondo transparente */
+    margin: 0 2cm; /* Ajusta los márgenes según sea necesario */
     position: relative;
     font-size: 16px;
-    
-}
-.icon-btn {
-    text-decoration: none !important; /* Removes underline */
 }
 
-/* Franja naranja en la parte inferior del topbar */
-.topbar-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: calc(100% + 4cm); /* Adjusts width to account for the side margins */
-    height: 1px;
-    background-color: #ef6605;
-    margin-left: -2cm; /* Centers the underline within the topbar container */
-    margin-right: 0cm; /* Centers the underline within the topbar container */
-}
-
-/* Sección izquierda (Logo) */
+/* Estilo del logo de texto */
 .topbar-left .logo {
     display: flex;
     align-items: center;
+    font-size: 45px; /* Tamaño del texto */
+    font-weight: 1000; /* Negrita */
+    color: #fff; /* Color del texto */
+    text-decoration: none; /* Elimina subrayado del enlace */
 }
 
-.topbar-left .logo img {
-    vertical-align: middle;
-    width: 170px; /* Aumentar tamaño fijo del logo */
-    height: auto;
+/* Estilo del texto del logo */
+.logo-text {
+    font-size: 30px; /* Aumenta el tamaño del texto */
+    font-weight: bold;
+    color: #ef6605; /* Color destacado, puedes cambiarlo según tu diseño */
+    text-transform: uppercase; /* Opcional: convierte el texto en mayúsculas */
+    letter-spacing: 2px; /* Espaciado entre letras */
+}
+
+/* Hover del logo-text */
+.topbar-left .logo:hover .logo-text {
+    color: #f2690d; /* Color cuando se pasa el mouse por encima */
 }
 
 /* Sección centro (Búsqueda) */
@@ -74,7 +84,6 @@
     font-size: inherit;
 }
 
-
 /* Ajuste para el botón de búsqueda */
 .search-box button {
     background-color: transparent;
@@ -89,76 +98,66 @@
     display: flex;
     gap: 10px;
 }
+
 .topbar-right .icon-btn i {
-    font-size: 18px; /* Adjust as needed */
+    font-size: 18px; /* Ajustar tamaño de icono */
 }
 
-/* Estilo de los botones de enlace e icono */
+/* Estilo de los botones de enlace e icono (sin borde) */
 .btn-link,
 .icon-btn {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px 15px;
-    background-color: white;
-    border: 2px solid #ef6605;
-    border-radius: 25px;
-    color: #ef6605;
-    text-decoration: none;
+    background-color: transparent; /* Fondo transparente */
+    border: none; /* Elimina el borde */
+    border-radius: 0; /* Elimina el borde redondeado */
+    color: #f4f0ee; /* Color del texto */
+    text-decoration: none; /* Elimina el subrayado */
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: inherit;
 }
 
-/* Estilo del ícono en el botón icon-btn */
-.icon-btn i {
-    font-size: 25px !important;   
-}
-
 /* Hover (Cambios al acercar el cursor) */
 .btn-link:hover,
 .icon-btn:hover {
-    background-color: #ef6605;
-    color: white;
+    color: #ea580c; /* Cambiar color del texto al hacer hover */
+    background-color: transparent; /* Asegura que no haya fondo en hover */
 }
 
-/* Ajuste del botón "Iniciar Sesión" */
-.btn-link:first-of-type {
-    background-color: #ef6605;
-    color: white;
+/* Ajuste para los botones específicos */
+.topbar-right .btn-link:first-of-type {
+    color: #f4f0ee; /* Iniciar sesión color */
 }
 
-/* Style for the little cart count number */
+/* Ajuste para el icono del carrito */
+.topbar-right .icon-btn {
+    position: relative; /* Esto permite que el contador se posicione en relación con el ícono */
+}
+
+.topbar-right .icon-btn i {
+    font-size: 25px; /* Tamaño del icono */
+}
+
+/* Circulo del contador en el carrito */
 .cart-count {
     position: absolute;
-    bottom: -5px;
-    right: -5px;
+    top: -5px; /* Ajusta la distancia desde la parte superior del carrito */
+    right: -5px; /* Ajusta la distancia desde la parte derecha del carrito */
     background-color: orange;
     color: white;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 25px;
+    height: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 12px;
-    line-height: 18px;
     border: 2px solid white;
+    font-weight: bold; /* Hace que el número sea más visible */
 }
-
-/* Ensure the icon-btn is relatively positioned */
-.icon-btn {
-    position: relative;
-    padding: 10px 10px;
-    background-color: white;
-    border: 2px solid #ef6605;
-    border-radius: 25px;
-    color: #ef6605;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
 
 /* Botón para vender */
 .btn-sell {
@@ -239,3 +238,4 @@
         padding: 10px;
     }
 }
+

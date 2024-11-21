@@ -21,6 +21,23 @@
 
 {% block content %}
 <main>
+  
+  
+
+  <!-- Sección de categorías con botones redondos -->
+<div class="categories-section">
+    <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+      {% csrf_token %}
+      <div class="categories-container">
+        {% for categoria in categorias %}
+          <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
+            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
+            <p class="category-name">{{ categoria.nombre }}</p>
+          </button>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
   <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
     <div class="filtros">
@@ -61,38 +78,6 @@
   </div>
 </form>
 
-  <div class="carousel-container">
-    <div class="carousel">
-      {% for carrusel_item in carrusel %}
-      <div class="carousel-item">
-        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
-      </div>
-      {% endfor %}
-    </div>
-    <button class="carousel-button prev">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-button next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-
-  <div class="carousel-dots"></div>
-
-  <!-- Sección de categorías con botones redondos -->
-<div class="categories-section">
-    <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
-      {% csrf_token %}
-      <div class="categories-container">
-        {% for categoria in categorias %}
-          <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
-            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
-            <p class="category-name">{{ categoria.nombre }}</p>
-          </button>
-        {% endfor %}
-      </div>
-    </form>
-  </div>
   
   <div class="super-offers-carousel">
     <div class="super-offers-header">
