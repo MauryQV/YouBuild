@@ -140,13 +140,15 @@ def lista_productosOfert(request):
         'layout_template': layout_template,  # Pasamos el layout base según el estado del usuario
     })
 
-
-
 def producto_view(request, id):
     producto = get_object_or_404(ProductoDb, id=id)
     producto.visitas += 1
     producto.save()
-    productoRel = ProductoDb.objects.filter(nombre__icontains=producto.nombre)
+
+    # Filtrar productos relacionados por categoría y excluir el producto actual
+    productoRel = ProductoDb.objects.filter(
+        categoria_fk=producto.categoria_fk
+    ).exclude(id=producto.id).select_related('categoria_fk').prefetch_related('imagenes')[:6]
 
     # Calcular datos dinámicos
     precio_final = producto.precio_final()
@@ -168,6 +170,7 @@ def producto_view(request, id):
         "favoritos_ids": favoritos_ids,
         "relacionados": productoRel,
     })
+
 # Buscar productos
 def buscar_view(request):
     q = request.GET.get('q', '')
@@ -485,31 +488,39 @@ def publicaciones_usuario_view(request):
         'mis_productos': productos,
         'usuario': usuario  
     })
-    
+
 @login_required
 def editar_producto(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    imagenes_actuales = ImagenProductoDB.objects.filter(producto_fk=producto)
-    
+    imagenes_actuales = producto.imagenes.all()  # Fetch related images using the related_name
+
     if request.method == 'POST':
         form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             producto = form.save(commit=False)
-            producto.usuario_fk = request.user.usuariodb  # Asegurarse de que el producto pertenezca al usuario
+            producto.usuario_fk = request.user.usuariodb
             producto.save()
-            
-            # Si se suben nuevas imágenes, las eliminamos y las guardamos
+
+            # Handle new image uploads without deleting old images
             if 'imagenes' in request.FILES:
-                ImagenProductoDB.objects.filter(producto_fk=producto).delete()  # Eliminar las imágenes previas
                 imagenes = request.FILES.getlist('imagenes')
                 for imagen in imagenes:
-                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+                     ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
 
-            return redirect('confirmacion_producto')  # Redirigir a la página de confirmación
+
+            return redirect('confirmacion_producto')
     else:
         form = EditarProductoForm(instance=producto)
+        form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
+        form.fields['provincia_fk'].initial = producto.municipio_fk.provincia_fk.id if producto.municipio_fk else None
+        form.fields['municipio_fk'].initial = producto.municipio_fk.id if producto.municipio_fk else None
 
-    return render(request, 'edit_producto.html', {'form': form, 'editar': True, 'imagenes_actuales': imagenes_actuales})
+    return render(request, 'edit_producto.html', {
+        'form': form,
+        'editar': True,
+        'imagenes_actuales': imagenes_actuales,
+    })
+
 
 @login_required
 def actualizar_descuento_view(request):
@@ -570,3 +581,126 @@ def actualizar_descuento_view(request):
         return redirect('mis_publicaciones')
 
     return render(request, 'crear_oferta.html', {'productos': productos})
+
+@transaction.atomic
+def procesar_transaccion(request):
+    if request.method == "POST":
+        tipo = request.POST.get('tipo')  # Compra o Venta
+        producto_id = request.POST.get('producto_id')
+        cantidad = int(request.POST.get('cantidad'))
+        detalles = request.POST.get('detalles', '')
+
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+
+        try:
+            # Ajustar el stock utilizando el método del modelo
+            if tipo == 'Compra':
+                producto.ajustar_stock(cantidad, operacion='restar')
+            elif tipo == 'Venta':
+                producto.ajustar_stock(cantidad, operacion='sumar')
+
+            # Crear la transacción
+            nueva_transaccion = Transaccion.objects.create(
+                tipo=tipo,
+                usuario=request.user,
+                producto=producto,
+                cantidad=cantidad,
+                detalles=detalles
+            )
+
+            return JsonResponse({
+                'message': 'Transacción procesada con éxito',
+                'precio_total': nueva_transaccion.precio_total
+            })
+
+        except ValueError as e:
+            # Manejo de errores si el stock es insuficiente u ocurre algo en ajustar_stock
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
+
+def generar_codigo_qr(url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return ContentFile(buffer.getvalue())
+
+def confirmar_compra(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes usar datos dinámicos
+
+    qr_image_url = generar_codigo_qr(producto)  # Lógica para generar el QR
+
+    return render(request, 'compra.html', {
+        'producto': producto,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def proceder_pago_carrito(request):
+    productos_carrito = obtener_productos_carrito(request)  # Tu lógica de carrito
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes hacerla dinámica
+    qr_image_url = generar_codigo_qr_para_carrito(productos_carrito)  # Lógica del QR
+
+    return render(request, 'proceder_pago_carrito.html', {
+        'productos_carrito': productos_carrito,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def ajustar_stock(self, cantidad, operacion='restar'):
+    if operacion == 'restar' and self.stock < cantidad:
+        raise ValueError("Stock insuficiente para realizar esta operación")
+    elif operacion == 'sumar':
+        self.stock += cantidad
+    else:
+        self.stock -= cantidad
+    self.save()
+
+def obtener_productos_carrito(request):
+    # Verifica que el usuario esté autenticado
+    if not request.user.is_authenticated:
+        return None  # O maneja carritos anónimos si lo prefieres
+
+    # Obtén el carrito activo del usuario
+    carrito, creado = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb, activo=True)
+
+    # Obtén los productos en el carrito
+    productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    return productos_carrito
+
+def generar_codigo_qr_para_carrito(productos_carrito):
+    # Construye un texto con la información de los productos
+    texto_qr = "Carrito de compras:\n"
+    for item in productos_carrito:
+        texto_qr += f"{item.producto_fk.nombre} - Cantidad: {item.cantidad} - Subtotal: Bs {item.calcular_subtotal()}\n"
+    
+    # Genera el código QR
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(texto_qr)
+    qr.make(fit=True)
+
+    # Crea una imagen del QR
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Guarda la imagen en memoria para devolverla
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+    return ContentFile(buffer.getvalue(), name="carrito_qr.png")
+

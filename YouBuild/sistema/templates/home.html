@@ -117,7 +117,7 @@
                             <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
                             <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
                             <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
-                            <button class="super-offers-details-btn">Ver Detalles</button>
+                            <button class="super-offers-details-btn"onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
                         </div>
                     </div>
                 {% endif %}

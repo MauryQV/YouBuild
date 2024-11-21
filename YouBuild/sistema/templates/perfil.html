@@ -72,18 +72,20 @@
             {{ p_form|crispy }}
             <button type="submit" id="submitButton" class="btn-primario" disabled>Guardar Cambios</button>
         </form>
-        <h2 class="mt-4">Cambiar Contraseña</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="password_change">
-            {{ password_form|crispy }}
-            <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
-                Cambiar Contraseña
-            </button>
-            {% if user.usuariodb.esta_bloqueado %}
-            <p class="lockout-message">Demasiados intentos fallidos, inténtelo nuevamente en 24 hrs.</p>
-            {% endif %}
-        </form>
+        <div class="password-change-section">
+            <h2 class="mt-4">Cambiar Contraseña</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="password_change">
+                {{ password_form|crispy }}
+                <button type="submit" id="password-change-btn" class="btn-primario" {% if user.usuariodb.esta_bloqueado %}disabled{% endif %}>
+                    Cambiar Contraseña
+                </button>
+                {% if user.usuariodb.esta_bloqueado %}
+                <p class="lockout-message">Demasiados intentos fallidos, inténtelo nuevamente en 24 hrs.</p>
+                {% endif %}
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

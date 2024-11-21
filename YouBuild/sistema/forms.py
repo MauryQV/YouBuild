@@ -272,7 +272,7 @@ class RegistroProductoForm(forms.ModelForm):
             for imagen in self.cleaned_data.get('imagenes'):
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
         return producto
-    
+
 class EditarProductoForm(forms.ModelForm):
     nombre = forms.CharField(
         max_length=50,
