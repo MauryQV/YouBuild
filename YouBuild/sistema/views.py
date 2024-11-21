@@ -479,31 +479,39 @@ def publicaciones_usuario_view(request):
         'mis_productos': productos,
         'usuario': usuario  
     })
-    
+
 @login_required
 def editar_producto(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    imagenes_actuales = ImagenProductoDB.objects.filter(producto_fk=producto)
-    
+    imagenes_actuales = producto.imagenes.all()  # Fetch related images using the related_name
+
     if request.method == 'POST':
         form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             producto = form.save(commit=False)
-            producto.usuario_fk = request.user.usuariodb  # Asegurarse de que el producto pertenezca al usuario
+            producto.usuario_fk = request.user.usuariodb
             producto.save()
-            
-            # Si se suben nuevas imágenes, las eliminamos y las guardamos
+
+            # Handle new image uploads without deleting old images
             if 'imagenes' in request.FILES:
-                ImagenProductoDB.objects.filter(producto_fk=producto).delete()  # Eliminar las imágenes previas
                 imagenes = request.FILES.getlist('imagenes')
                 for imagen in imagenes:
-                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+                     ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
 
-            return redirect('confirmacion_producto')  # Redirigir a la página de confirmación
+
+            return redirect('confirmacion_producto')
     else:
         form = EditarProductoForm(instance=producto)
+        form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
+        form.fields['provincia_fk'].initial = producto.municipio_fk.provincia_fk.id if producto.municipio_fk else None
+        form.fields['municipio_fk'].initial = producto.municipio_fk.id if producto.municipio_fk else None
 
-    return render(request, 'edit_producto.html', {'form': form, 'editar': True, 'imagenes_actuales': imagenes_actuales})
+    return render(request, 'edit_producto.html', {
+        'form': form,
+        'editar': True,
+        'imagenes_actuales': imagenes_actuales,
+    })
+
 
 class CrearPromocionAPIView(APIView):
     permission_classes = [IsAuthenticated]
