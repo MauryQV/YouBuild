@@ -35,7 +35,7 @@ body {
 .topbar-left .logo {
     display: flex;
     align-items: center;
-    font-size: 45px; /* Tamaño del texto */
+    font-size: 30px; /* Tamaño del texto */
     font-weight: 1000; /* Negrita */
     color: #fff; /* Color del texto */
     text-decoration: none; /* Elimina subrayado del enlace */
@@ -43,7 +43,7 @@ body {
 
 /* Estilo del texto del logo */
 .logo-text {
-    font-size: 30px; /* Aumenta el tamaño del texto */
+    font-size: 20px; /* Aumenta el tamaño del texto */
     font-weight: bold;
     color: #ef6605; /* Color destacado, puedes cambiarlo según tu diseño */
     text-transform: uppercase; /* Opcional: convierte el texto en mayúsculas */
