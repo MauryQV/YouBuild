@@ -11,7 +11,16 @@ body {
     max-width: 1200px;
     background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
     border-radius: 10px; /* Bordes redondeados opcionales */
+    padding: 20px; /* Espaciado interno */
 }
+
+.historial-container h1 {
+    margin-bottom: 20px; /* Separación del título hacia abajo */
+    font-size: 24px; /* Tamaño del título */
+    color: #1C1C0D; /* Color del título */
+    text-align: center; /* Centrar el texto (opcional) */
+}
+
 
 .tabs {
     display: flex;
@@ -41,6 +50,7 @@ body {
 
 .tab-content.active {
     display: block;
+    margin-top: 20px; 
 }
 
 .transacciones-table {

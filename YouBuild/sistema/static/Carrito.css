@@ -20,8 +20,8 @@ body {
     max-width: 90%; /* Ancho máximo del contenedor ajustado */
     margin: 20px auto; /* Centramos el contenedor */
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
+    background-color: rgba(247, 243, 239, 0.9); /* Color #F7F3EF con opacidad de 50% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
