@@ -188,7 +188,7 @@ class RegistroProductoForm(forms.ModelForm):
         max_length=500,
         required=True,
         label="Detalle",
-        widget=forms.Textarea(attrs={'placeholder': '--Agrega mas detalles del producto--'})
+        widget=forms.Textarea(attrs={'placeholder': '--Agrega más detalles del producto--'})
     )
     precio = forms.FloatField(
         required=True,
@@ -223,7 +223,7 @@ class RegistroProductoForm(forms.ModelForm):
         max_length=255,
         required=True,
         label="Dirección",
-        widget=forms.TextInput(attrs={'placeholder': '--Agrega mas detalles de la ubicacion, puntos de referencia, nro de casa,etc.--'})
+        widget=forms.TextInput(attrs={'placeholder': '--Agrega más detalles de la ubicación, puntos de referencia, nro de casa, etc.--'})
     )
     cantidad = forms.IntegerField(
         required=True,
@@ -255,14 +255,31 @@ class RegistroProductoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if 'departamento_fk' in self.data:
+        
+        if self.instance.pk:  # Solo ocurre cuando se está editando un producto
+            municipio = self.instance.municipio_fk
+            provincia = municipio.provincia_fk
+            departamento = provincia.departamento_fk
+            
+            # Llenamos las opciones correspondientes para el formulario de edición
+            self.fields['departamento_fk'].initial = departamento
+            self.fields['provincia_fk'].initial = provincia
+            self.fields['municipio_fk'].initial = municipio
+            
+            # Filtrar provincias según el departamento del municipio
+            self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=departamento).order_by('nombre')
+            
+            # Filtrar municipios según la provincia del municipio
+            self.fields['municipio_fk'].queryset = MunicipioDB.objects.filter(provincia_fk=provincia).order_by('nombre')
+        
+        elif 'departamento_fk' in self.data:
+            # Lógica de creación, como estaba antes
             try:
                 departamento_id = int(self.data.get('departamento_fk'))
                 self.fields['provincia_fk'].queryset = ProvinciaDB.objects.filter(departamento_fk=departamento_id).order_by('nombre')
             except (ValueError, TypeError):
                 pass
-        elif self.instance.pk:
-            self.fields['provincia_fk'].queryset = self.instance.departamento_fk.provincia_set.order_by('nombre')
+
 
     @transaction.atomic
     def save(self, commit=True):
