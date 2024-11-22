@@ -10,25 +10,23 @@ button {
 /* Estilos generales para la sección de filtros */
 .filtros {
     font-family: 'Comfortaa', sans-serif;
-    width: 100vw; /* Full viewport width */
-    margin-left: calc(-50vw + 50%); /* Center align full-width */
+    width: 90vw; /* Mantiene el ancho completo de la ventana */
     display: flex;
     flex-wrap: nowrap;
     position: relative;
     justify-content: flex-start;
     align-items: center;
-    gap: 10px; /* Space between elements */
-    padding: 10px 2cm; /* 2cm padding on left and right */
+    gap: 10px; /* Espaciado entre los elementos */
+    padding: 10px 2cm; /* 2cm de relleno a la izquierda y derecha */
     background-color: #ffffff;
     border-radius: 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Correct shadow format */
-    box-sizing: border-box; /* Ensures padding is within the width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Formato de sombra */
+    box-sizing: border-box; /* Asegura que el relleno esté dentro del ancho */
     font-family: 'Comfortaa', sans-serif;
+    margin-top: 65vh; /* Ajusta la distancia desde la parte superior, 70% de la altura de la ventana */
 }
 
-.carousel-container {
-    margin-top: 20px; /* Adds more space above the carousel */
-}
+
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
     /*width: 180px;*/
@@ -58,7 +56,7 @@ button {
     width: 20px;
     height: 20px;
     background-color: #ffffff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");
+    /*background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");*/
     background-repeat: no-repeat;
     background-size: contain;
     pointer-events: none;
@@ -102,10 +100,6 @@ button {
     width: auto; /* Dynamic width based on content */
 }
 
-/* Evitar choque con el carrusel */
-.carousel {
-    margin-top: 0px; /* Aumentar el margen superior del carrusel */
-}
 
 /* Estilo por defecto del select */
 select {
@@ -128,9 +122,65 @@ select:active {
     background-color: transparent;
 }
 
-/* Estilo cuando el mouse pasa sobre el select */
-select:hover {
-    border-color: #ef6605;
+.producto-item {
+    position: relative; /* Para que la etiqueta de descuento se posicione dentro del contenedor */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.producto-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.producto-item h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.producto-item .discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     background-color: #ef6605;
-    color: #ffffff;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.producto-item .discounted-price {
+    color: #28a745; /* Verde para precios con descuento */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.producto-item .original-price {
+    color: #888;
+    font-size: 14px;
+    text-decoration: line-through;
+}
+
+.producto-item a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ef6605;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.producto-item a:hover {
+    background-color: #d65404;
 }

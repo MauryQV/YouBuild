@@ -34,12 +34,15 @@ urlpatterns = [
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
     path('productos/', views.producto_view, name='product_list'),
-    path('promocion/<int:producto_id>/crear/', CrearPromocionAPIView.as_view(), name='crear-promocion'),
-    path('promocion/<int:producto_id>/finalizar/', FinalizarPromocionAPIView.as_view(), name='finalizar-promocion'),
     path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
     path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
     path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
     path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
+    path('crear_oferta/', actualizar_descuento_view, name='crear_oferta'),
+    path('confirmar-compra/<int:producto_id>/', views.confirmar_compra, name='confirmar_compra'),
+    path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
+    path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
+    path('historial/', historial_transacciones_view, name='historial_transacciones'),
     path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
 
 ]

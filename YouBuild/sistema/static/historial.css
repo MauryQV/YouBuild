@@ -1,0 +1,105 @@
+body {
+    font-family: 'Comfortaa', sans-serif;
+    margin: 0;
+    padding: 0;
+    
+}
+
+.historial-container {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
+}
+
+.tabs {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.tab-button.active {
+    background-color: #F2690D;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.transacciones-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transacciones-table th, .transacciones-table td {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.transacciones-table th {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.transacciones-table td img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.transacciones-table td .producto-info {
+    display: flex;
+    align-items: center;
+}
+
+.btn-detalle {
+    background-color: #F2690D;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-detalle:hover {
+    background-color: darkorange;
+}
+
+/* Estilo para el botón "Volver" */
+.btn-volver {
+    display: inline-block;
+    background-color: #F2690D; /* Color de fondo */
+    color: white; /* Color del texto */
+    text-decoration: none; /* Eliminar subrayado */
+    font-size: 16px; /* Tamaño de la fuente */
+    font-weight: 600; /* Grosor de la fuente */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    border: none; /* Sin borde */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Animaciones */
+}
+
+/* Cambio de color al pasar el cursor */
+.btn-volver:hover {
+    background-color: orange; /* Color más oscuro en hover */
+    transform: scale(1.05); /* Agrandar ligeramente el botón */
+}

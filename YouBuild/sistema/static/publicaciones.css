@@ -3,7 +3,11 @@
     width: 80%;
     margin: auto;
     font-family: 'Comfortaa', sans-serif;
+    background-color: rgba(247, 243, 239, 0.9); /* Fondo color F7F3EF con opacidad de 90% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
+    padding: 20px; /* Puedes añadir padding si es necesario */
 }
+
 
 h2 {
     text-align: left;
@@ -75,6 +79,11 @@ h2 {
 .estado.vendido {
     background-color: #f8d7da;
     color: #dc3545;
+}
+
+.estado.promocion {
+    background-color: #f8d7da;
+    color: #436cf3;
 }
 
 /* Botones de acciones */

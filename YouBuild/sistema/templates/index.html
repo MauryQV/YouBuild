@@ -22,69 +22,49 @@
 
 {% block content %}
 <main>
-  <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
-    {% csrf_token %}
-    <div class="filtros">
-      <select id="categoria" name="categoria">
-          <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="">Todas las categorías</option>
-          {% for categoria in categorias %}
-              <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-          {% endfor %}
-      </select>
   
-      <select id="precio" name="precio" onchange="updatePrices()">
-          <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="0-50">Bs 0 - Bs 50</option>
-          <option value="51-100">Bs 51 - Bs 100</option>
-          <option value="101-200">Bs 101 - Bs 200</option>
-          <option value="201-500">Bs 201 - Bs 500</option>
-          <option value="500-">Bs +500</option>
-      </select>
-      <input type="hidden" id="precio_min" name="precio_min">
-      <input type="hidden" id="precio_max" name="precio_max">
-  
-      <select id="ordenar" name="ordenar">
-          <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="relevantes">Más relevantes</option>
-          <option value="menor">Menor Precio</option>
-          <option value="mayor">Mayor Precio</option>
-      </select>
 
-      <!-- Filtro de ofertas como combo box -->
-      <select id="oferta" name="oferta">
-          <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
-          <option value="si">Solo ofertas</option>
-          <option value="no">Mostrar todos</option>
-      </select>
+<form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+  {% csrf_token %}
+  <div class="filtros">
+    <select id="categoria" name="categoria">
+        <option value="" style="display: none;">Categoría&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="">Todas las categorías</option>
+        {% for categoria in categorias %}
+            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+        {% endfor %}
+    </select>
 
-      <button id="aplicar-filtros" type="submit">Aplicar</button>
-      <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
-    </div>
-</form>
+    <select id="precio" name="precio" onchange="updatePrices()">
+        <option value="" style="display: none;">Precio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="0-50">Bs 0 - Bs 50</option>
+        <option value="51-100">Bs 51 - Bs 100</option>
+        <option value="101-200">Bs 101 - Bs 200</option>
+        <option value="201-500">Bs 201 - Bs 500</option>
+        <option value="500-">Bs +500</option>
+    </select>
+    <input type="hidden" id="precio_min" name="precio_min">
+    <input type="hidden" id="precio_max" name="precio_max">
 
+    <select id="ordenar" name="ordenar">
+        <option value="" style="display: none;">Ordenar por&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="relevantes">Más relevantes</option>
+        <option value="menor">Menor Precio</option>
+        <option value="mayor">Mayor Precio</option>
+    </select>
 
+    <!-- Filtro de ofertas como combo box -->
+    <select id="oferta" name="oferta">
+        <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="si">Solo ofertas</option>
+        <option value="no">Mostrar todos</option>
+    </select>
 
-  <div class="carousel-container">
-    <div class="carousel">
-      {% for carrusel_item in carrusel %}
-      <div class="carousel-item">
-        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
-      </div>
-      {% endfor %}
-    </div>
-    <button class="carousel-button prev">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-button next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
+    <button id="aplicar-filtros" type="submit">Aplicar</button>
+    <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
   </div>
-
-
-  <div class="carousel-dots"></div>
-
- <!-- Sección de categorías con botones redondos -->
+</form>
+<!-- Sección de categorías con botones redondos -->
 <div class="categories-section">
   <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
@@ -326,41 +306,52 @@
     .then(data => {
         productsContainer.innerHTML = ''; // Limpiar contenedor antes de agregar productos
 
+        // Verificar que la respuesta contenga productos
         if (data.products && data.products.length > 0) {
-            data.products.forEach(producto => {
-                productsContainer.innerHTML += `
-                    <div class="product">
-                        <img src="${producto.imagen}" alt="${producto.nombre}" />
-                        <h3>${producto.nombre}</h3>
-                        <p>Bs ${producto.precio}</p>
-                        <div class="buttons-container">
-                            <div class="button-row">
-                                <button class="btn buy-now">Comprar Ahora</button>
-                                <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
-                                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                                </button>
-                            </div>
-                            <div class="button-row">
-                                <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                                <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
-                                    <i class="fas fa-heart"></i> Agregar a Lista
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-            });
+          data.products.forEach(producto => {
+              // Añadir el HTML del producto al contenedor
+              productsContainer.innerHTML += `
+                  <div class="product">
+                      ${producto.estado === "promocion" ? `<div class="discount-badge">${producto.descuento}% OFF</div>` : ''}
+                      <img src="${producto.imagen || 'default-image.jpg'}" alt="${producto.nombre}" />
+                      <h3>${producto.nombre}</h3>
+                      
+                      ${producto.precio_final !== producto.precio ? `
+                          <p class="discounted-price">Bs ${producto.precio_final}</p>
+                          <p class="original-price"><s>Bs ${producto.precio}</s></p>
+                      ` : `
+                          <p>Bs ${producto.precio}</p>
+                      `}
+                      
+                      <div class="buttons-container">
+                          <div class="button-row">
+                              <button class="btn buy-now">Comprar Ahora</button>
+                              <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
+                                  <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                              </button>
+                          </div>
+                          <div class="button-row">
+                              <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
+                                  <i class="fas fa-eye"></i> Ver Detalles
+                              </button>
+                              <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
+                                  <i class="fas fa-heart"></i> Agregar a Lista
+                              </button>
+                          </div>
+                      </div>
+                  </div>`;
+          });
         } else {
-            productsContainer.innerHTML = `
-                <div class="mi-no-results">
-                    <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
-                    <p>No se encontraron productos relacionados con tu búsqueda.</p>
-                    <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
-                    <div class="mi-button-row">
-                        <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
-                    </div>
-                </div>`;
+          // Si no hay productos, mostrar mensaje
+          productsContainer.innerHTML = `
+              <div class="mi-no-results">
+                  <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+                  <p>No se encontraron productos relacionados con tu búsqueda.</p>
+                  <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
+                  <div class="mi-button-row">
+                      <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
+                  </div>
+              </div>`;
         }
     })
     .catch(error => {

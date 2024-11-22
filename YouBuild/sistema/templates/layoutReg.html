@@ -26,7 +26,8 @@
       <div class="topbar-background">
       <div class="topbar-container">
         <div class="topbar-left">
-          <a href="/home " class="logo"><img src="{% static 'logo.jpeg' %}" alt="Logo" width="125" /></a>
+          <!-- Logo como texto -->
+          <a href="/" class="logo">YouBuild</a> 
         </div>
         <div class="topbar-center">
           <!-- Aquí está el formulario con las restricciones necesarias -->
@@ -51,6 +52,7 @@
             <div class="dropdown-menu hidden" id="profileDropdown">
               <a href="{% url 'profile' %}">Mi Perfil</a>
               <a href="{% url 'mis_publicaciones' %}">Mis publicaciones</a>
+              <a href="{% url 'historial_transacciones' %}">Historial</a>
               <a href="{% url 'logout' %}">Cerrar Sesión</a>
             </div>
           </div>
@@ -60,6 +62,13 @@
           </a>
         </div>
       </div>
+      <div class="welcome-section">
+        {% if request.resolver_match.url_name == "home" %}
+          <h1>BIENVENIDO A YOUBUILD!</h1>
+          <p>Una plataforma que facilita la compra y venta de materiales de construcción.</p>
+        {% endif %}
+      </div>
+      
     </header>
     <div>
       {% block content %}

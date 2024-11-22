@@ -26,9 +26,8 @@
       <div class="topbar-background">
       <div class="topbar-container">
         <div class="topbar-left">
-          <a href="/" class="logo">
-            <img src="{% static 'logo.jpeg' %}" alt="Logo" width="125">
-          </a>
+          <!-- Logo como texto -->
+          <a href="/" class="logo">YouBuild</a> 
         </div>
         <div class="topbar-center">
           <!-- Aquí está el formulario con las restricciones necesarias -->
@@ -50,11 +49,19 @@
           </a>  
         </div>
       </div>
+      <div class="welcome-section">
+        {% if request.resolver_match.url_name == "index" %}
+          <h1>BIENVENIDO A YOUBUILD!</h1>
+          <p>Una plataforma que facilita la compra y venta de materiales de construcción.</p>
+        {% endif %}
+      </div>
+      
     </header>
     
     <div>
       {% block content %}
-      <!--COLOCAR SU CONTENIDO-->
+      
+      
       {% endblock %}
     </div>
 
