@@ -19,6 +19,11 @@ from rest_framework import status
 from .serializers import ProductoSerializer
 from django.utils import timezone
 from django.shortcuts import render, redirect
+<<<<<<< Updated upstream
+=======
+from datetime import datetime, timedelta
+from django.core.mail import send_mail
+>>>>>>> Stashed changes
 
 # Vista principal
 @login_required
@@ -516,6 +521,238 @@ class ActualizarPublicacionAPIView(APIView):
             for foto in fotos:
                 ImagenProductoDB.objects.create(producto_fk=producto, imagen=foto)
 
+<<<<<<< Updated upstream
         # Responder con los datos actualizados
         serializer = ProductoSerializer(producto)
         return Response(serializer.data, status=status.HTTP_200_OK)
+=======
+        # Redirigir a "mis publicaciones"
+        return redirect('mis_publicaciones')
+
+    return render(request, 'crear_oferta.html', {'productos': productos})
+
+@transaction.atomic
+def procesar_transaccion(request):
+    if request.method == "POST":
+        tipo = request.POST.get('tipo')  # Compra o Venta
+        producto_id = request.POST.get('producto_id')
+        cantidad = int(request.POST.get('cantidad'))
+        detalles = request.POST.get('detalles', '')
+
+        # Obtener el producto
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+
+        try:
+            # Ajustar el stock utilizando el método del modelo
+            if tipo == 'Compra':
+                producto.ajustar_stock(cantidad, operacion='restar')
+            elif tipo == 'Venta':
+                producto.ajustar_stock(cantidad, operacion='sumar')
+
+            # Crear la transacción
+            nueva_transaccion = Transaccion.objects.create(
+                tipo=tipo,
+                usuario=request.user,
+                producto=producto,
+                cantidad=cantidad,
+                detalles=detalles
+            )
+
+            return JsonResponse({
+                'message': 'Transacción procesada con éxito',
+                'precio_total': nueva_transaccion.precio_total
+            })
+
+        except ValueError as e:
+            # Manejo de errores si el stock es insuficiente u ocurre algo en ajustar_stock
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+import qrcode 
+from io import BytesIO
+from django.core.files.base import ContentFile
+
+def generar_codigo_qr(url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return ContentFile(buffer.getvalue())
+
+def confirmar_compra(request, producto_id):
+    producto = get_object_or_404(ProductoDb, id=producto_id)
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes usar datos dinámicos
+
+    qr_image_url = generar_codigo_qr(producto)  # Lógica para generar el QR
+
+    return render(request, 'compra.html', {
+        'producto': producto,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def proceder_pago_carrito(request):
+    productos_carrito = obtener_productos_carrito(request)  # Tu lógica de carrito
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes hacerla dinámica
+    qr_image_url = generar_codigo_qr_para_carrito(productos_carrito)  # Lógica del QR
+
+    return render(request, 'proceder_pago_carrito.html', {
+        'productos_carrito': productos_carrito,
+        'direccion_envio': direccion_envio,
+        'qr_image_url': qr_image_url,
+    })
+
+def ajustar_stock(self, cantidad, operacion='restar'):
+    if operacion == 'restar' and self.stock < cantidad:
+        raise ValueError("Stock insuficiente para realizar esta operación")
+    elif operacion == 'sumar':
+        self.stock += cantidad
+    else:
+        self.stock -= cantidad
+    self.save()
+
+def obtener_productos_carrito(request):
+    # Verifica que el usuario esté autenticado
+    if not request.user.is_authenticated:
+        return None  # O maneja carritos anónimos si lo prefieres
+
+    # Obtén el carrito activo del usuario
+    carrito, creado = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb, activo=True)
+
+    # Obtén los productos en el carrito
+    productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+
+    return productos_carrito
+
+def generar_codigo_qr_para_carrito(productos_carrito):
+    # Construye un texto con la información de los productos
+    texto_qr = "Carrito de compras:\n"
+    for item in productos_carrito:
+        texto_qr += f"{item.producto_fk.nombre} - Cantidad: {item.cantidad} - Subtotal: Bs {item.calcular_subtotal()}\n"
+    
+    # Genera el código QR
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(texto_qr)
+    qr.make(fit=True)
+
+    # Crea una imagen del QR
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Guarda la imagen en memoria para devolverla
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+    return ContentFile(buffer.getvalue(), name="carrito_qr.png")
+
+def historial_transacciones_view(request):
+    usuario = request.user  # Usuario autenticado
+    transacciones = Transaccion.objects.filter(usuario=usuario)  # Todas las transacciones del usuario
+    compras = transacciones.filter(tipo='Compra')  # Solo compras
+    ventas = transacciones.filter(tipo='Venta')  # Solo ventas
+
+    # Preparar datos enriquecidos para el contexto
+    transacciones_enriquecidas = []
+    for transaccion in transacciones:
+        producto = transaccion.producto
+        # Determinar la URL de la imagen
+        if producto.imagenes.exists():
+            imagen_url = producto.imagenes.first().imagen.url
+        else:
+            imagen_url = 'path/to/default-image.jpg'  # Ruta de la imagen por defecto
+        # Añadir la transacción con datos extra
+        transacciones_enriquecidas.append({
+            'transaccion': transaccion,
+            'compras': compras,
+            'ventas': ventas,
+            'imagen_url': imagen_url,
+        })
+
+    context = {
+        'transacciones': transacciones_enriquecidas,
+    }
+    return render(request, 'Historial.html', context)
+
+def solicitar_cotizacion(request, producto_id=None):
+    # Obtener o inicializar el carrito en la sesión
+    carrito = request.session.get('carrito', [])
+    
+    # Si hay un producto específico, agrégalo al carrito
+    if producto_id:
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        carrito.append({
+            'id': producto.id,
+            'nombre': producto.nombre,
+            'cantidad': 1,  # Cantidad predeterminada
+        })
+        request.session['carrito'] = carrito
+        return redirect('solicitar_cotizacion')  # Redirigir para evitar reenvíos
+
+    # Procesar el formulario al enviar
+    if request.method == 'POST':
+        form = CotizacionForm(request.POST)
+        if form.is_valid():
+            # Datos generales del formulario
+            nombre = form.cleaned_data['nombre_completo']
+            correo = form.cleaned_data['correo_electronico']
+            telefono = form.cleaned_data['numero_telefono']
+            comentarios = form.cleaned_data.get('comentarios', 'N/A')
+
+            # Detalles del carrito
+            productos = request.POST.getlist('producto')
+            cantidades = request.POST.getlist('cantidad')
+
+            # Formatear detalles de los productos
+            detalles_productos = "\n".join(
+                [f"- {prod} (Cantidad: {cant})" for prod, cant in zip(productos, cantidades)]
+            )
+
+            # Generar el mensaje del correo
+            mensaje = f"""
+            Nueva solicitud de cotización:
+            Nombre: {nombre}
+            Correo: {correo}
+            Teléfono: {telefono}
+            Productos seleccionados:\n{detalles_productos}
+            Comentarios: {comentarios}
+            """
+
+            # Enviar el correo
+            send_mail(
+                subject="Solicitud de Cotización",
+                message=mensaje,
+                from_email='tienda@ejemplo.com',
+                recipient_list=[correo],
+            )
+
+            # Limpiar el carrito y redirigir a la página de confirmación
+            request.session['carrito'] = []
+            return render(request, 'cotizacion_confirmacion.html', {'nombre': nombre})
+
+    else:
+        form = CotizacionForm()
+
+    return render(request, 'cotizacion.html', {
+        'form': form,
+        'carrito': carrito,  # Pasar el carrito al template
+    })
+    
+def eliminar_todo_el_carrito(request, product_index=None):
+    carrito = request.session.get('carrito', [])
+    
+    if product_index is not None and 0 <= product_index < len(carrito):
+        del carrito[product_index]  # Eliminar producto específico
+    else:
+        carrito = []  # Limpiar todo el carrito
+    
+    request.session['carrito'] = carrito
+    return JsonResponse({'mensaje': 'Carrito actualizado correctamente.'})
+>>>>>>> Stashed changes

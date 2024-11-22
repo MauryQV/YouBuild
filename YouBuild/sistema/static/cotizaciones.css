@@ -1,0 +1,63 @@
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+}
+
+/* Botones con fondo naranja y texto blanco */
+/* Botones con fondo naranja y texto blanco */
+.btn.btn-orange {
+    background-color: orange !important;
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.btn-orange:hover {
+    background-color: darkorange !important;
+}
+
+/* Botón de limpiar con fondo blanco, borde y texto naranja */
+.btn.btn-white-orange {
+    background-color: white !important;
+    color: orange !important;
+    border: 2px solid orange !important;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn.btn-white-orange:hover {
+    background-color: orange !important;
+    color: white !important;
+}
+
+/* Botón de cancelar con texto y borde naranja, fondo blanco */
+.btn.btn-cancel {
+    background-color: white !important;
+    color: orange !important;
+    border: 2px solid orange !important;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn.btn-cancel:hover {
+    background-color: orange !important;
+    color: white !important;
+}
+

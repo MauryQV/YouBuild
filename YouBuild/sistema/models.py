@@ -309,4 +309,32 @@ class ListaFavoritosDB(models.Model):
         ListaFavoritosDB.objects.filter(usuario=self.usuario, producto=producto).delete()
 
     def contar_productos(self):
+<<<<<<< Updated upstream
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
+=======
+        return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
+    
+class Transaccion(models.Model):
+    TIPO_CHOICES = [
+        ('Compra', 'Compra'),
+        ('Venta', 'Venta'),
+    ]
+
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    detalles = models.TextField(blank=True, null=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def calcular_precio_total(self):
+        return self.cantidad * self.producto.precio
+
+    @property
+    def precio_total(self):
+        return self.calcular_precio_total()
+
+    def __str__(self):
+        return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"
+    
+>>>>>>> Stashed changes

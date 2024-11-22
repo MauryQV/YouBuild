@@ -10,6 +10,84 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 import re
 
+class CotizacionForm(forms.Form):
+    nombre_completo = forms.CharField(
+        label="Nombre completo",
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese su nombre completo',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    correo_electronico = forms.EmailField(
+        label="Correo electrónico",
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Ingrese su correo electrónico',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    numero_telefono = forms.CharField(
+        label="Número de teléfono",
+        max_length=8,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese su número de celular',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    comentarios = forms.CharField(
+        label="Comentarios adicionales",
+        required=False,
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Escribe aquí tus comentarios adicionales…',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+
+    # Campos dinámicos para productos
+    producto = forms.CharField(
+        label="Producto",
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese el nombre del producto',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    cantidad = forms.IntegerField(
+        label="Cantidad",
+        min_value=1,
+        widget=forms.NumberInput(attrs={
+            'placeholder': 'Ingrese la cantidad',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+
+    # Validaciones personalizadas
+    def clean_nombre_completo(self):
+        nombre = self.cleaned_data['nombre_completo']
+        if not re.match(r'^[a-zA-Z\s]{4,50}$', nombre):
+            raise ValidationError("El nombre debe contener solo letras y entre 4 y 50 caracteres.")
+        if '  ' in nombre:
+            raise ValidationError("El nombre no puede contener espacios consecutivos.")
+        if nombre.count(' ') > 7:
+            raise ValidationError("El nombre no puede tener más de 7 espacios.")
+        return nombre
+
+    def clean_numero_telefono(self):
+        numero = self.cleaned_data['numero_telefono']
+        if not numero.isdigit() or len(numero) != 8 or not numero.startswith(('6', '7')):
+            raise ValidationError("El número de teléfono debe ser de 8 dígitos y comenzar con 6 o 7.")
+        return numero
+
+
+
+
+
 class LoginForm(AuthenticationForm):
     pass
 

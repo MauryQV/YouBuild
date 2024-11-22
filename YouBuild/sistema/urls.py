@@ -36,10 +36,29 @@ urlpatterns = [
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
 
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
+<<<<<<< Updated upstream
     path('api/publicaciones/', PublicacionesUsuarioAPIView.as_view(), name='publicaciones_usuario'),
     path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
      path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
      path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+=======
+    path('productos/', views.producto_view, name='product_list'),
+    path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+    path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+    path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
+    path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
+    path('crear_oferta/', actualizar_descuento_view, name='crear_oferta'),
+    path('confirmar-compra/<int:producto_id>/', views.confirmar_compra, name='confirmar_compra'),
+    path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
+    path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
+    path('historial/', historial_transacciones_view, name='historial_transacciones'),
+    path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+    
+     path('solicitar-cotizacion/', solicitar_cotizacion, name='solicitar_cotizacion'),
+    path('solicitar-cotizacion/<int:producto_id>/', solicitar_cotizacion, name='solicitar_cotizacion_producto'),
+    path('eliminar-todo-el-carrito/', eliminar_todo_el_carrito, name='eliminar_todo_el_carrito'),
+
+>>>>>>> Stashed changes
 
 ]
 
