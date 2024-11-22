@@ -100,7 +100,7 @@
 
             <fieldset class="section">
                 <legend>Fotos</legend>
-                <p>Sube al menos una foto</p>
+                <p>Aumenta otras fotos</p>
                 <div class="image-upload">
                     <label for="file1">
                         <input type="file" id="file1" name="imagenes" required onchange="showPreview(event, 'preview1')">
@@ -156,13 +156,30 @@
 
             <!-- Botones -->
             <div class="form-buttons">
-                <button type="button" class="discard-button" onclick="window.location.href='{% url 'index' %}'">Descartar</button>
-                <button type="submit" class="submit-button">Guardar</button>
+                <button type="button" class="discard-button" onclick="window.location.href='{% url 'mis_publicaciones' %}'">Descartar</button>
+                <button type="submit" class="submit-button" onclick="return validateForm();">Guardar cambios</button>
             </div>
         </form>
     </div>
 
     <script>
+        function validateForm() {
+            // Basic validation for required fields
+            let valid = true;
+            const nombre = document.getElementById('id_nombre').value.trim();
+            const categoria = document.getElementById('id_categoria_fk').value.trim();
+            const detalle = document.getElementById('id_detalle').value.trim();
+            const precio = parseFloat(document.getElementById('id_precio').value.trim());
+            const cantidad = parseInt(document.getElementById('id_cantidad').value.trim());
+        
+            if (!nombre || !categoria || !detalle || isNaN(precio) || isNaN(cantidad) || cantidad < 1 || precio <= 0) {
+                alert("Por favor, completa todos los campos correctamente.");
+                valid = false;
+            }
+        
+            return valid;
+        }
+        
         function showPreview(event, previewId) {
             const file = event.target.files[0];
             const preview = document.getElementById(previewId);
@@ -330,7 +347,6 @@
             // Validación del formulario al hacer clic en el botón "Guardar"
             $('.submit-button').on('click', function(event) {
                 event.preventDefault(); // Evitar el envío del formulario para realizar la validación
-    
                 let valid = true; // Variable para determinar si el formulario es válido
                 // Limpiar mensajes de error
                 $('#error-nombre').hide();
@@ -381,8 +397,9 @@
     
                 // Si el formulario es válido, se puede enviar
                 if (valid) {
-                    // Aquí se puede enviar el formulario (ej. $('#formulario-producto').submit())
-                    $('#formulario-producto').submit(); // Comentado si quieres realizar otras acciones antes de enviar
+                    $('#formulario-producto').submit(); // Submit the form programmatically
+                } else {
+                    alert("Por favor, corrige los errores antes de continuar."); // Error message for invalid form
                 }
             });
              // Delete current images
@@ -409,8 +426,6 @@
         });
     </script>
     
-    
-        
 </body>
 </html>
 {% endblock %}
