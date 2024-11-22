@@ -18,9 +18,7 @@
   </style>
 {% endblock %}
 {% block content %}
-<div class="titulo">
-    <h1> {{ producto.nombre }} </h1>
-</div>
+
 <div class="flex-container">
     <div class="column column-left flex-column">
         <h3>Vendedor</h3>
@@ -130,19 +128,26 @@
         <p class="precio-sin-promocion">Bs {{ producto.precio }}</p>
     {% endif %}
         
-        <h3>Ubicación</h3>
+        <h3>Ubicación:</h3>
         <p>
             {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
             {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
             {{ producto.usuario_fk.municipio_fk }}
+        </p>
+        <h4>Direccion Precisa:</h4>
+        <p>
+            {{producto.direccion_1}}
         </p>
     </div>
     
 </div>
 
 <!-- Sección de productos relacionados -->
-<h2 class="products-title">Productos Relacionados</h2>
+
 <div class="products-container">
+    <div class="products-title">
+        Productos Relacionados
+      </div>
     {% for producto in productos_relacionados %}
     <div class="product">
         {% if producto.estado == "promocion" %}

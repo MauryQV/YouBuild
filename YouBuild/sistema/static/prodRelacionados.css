@@ -17,16 +17,20 @@ body {
     font-size: 1em;
     color: #333;
     margin-left: 20px;
+    width: 100%; /* Asegura que ocupe todo el ancho */
 }
 
 .products-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center; /* Centrar los productos */
-    gap: 10px; /* Espacio entre productos */
-    padding: 20px; /* Espacio alrededor del contenedor */
-    box-sizing: border-box; /* Incluir padding en el ancho total */
+    gap: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(247, 243, 239, 0.9);
+    border-radius: 10px;
 }
+
 
 .product {
     position: relative; /* Posición relativa para manejar elementos absolutos como el badge */
