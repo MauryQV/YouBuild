@@ -44,6 +44,7 @@ urlpatterns = [
     path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
     path('historial/', historial_transacciones_view, name='historial_transacciones'),
     path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+    path('delete-image/<int:image_id>/', delete_image, name='delete_image'),
 
 ]
 

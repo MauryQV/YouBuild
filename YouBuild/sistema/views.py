@@ -495,6 +495,7 @@ def publicaciones_usuario_view(request):
         'mis_productos': productos,
         'usuario': usuario  
     })
+
 @login_required
 def editar_producto(request, producto_id):
     print(f"Fetching product with ID: {producto_id}")
@@ -533,6 +534,16 @@ def editar_producto(request, producto_id):
         'editar': True,
         'imagenes_actuales': imagenes_actuales,
     })
+
+@login_required
+def delete_image(request, image_id):
+    """
+    View to handle deletion of an image from a product.
+    """
+    imagen = get_object_or_404(ImagenProductoDB, id=image_id, producto_fk__usuario_fk=request.user.usuariodb)
+    imagen.delete()
+    return JsonResponse({'success': True})
+    
 
 @login_required
 def eliminar_producto(request, producto_id):

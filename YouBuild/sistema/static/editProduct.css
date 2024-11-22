@@ -14,7 +14,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 55px auto 40px auto; /* Adjust margin to prevent overlapping */
+    margin: 55px auto 40px auto; /* Aumenta el margen superior para evitar que el top bar lo cubra */
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -26,7 +26,7 @@ h1.title {
     color: #333;
     text-align: center;
     font-size: 28px;
-    margin-top: 20px;
+    margin-top: 20px; /* Ajusta el margen superior del título */
     margin-bottom: 20px;
 }
 
@@ -125,9 +125,7 @@ small {
 .image-upload {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-top: 10px;
+    justify-content: space-around;
 }
 
 .image-upload label {
@@ -150,47 +148,9 @@ small {
 }
 
 .image-upload span {
-    font-size: 16px;
+    font-size: 18px;
     color: #666;
     text-align: center;
-}
-
-/* Current Images Section */
-.current-images {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.image-container {
-    position: relative;
-}
-
-.image-preview {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    object-fit: cover;
-}
-
-/* Remove Button for Uploaded Images */
-.remove-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #cbcbcb;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
 }
 
 /* Buttons */
@@ -214,9 +174,101 @@ small {
     text-align: center;
 }
 
+.discard-button {
+    background-color: #ef6605;
+}
+
 .discard-button:hover,
 .submit-button:hover {
     opacity: 0.9;
+}
+
+/* Image Upload Styling */
+.image-upload label {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #999;
+    font-size: 24px;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-upload span {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload span[style*="background-image"] {
+    color: transparent;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #cbcbcb;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+/* Styling for current images */
+.current-images .image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Ensures the image fits within the dimensions without distortion */
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    display: block;
+}
+
+.current-images {
+    display: flex;
+    gap: 10px; /* Add space between images */
+    flex-wrap: wrap;
+}
+
+/* Styling for the delete button */
+.current-images .delete-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgb(183, 183, 183);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container {
+    position: relative;
+    width: 100px; /* Match the width of the images */
+    height: 100px; /* Match the height of the images */
 }
 
 /* Error messages */
@@ -227,20 +279,9 @@ small {
 #error-cantidad,
 #error-foto {
     color: red;
-    font-size: 12px;
-    margin-top: 5px;
     display: none;
 }
 
-/* Adjustments for Location Section */
-.location-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
 
-.location-group .form-group {
-    flex: 1;
-    min-width: 30%; /* Ensure proper responsiveness */
-}
+
 
