@@ -3,36 +3,30 @@
 
 {% block content %}
     <div class="container">
-        <h2>{% if producto %}Editar: {{ producto.nombre }}{% else %}Registrar Producto{% endif %}</h2>
+        <h2>{% if producto %}Editar{% else %}Registrar{% endif %} Producto</h2>
 
-        <!-- Mostrar mensajes de error si los hay -->
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <strong>¡Ups! Hubo algunos problemas con tu formulario:</strong>
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <!-- Formulario de Producto -->
         <form id="formulario-producto" method="POST" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
             {{ form.as_p }}  <!-- Muestra el formulario con los campos pre-poblados -->
 
+            <div>
+                <label>Imágenes existentes:</label>
+                <ul>
+                    {% for imagen in producto.imagenproducto_set.all %}
+                        <li>
+                            <img src="{{ imagen.imagen.url }}" alt="Imagen {{ forloop.counter }}" width="100">
+                        </li>
+                    {% empty %}
+                        <li>No hay imágenes existentes.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
             <button type="submit" class="btn btn-primary">
-                {% if producto %}
-                    Guardar Cambios
-                {% else %}
-                    Registrar Producto
-                {% endif %}
+                {% if producto %}Guardar Cambios{% else %}Registrar Producto{% endif %}
             </button>
         </form>
-
     </div>
 {% endblock %}
+
 

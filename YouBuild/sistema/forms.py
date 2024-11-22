@@ -284,11 +284,21 @@ class RegistroProductoForm(forms.ModelForm):
     @transaction.atomic
     def save(self, commit=True):
         producto = super().save(commit=False)
+    
         if commit:
             producto.save()
-            for imagen in self.cleaned_data.get('imagenes'):
-                ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+        
+        # Eliminar las imágenes existentes antes de guardar las nuevas
+        if self.cleaned_data.get('imagenes'):  # Si se han subido imágenes nuevas
+            producto.imagenes.all().delete()  # Eliminar imágenes existentes (con 'imagenes' en lugar de 'imagenproducto_set')
+        
+        # Crear las nuevas imágenes
+        for imagen in self.cleaned_data.get('imagenes', []):
+            ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
+    
         return producto
+
+
 
 class EditarProductoForm(forms.ModelForm):
     nombre = forms.CharField(
