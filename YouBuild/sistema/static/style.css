@@ -30,42 +30,41 @@ main {
 footer {
     background-color: #bcbbbb;
     padding: 20px 0;
-    width: 100%; 
-    position: relative; 
+    width: 100%; /* Ocupa el 100% del ancho disponible */
+    position: relative;
     color: #ffffff;
+    margin-top: auto; /* Asegura que el footer se quede al final de la página */
+    margin: 0; /* Elimina márgenes */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
 .footer-container {
     display: flex; 
-    justify-content: space-around; 
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
     flex-wrap: wrap;
     width: 100%;
-    margin: 0 auto; 
-    padding: 0 0px; 
-    margin: 0 2cm; 
+    padding: 0 1rem; /* Ajusta el padding para evitar desbordes */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
 .footer-contact,
-.footer-legal {
-    flex: 1; /* Cada sección toma un espacio igual */
-    min-width: 200px; /* Ancho mínimo para cada sección */
+.footer-legal,
+.footer-description,
+.footer-links {
+    flex: 1 1 200px; /* Permite que los elementos crezcan y se ajusten, con un ancho mínimo de 200px */
     margin: 10px; /* Margen entre secciones */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
 .footer-description {
-    flex: 1; /* Cada sección toma un espacio igual */
-    min-width: 200px; /* Ancho mínimo para cada sección */
-    margin: 10px; /* Margen entre secciones */
     margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
 }
-
 
 .footer-links {
-    flex: 1; /* Cada sección toma un espacio igual */
-    min-width: 200px; /* Ancho mínimo para cada sección */
-    margin: 10px; /* Margen entre secciones */
     margin-left: 30px; /* Aumenta el margen izquierdo para moverlo más a la derecha */
 }
+
+
 
 .social-section {
     display: flex;
