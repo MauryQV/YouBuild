@@ -8,6 +8,27 @@ body {
     margin: 0; /* Elimina márgenes por defecto */
 }
 
+/* Media queries para diseño responsivo */
+@media (max-width: 1024px) {
+    body {
+        background-size: 100% 100%; /* Escala la imagen según el tamaño del cuerpo */
+        background-attachment: scroll; /* Permite que se desplace con el contenido */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        background-size: auto 100%; /* Ajusta el alto al 100% y el ancho automáticamente */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        background-size: contain; /* Escala la imagen para que se ajuste dentro del área */
+        background-attachment: scroll; /* Asegura el desplazamiento en pantallas pequeñas */
+        background-position: top; /* Ajusta la posición en dispositivos pequeños */
+    }
+}
 /* La topbar sigue teniendo su imagen como fondo */
 .topbar-background {
     background-size: cover;

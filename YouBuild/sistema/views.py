@@ -509,42 +509,30 @@ def publicaciones_usuario_view(request):
 
 @login_required
 def editar_producto(request, producto_id):
-    print(f"Fetching product with ID: {producto_id}")
-    producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
-    print(f"Product fetched: {producto}")
-
-    imagenes_actuales = producto.imagenes.all()
-    print(f"Existing images: {imagenes_actuales}")
+    # Obtener el producto por ID
+    producto = get_object_or_404(ProductoDb, id=producto_id)
 
     if request.method == 'POST':
-        print(f"Received POST request with data: {request.POST}")
-        form = EditarProductoForm(request.POST, request.FILES, instance=producto)
+        # Al recibir una solicitud POST, procesar el formulario con los datos actuales del producto
+        form = RegistroProductoForm(request.POST, request.FILES, instance=producto)
+
         if form.is_valid():
-            print("Form is valid, saving product.")
-            producto = form.save(commit=False)
-            producto.usuario_fk = request.user.usuariodb
-            producto.save()
-
-            if 'imagenes' in request.FILES:
-                imagenes = request.FILES.getlist('imagenes')
-                print(f"New images uploaded: {imagenes}")
-                for imagen in imagenes:
-                    ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
-
-            return redirect('confirmacion_producto')
+            # Si el formulario es válido, guardar los cambios
+            form.save()
+            # Redirigir a una página de confirmación o a la lista de productos
+            return redirect('confirmacion_producto')  # Asegúrate de tener esta URL configurada en tus urls.py
         else:
-            print(f"Form errors: {form.errors}")
+            # Si el formulario no es válido, puedes agregar un mensaje de error aquí (opcional)
+            # Puedes mostrar mensajes de error en la plantilla
+            return render(request, 'registro_producto.html', {'form': form, 'producto': producto, 'error': 'Hubo un error al guardar los cambios'})
+    
     else:
-        form = EditarProductoForm(instance=producto)
-        form.fields['departamento_fk'].initial = producto.municipio_fk.provincia_fk.departamento_fk.id if producto.municipio_fk else None
-        form.fields['provincia_fk'].initial = producto.municipio_fk.provincia_fk.id if producto.municipio_fk else None
-        form.fields['municipio_fk'].initial = producto.municipio_fk.id if producto.municipio_fk else None
+        # Si la solicitud es GET, pre-llenar el formulario con los datos actuales del producto
+        form = RegistroProductoForm(instance=producto)
 
-    return render(request, 'edit_producto.html', {
-        'form': form,
-        'editar': True,
-        'imagenes_actuales': imagenes_actuales,
-    })
+    # Renderizar el formulario de edición con los datos actuales del producto
+    return render(request, 'registro_producto.html', {'form': form, 'producto': producto})
+
 
 
 @login_required
