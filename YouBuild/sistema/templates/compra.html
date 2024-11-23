@@ -45,7 +45,7 @@
     function confirmarPago() {
         console.log("Enviando solicitud de pago...");
         fetch('/procesar-transaccion/', {
-            method: 'POST',
+            method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
@@ -64,6 +64,7 @@
             } else {
                 alert('Transacción procesada con éxito. Precio total: ' + data.precio_total);
                 // Redirigir a otra página si es necesario
+                window.location.href = '{% url "historial_transacciones" %}';
             }
         })
         .catch(error => {

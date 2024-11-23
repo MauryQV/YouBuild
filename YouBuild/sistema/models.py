@@ -173,6 +173,7 @@ class ProductoDb(models.Model):
     direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
+    activo = models.BooleanField(default=True, verbose_name="Activo")  # Campo para soft delete.
 
     class Meta:
         db_table = "productos"
@@ -221,15 +222,12 @@ class ProductoDb(models.Model):
         return 0
     
     def ajustar_stock(self, cantidad, operacion='restar'):
-        """
-        Ajusta el stock del producto. Valida si hay suficiente stock para restar.
-        """
         if operacion == 'restar':
-            if self.stock < cantidad:
+            if self.cantidad < cantidad:
                 raise ValueError("Stock insuficiente para realizar esta operación.")
-            self.stock -= cantidad
+            self.cantidad -= cantidad
         elif operacion == 'sumar':
-            self.stock += cantidad
+            self.cantidad += cantidad
         self.save()
 
 
@@ -323,24 +321,30 @@ class ListaFavoritosDB(models.Model):
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
     
 class Transaccion(models.Model):
+    COMPRA = 'Compra'
+    VENTA = 'Venta'
     TIPO_CHOICES = [
-        ('Compra', 'Compra'),
-        ('Venta', 'Venta'),
+        (COMPRA, 'Compra'),
+        (VENTA, 'Venta'),
     ]
 
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE)
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="transacciones")
     cantidad = models.PositiveIntegerField()
     detalles = models.TextField(blank=True, null=True)
     fecha = models.DateTimeField(auto_now_add=True)
 
     def calcular_precio_total(self):
-        return self.cantidad * self.producto.precio
+        return self.cantidad * self.producto.precio_final()
 
     @property
     def precio_total(self):
         return self.calcular_precio_total()
+
+    def clean(self):
+        if self.tipo == self.COMPRA and self.producto.cantidad < self.cantidad:
+            raise ValidationError("El producto no tiene suficiente stock disponible.")
 
     def __str__(self):
         return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"

@@ -1,0 +1,117 @@
+/* Estilo general para la página de confirmación de compra */
+.container {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Estilo para la dirección de envío */
+.direccion-envio {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.direccion-envio p {
+    margin: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Estilo de la tabla con los productos del carrito */
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.table td {
+    background-color: #fff;
+}
+
+/* Estilo para el total */
+h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+}
+
+/* Estilo para el contenedor del código QR */
+.qr-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr-imagen {
+    max-width: 200px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+/* Estilo del botón de finalizar compra */
+.boton-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-confirmar {
+    background-color: #f59c17;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-confirmar:hover {
+    background-color: #cc7e12;
+}
+
+/* Estilo del enlace de historial de transacciones */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6368;
+}
+
+/* Estilo para los mensajes cuando el carrito está vacío */
+.empty-cart-message {
+    font-size: 18px;
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+}

@@ -44,7 +44,11 @@
             {% endfor %}
         </div>
         <div class="botones button-row">
-            <button class="btn" id="btn-comprar" onclick="comprar({{ producto.id }})">Comprar</button>
+            <button 
+                class="btn" id="btn-comprar" 
+                onclick="location.href='{% url 'confirmar_compra' producto.id %}'">
+                Comprar
+            </button>
             <button class="btn add-to-view" id="btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">
                 <i class="fas fa-shopping-cart"></i> Agregar al Carrito
             </button>
@@ -158,7 +162,11 @@
         {% endif %}
         <div class="buttons-container">
             <div class="button-row">
-                <button class="btn buy-now" onclick="verDetalles({{ producto.id }})">Comprar Ahora</button>
+                <button 
+                    class="btn buy-now" 
+                    onclick="location.href='{% url 'confirmar_compra' producto.id %}'">
+                    Comprar Ahora
+                </button>
                 <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
                     <i class="fas fa-shopping-cart"></i> Agregar a Carrito
                 </button>
