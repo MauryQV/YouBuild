@@ -298,7 +298,13 @@ def carrito_view(request):
     })
 
 @login_required
-def eliminar_producto(request, producto_id):
+def eliminar_producto(request, item_id):
+    carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
+    carrito_producto.delete()
+    return redirect('Carrito')
+
+@login_required
+def eliminar_productos(request, producto_id):
     print(f"Received request to delete product ID: {producto_id}")  # Debugging
     if request.method == 'POST':  # Ensure it's a POST request
         producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)

@@ -43,7 +43,7 @@ urlpatterns = [
     path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
     path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
     path('historial/', historial_transacciones_view, name='historial_transacciones'),
-    path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+    path('eliminar-productos/<int:producto_id>/', views.eliminar_productos, name='eliminar_producto'),
 
 ]
 
