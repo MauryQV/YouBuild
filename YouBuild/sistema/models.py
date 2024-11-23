@@ -198,13 +198,15 @@ class ProductoDb(models.Model):
         return self.precio
 
     def esta_en_promocion(self):
-        ahora = timezone.now()
-        return (
-            self.estado == 'promocion' and
-            self.fecha_inicio_promocion and
-            self.fecha_fin_promocion and
-            self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion
-        )
+        """
+        Verifica si el producto está actualmente en promoción.
+        """
+        if self.estado == 'promocion':
+            # Comprueba si la fecha actual está dentro del rango de promoción
+            ahora = timezone.now()
+            if self.fecha_inicio_promocion and self.fecha_fin_promocion:
+                return ahora <= self.fecha_fin_promocion
+        return False
 
     def dias_restantes_promocion(self):
        

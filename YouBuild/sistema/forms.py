@@ -281,22 +281,14 @@ class RegistroProductoForm(forms.ModelForm):
                 pass
 
 
-    @transaction.atomic
-    def save(self, commit=True):
-        producto = super().save(commit=False)
-    
-        if commit:
-            producto.save()
-        
-        # Eliminar las imágenes existentes antes de guardar las nuevas
-        if self.cleaned_data.get('imagenes'):  # Si se han subido imágenes nuevas
-            producto.imagenes.all().delete()  # Eliminar imágenes existentes (con 'imagenes' en lugar de 'imagenproducto_set')
-        
-        # Crear las nuevas imágenes
-        for imagen in self.cleaned_data.get('imagenes', []):
-            ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)
-    
-        return producto
+@transaction.atomic
+def save(self, commit=True):
+    producto = super().save(commit=False)  # El objeto no se guarda aún en la base de datos
+    if commit:
+        producto.save()  # Aquí se guarda el producto y se genera su primary key
+        for imagen in self.cleaned_data.get('imagenes'):  # Intentas acceder a una relación
+            ImagenProductoDB.objects.create(producto_fk=producto, imagen=imagen)  # Esto requiere un PK
+    return producto
 
 
 
