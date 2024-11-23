@@ -78,7 +78,7 @@
 
         <div class="mt-4">
             
-            <button type="submit" class="btn btn-primary" id="submit-btn">Enviar Cotización</button>
+            <button type="submit" class="btn btn-primary" id="submit-btn" disabled> Enviar Cotización</button>
             <button type="reset" class="btn btn-white-orange" id="reset-form">Limpiar formulario</button>
             <button type="button" onclick="window.location.href='/'" class="btn btn-orange-view" id="view-products" onclick="redirectToProducts()"> Ver Productos</button>
             <button type="button" onclick="window.location.href='/'" class="btn btn-cancel">Cancelar</button>
@@ -89,109 +89,15 @@
 
 {% block extra_scripts %}
 <script>
-
     document.addEventListener('DOMContentLoaded', () => {
-        // Campo de número de celular
-        const telefonoInput = document.querySelector('input[name="numero_telefono"]');
-        const telefonoError = document.createElement('div');
-        telefonoError.style.color = 'red';
-        telefonoError.style.fontSize = '12px';
-        telefonoInput.parentNode.appendChild(telefonoError);
-    
-        // Añadir el placeholder si no está definido
-        if (!telefonoInput.placeholder) {
-            telefonoInput.placeholder = 'Ingrese su número de celular';
-        }
-    
-        // Función de validación para el campo "Número de celular"
-        const validateTelefono = () => {
-            const telefono = telefonoInput.value.trim();
-            let errorMessage = '';
-    
-            if (telefono === '') {
-                errorMessage = 'Campo obligatorio';
-            } else if (!/^\d+$/.test(telefono)) {
-                errorMessage = 'Solo se permiten caracteres numéricos';
-            } else if (!telefono.startsWith('6') && !telefono.startsWith('7')) {
-                errorMessage = 'El número de celular debe empezar por 6 o 7';
-            } else if (telefono.length !== 8) {
-                errorMessage = 'Debe tener solo 8 dígitos';
-            }
-    
-            if (errorMessage) {
-                telefonoError.textContent = errorMessage;
-                telefonoInput.classList.add('is-invalid');
-            } else {
-                telefonoError.textContent = '';
-                telefonoInput.classList.remove('is-invalid');
-            }
-        };
-    
-        // Escuchar eventos de entrada y desenfoque
-        telefonoInput.addEventListener('input', validateTelefono);
-        telefonoInput.addEventListener('blur', validateTelefono);
-    
-        // Validar antes de enviar el formulario
+        // Elementos del formulario
         const form = document.querySelector('form');
-        form.addEventListener('submit', (event) => {
-            validateTelefono(); // Validar "Número de celular"
-            if (telefonoError.textContent) {
-                event.preventDefault(); // Detener el envío si hay errores
-            }
-        });
-    });    
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const emailInput = document.querySelector('input[name="correo_electronico"]');
-        const emailError = document.createElement('div');
-        emailError.style.color = 'red';
-        emailError.style.fontSize = '12px';
-        emailInput.parentNode.appendChild(emailError);
+        const submitButton = document.getElementById('submit-btn');
+        const resetFormBtn = document.getElementById('reset-form');
+        const productosContainer = document.getElementById('productos-container');
+        const addProductBtn = document.getElementById('add-product');
     
-        // Función para validar el correo electrónico
-        const validateEmail = () => {
-            const email = emailInput.value.trim();
-            let errorMessage = '';
-    
-            if (email === '') {
-                errorMessage = 'Campo obligatorio';
-            } else if (!email.includes('@')) {
-                errorMessage = 'Correo electronico invalido: falta el símbolo "@"';
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                errorMessage = 'Correo electronico invalido: formato incorrecto';
-            } else if (email.includes(' ')) {
-                errorMessage = 'Correo electronico invalido: contiene espacios';
-            }
-    
-            if (errorMessage) {
-                emailError.textContent = errorMessage;
-                emailInput.classList.add('is-invalid');
-            } else {
-                emailError.textContent = '';
-                emailInput.classList.remove('is-invalid');
-            }
-        };
-    
-        // Validar el correo cuando se escribe o al perder el foco
-        emailInput.addEventListener('input', validateEmail);
-        emailInput.addEventListener('blur', validateEmail);
-    
-        // Validar antes de enviar el formulario
-        const form = document.querySelector('form');
-        form.addEventListener('submit', (event) => {
-            validateEmail();
-            if (emailError.textContent) {
-                event.preventDefault(); // Detener el envío si hay errores
-            }
-        });
-    });
-    
-
-
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+        // Validaciones: Nombre Completo
         const nombreInput = document.querySelector('input[name="nombre_completo"]');
         const nombreError = document.createElement('div');
         nombreError.style.color = 'red';
@@ -216,95 +122,140 @@
                 errorMessage = 'No se permiten más de 2 espacios seguidos';
             }
     
-            if (errorMessage) {
-                nombreError.textContent = errorMessage;
-                nombreInput.classList.add('is-invalid');
-            } else {
-                nombreError.textContent = '';
-                nombreInput.classList.remove('is-invalid');
-            }
+            nombreError.textContent = errorMessage;
+            nombreInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
         };
     
-        // Escucha eventos en el campo de entrada
-        nombreInput.addEventListener('input', validateNombreCompleto);
+        // Validaciones: Número de Teléfono
+        const telefonoInput = document.querySelector('input[name="numero_telefono"]');
+        const telefonoError = document.createElement('div');
+        telefonoError.style.color = 'red';
+        telefonoError.style.fontSize = '12px';
+        telefonoInput.parentNode.appendChild(telefonoError);
     
-        const form = document.querySelector('form');
-        const submitButton = document.getElementById('submit-btn');
+        const validateTelefono = () => {
+            const telefono = telefonoInput.value.trim();
+            let errorMessage = '';
     
-        // Validar el formulario antes de enviarlo
-        form.addEventListener('submit', (event) => {
-            validateNombreCompleto(); // Validar "Nombre completo" antes de enviar
-            if (nombreError.textContent) {
-                event.preventDefault(); // Detener el envío si hay errores
+            if (telefono === '') {
+                errorMessage = 'Campo obligatorio';
+            } else if (!/^\d+$/.test(telefono)) {
+                errorMessage = 'Solo se permiten caracteres numéricos';
+            } else if (!telefono.startsWith('6') && !telefono.startsWith('7')) {
+                errorMessage = 'El número de celular debe empezar por 6 o 7';
+            } else if (telefono.length !== 8) {
+                errorMessage = 'Debe tener solo 8 dígitos';
+            }
+    
+            telefonoError.textContent = errorMessage;
+            telefonoInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
+        };
+    
+        // Validaciones: Correo Electrónico
+        const emailInput = document.querySelector('input[name="correo_electronico"]');
+        const emailError = document.createElement('div');
+        emailError.style.color = 'red';
+        emailError.style.fontSize = '12px';
+        emailInput.parentNode.appendChild(emailError);
+    
+        const validateEmail = () => {
+            const email = emailInput.value.trim();
+            let errorMessage = '';
+    
+            if (email === '') {
+                errorMessage = 'Campo obligatorio';
+            } else if (!email.includes('@')) {
+                errorMessage = 'Correo electronico invalido: falta el símbolo "@"';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorMessage = 'Correo electronico invalido: formato incorrecto';
+            } else if (email.includes(' ')) {
+                errorMessage = 'Correo electronico invalido: contiene espacios';
+            }
+    
+            emailError.textContent = errorMessage;
+            emailInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
+        };
+    
+        // Validación manual de campos específicos
+        const validateFormFields = () => {
+            const isNombreValid = validateNombreCompleto();
+            const isTelefonoValid = validateTelefono();
+            const isEmailValid = validateEmail();
+            return isNombreValid && isTelefonoValid && isEmailValid;
+        };
+    
+        // Actualizar el botón de envío
+        const updateSubmitButton = () => {
+            submitButton.disabled = !validateFormFields();
+        };
+    
+        // Escuchadores de eventos para validaciones individuales
+        nombreInput.addEventListener('input', updateSubmitButton);
+        telefonoInput.addEventListener('input', updateSubmitButton);
+        emailInput.addEventListener('input', updateSubmitButton);
+    
+        // Agregar Producto al Formulario
+        addProductBtn.addEventListener('click', () => {
+            const newProduct = document.createElement('div');
+            newProduct.className = 'producto-item row mb-3';
+            newProduct.innerHTML = `
+                <div class="col-md-6">
+                    <label>Producto</label>
+                    <input type="text" name="producto" placeholder="Nombre del producto" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label>Cantidad</label>
+                    <input type="number" name="cantidad" placeholder="Cantidad" class="form-control" required min="1">
+                    <button type="button" class="btn btn-orange-remove mt-2 remove-product">Eliminar</button>
+                </div>
+            `;
+            productosContainer.appendChild(newProduct);
+            updateSubmitButton();
+        });
+    
+        // Eliminar Producto del Formulario
+        productosContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-product')) {
+                e.target.closest('.producto-item').remove();
+                updateSubmitButton();
             }
         });
-    });
-    </script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const submitButton = document.getElementById('submit-btn');
-    const resetFormBtn = document.getElementById('reset-form');
-    const form = document.querySelector('form');
-    const productosContainer = document.getElementById('productos-container');
-    const addProductBtn = document.getElementById('add-product');
-    const nombreInput = document.querySelector('input[name="nombre_completo"]');
-    const nombreError = document.createElement('div');
-    nombreError.style.color = 'red';
-    nombreError.style.fontSize = '12px';
-    nombreInput.parentNode.appendChild(nombreError);
-
-    const updateSubmitButton = () => {
-        submitButton.disabled = !form.checkValidity();
-    };
-
-    addProductBtn.addEventListener('click', () => {
-        const newProduct = document.createElement('div');
-        newProduct.className = 'producto-item row mb-3';
-        newProduct.innerHTML = `
-            <div class="col-md-6">
-                <label>Producto</label>
-                <input type="text" name="producto" placeholder="Nombre del producto" class="form-control" required>
-            </div>
-            <div class="col-md-6">
-                <label>Cantidad</label>
-                <input type="number" name="cantidad" placeholder="Cantidad" class="form-control" required min="1">
-                <button type="button" class="btn btn-orange-remove mt-2 remove-product">Eliminar</button>
-                
-            </div>
-        `;
-        productosContainer.appendChild(newProduct);
-        updateSubmitButton();
-    });
-
-    productosContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-product')) {
-            e.target.closest('.producto-item').remove();
-            updateSubmitButton();
-        }
-    });
-
-    form.addEventListener('input', updateSubmitButton);
-
-
-      // Limpiar formulario
-      resetFormBtn.addEventListener('click', (event) => {
-        event.preventDefault();
-        fetch('/eliminar-todo-el-carrito/', { 
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    
+        // Enviar el formulario
+        form.addEventListener('submit', (event) => {
+            if (!validateFormFields()) {
+                event.preventDefault();
+                alert("Por favor, corrige los errores antes de enviar.");
+            } else {
+                alert("Gracias por su solicitud. Le enviaremos la cotización a su correo.");
+                form.submit();
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            productosContainer.innerHTML = '';
-            document.querySelectorAll('form input, form textarea').forEach(input => {
-                input.value = '';
-            });
-            updateSubmitButtonState();
-        })
-        .catch(error => console.error('Error:', error));
+        });
+    
+        // Limpiar el formulario
+        resetFormBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            fetch('/eliminar-todo-el-carrito/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    productosContainer.innerHTML = '';
+                    document.querySelectorAll('form input, form textarea').forEach(input => {
+                        input.value = '';
+                    });
+                    updateSubmitButton();
+                })
+                .catch(error => console.error('Error:', error));
+        });
     });
-});
+    
 </script>
+
 {% endblock %}
