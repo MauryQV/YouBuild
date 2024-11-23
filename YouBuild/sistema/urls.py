@@ -10,7 +10,7 @@ urlpatterns = [
     path('producto/<int:id>/', producto_view, name='detalle_producto'),
     path('buscar/', buscar_view, name='buscar'),
     path('carrito/', carrito_view, name='Carrito'),
-    path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
+    path('carrito/eliminar/<int:producto_id>/', eliminar_producto_carrito, name='eliminar_producto_carrito'),
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
@@ -43,7 +43,8 @@ urlpatterns = [
     path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
     path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
     path('historial/', historial_transacciones_view, name='historial_transacciones'),
-    path('eliminar-productos/<int:producto_id>/', views.eliminar_productos, name='eliminar_producto'),
+    path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+    path('procesar-carrito/', procesar_carrito, name='procesar_carrito'),
 
 ]
 

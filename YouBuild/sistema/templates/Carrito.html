@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends 'layoutReg.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Carrito de Compras{% endblock %}
 
@@ -19,6 +20,18 @@
 {% block content %}
 <div class="container">
     <h1>Carrito de Compras</h1>
+
+    {% if messages %}
+        <div id="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                    <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="cart-container">
         <!-- Tabla con productos seleccionados -->
         <div class="cart-products">
@@ -37,7 +50,7 @@
                     {% for item in carrito_productos %}
                     <tr>
                         <td>
-                            <form action="{% url 'eliminar_producto' item.id %}" method="post">
+                            <form action="{% url 'eliminar_producto_carrito' item.producto_fk.id %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn-eliminar"><i class="fas fa-times"></i></button>
                             </form>
@@ -87,7 +100,11 @@
                 <span>Total</span>
                 <span>Bs {{carrito_total}}</span>  <!-- Mostrar correctamente el total -->
             </div>
-            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
+            <button 
+                class="btn-Proceder-pago" 
+                onclick="location.href='{% url 'proceder_pago_carrito' %}'">
+                Proceder al Pago
+            </button>
         </div>
     </div>
 </div>
