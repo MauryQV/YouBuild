@@ -625,7 +625,10 @@ def actualizar_descuento_view(request):
 
         # Actualizar el producto con descuento y fechas
         producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=usuario)
+        print("Todo llego de manera correcta")
+        print("Descuento es: "+ str(descuento))
         producto.descuento = descuento
+        producto.estado = 'promocion'
         producto.fecha_inicio_promocion = fecha_inicio
         producto.fecha_fin_promocion = fecha_fin
         producto.save()
