@@ -906,13 +906,12 @@ def solicitar_cotizacion(request, producto_id=None):
             )
 
             # Limpiar el carrito
-            request.session['carrito'] = []
+            
 
             # Agregar mensaje de confirmación al contexto
             messages.success(request, 'Gracias por su solicitud. Le enviaremos la cotización a su correo.')
-
-            # Renderizar de nuevo `cotizacion.html` con el formulario limpio
-            return render(request, 'cotizacion.html', {'form': CotizacionForm(), 'carrito': []})
+            request.session['carrito'] = []
+            #return redirect('solicitar_cotizacion')  # Redirigir para limpiar formulario y mostrar mensaje
 
     else:
         form = CotizacionForm()

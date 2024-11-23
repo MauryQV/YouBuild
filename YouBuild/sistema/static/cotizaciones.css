@@ -145,3 +145,26 @@ label[for="id_comentarios"] {
     font-weight: bold; /* Hace el texto más destacado */
     font-size: 18px; /* Tamaño ajustado */
 }
+
+#success-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ef6605;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+#success-message.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}

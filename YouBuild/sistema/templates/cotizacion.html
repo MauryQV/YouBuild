@@ -11,6 +11,16 @@
 
 {% block content %}
 <div class="container mt-5 form-container">
+    {% if messages %}
+        <div id="success-message">
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- Resto del formulario -->
+</div>
+<div class="container mt-5 form-container">
     <h2 style="font-family: Arial, sans-serif; font-size: 32px;">Solicitar Cotización</h2>
     <form method="POST" novalidate>
         {% csrf_token %}
@@ -75,7 +85,9 @@
             {{ form.comentarios }}
         </div>
        
-
+        <div id="success-message" class="success-message" style="display: none;">
+            ¡Gracias por su solicitud! Le enviaremos la cotización a su correo.
+        </div>
         <div class="mt-4">
             
             <button type="submit" class="btn btn-primary" id="submit-btn" disabled> Enviar Cotización</button>
@@ -90,12 +102,12 @@
 {% block extra_scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Elementos del formulario
         const form = document.querySelector('form');
         const submitButton = document.getElementById('submit-btn');
         const resetFormBtn = document.getElementById('reset-form');
         const productosContainer = document.getElementById('productos-container');
         const addProductBtn = document.getElementById('add-product');
+        const successMessage = document.getElementById('success-message'); // Contenedor del mensaje
     
         // Validaciones: Nombre Completo
         const nombreInput = document.querySelector('input[name="nombre_completo"]');
@@ -197,32 +209,13 @@
         telefonoInput.addEventListener('input', updateSubmitButton);
         emailInput.addEventListener('input', updateSubmitButton);
     
-        // Agregar Producto al Formulario
-        addProductBtn.addEventListener('click', () => {
-            const newProduct = document.createElement('div');
-            newProduct.className = 'producto-item row mb-3';
-            newProduct.innerHTML = `
-                <div class="col-md-6">
-                    <label>Producto</label>
-                    <input type="text" name="producto" placeholder="Nombre del producto" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label>Cantidad</label>
-                    <input type="number" name="cantidad" placeholder="Cantidad" class="form-control" required min="1">
-                    <button type="button" class="btn btn-orange-remove mt-2 remove-product">Eliminar</button>
-                </div>
-            `;
-            productosContainer.appendChild(newProduct);
-            updateSubmitButton();
-        });
-    
-        // Eliminar Producto del Formulario
-        productosContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-product')) {
-                e.target.closest('.producto-item').remove();
-                updateSubmitButton();
-            }
-        });
+        // Mostrar mensaje de éxito con animación
+        const showSuccessMessage = () => {
+            successMessage.classList.add('show'); // Agregar clase para hacer visible el mensaje
+            setTimeout(() => {
+                successMessage.classList.remove('show'); // Ocultar después de 3 segundos
+            }, 3000);
+        };
     
         // Enviar el formulario
         form.addEventListener('submit', (event) => {
@@ -230,8 +223,9 @@
                 event.preventDefault();
                 alert("Por favor, corrige los errores antes de enviar.");
             } else {
-                alert("Gracias por su solicitud. Le enviaremos la cotización a su correo.");
-                form.submit();
+                event.preventDefault(); // Simulamos el envío para mostrar el mensaje
+                showSuccessMessage(); // Mostrar el mensaje de éxito
+                setTimeout(() => form.submit(), 3100); // Enviar el formulario después de la animación
             }
         });
     
