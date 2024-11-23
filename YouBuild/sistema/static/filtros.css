@@ -1,36 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+
 body {
     font-family: 'Comfortaa', sans-serif !important;
 }
+
 .filtros,
 .filtros select,
 button {
     font-family: 'Comfortaa', sans-serif !important;
-}   
+}
+
 /* Estilos generales para la sección de filtros */
 .filtros {
     font-family: 'Comfortaa', sans-serif;
-    width: 90vw; /* Mantiene el ancho completo de la ventana */
+    width: 100%; /* Asegura que ocupe todo el ancho */
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en filas */
     position: relative;
     justify-content: flex-start;
     align-items: center;
     gap: 10px; /* Espaciado entre los elementos */
-    padding: 10px 2cm; /* 2cm de relleno a la izquierda y derecha */
+    padding: 10px;
     background-color: #ffffff;
     border-radius: 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Formato de sombra */
-    box-sizing: border-box; /* Asegura que el relleno esté dentro del ancho */
-    font-family: 'Comfortaa', sans-serif;
-    margin-top: 65vh; /* Ajusta la distancia desde la parte superior, 70% de la altura de la ventana */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra */
+    box-sizing: border-box;
+    margin-top: 65vh; /* Ajusta la distancia desde la parte superior */
 }
-
 
 /* Estilo de los selectores (dropdowns) */
 .filtros select {
-    /*width: 180px;*/
-    padding: 8px 8px 8px 35px;
+    width: calc(50% - 20px); /* Mitad del ancho menos espacio */
+    min-width: 150px; /* Tamaño mínimo */
+    max-width: 300px; /* Tamaño máximo */
+    padding: 8px;
     text-align: center; 
     text-align-last: center;
     background-color: #ffffff;
@@ -41,34 +44,8 @@ button {
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
-    margin-left: 2cm; /* Adds 2cm margin for the elements only */
-    margin-right: -70px; /* Reduced right margin for closer spacing */
-    gap: 10px; /* Reduced space between elements */
-    width: auto; /* Dynamic width based on content */
 }
 
-.filtros::before {
-    content: "  ";
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background-color: #ffffff;
-    /*background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='transparent' viewBox='0 0 24 24' stroke='%23ef6605'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");*/
-    background-repeat: no-repeat;
-    background-size: contain;
-    pointer-events: none;
-    margin-left: 2cm; /* Adds 2cm margin for the elements only */
-
-}
-
-.filtros select::-ms-expand {
-    display: none;
-    width: auto; /* Dynamic width based on content */
-}
-    
 /* Opciones dentro de los selectores */
 .filtros select option {
     color: #333;
@@ -87,9 +64,7 @@ button {
     font-size: 14px;
     border-radius: 25px;
     cursor: pointer;
-    margin-left: 77px; /* Spacing to separate buttons from the selects */
-    margin-right: -70px;
-    width: auto; /* Dynamic width based on content */
+    margin-top: 10px; /* Espaciado vertical en pantallas pequeñas */
 }
 
 /* Efecto hover en los botones */
@@ -97,11 +72,9 @@ button {
 #reset-filtros:hover {
     background-color: #ef6605; /* Fondo naranja */
     color: white; /* Texto blanco */
-    width: auto; /* Dynamic width based on content */
 }
 
-
-/* Estilo por defecto del select */
+/* Ajustes generales para los selectores */
 select {
     border: 2px solid #ccc;
     background-color: transparent;
@@ -109,28 +82,68 @@ select {
     font-size: 14px;
 }
 
-/* Estilo cuando el select tiene foco (cuando el usuario lo selecciona) */
 select:focus {
     border-color: #ef6605;
-    background-color: transparent;
     outline: none;
 }
 
-/* Estilo cuando el select está activo (se hace clic sobre él) */
 select:active {
     border-color: #ef6605;
-    background-color: transparent;
 }
 
+/* Ajustes para dispositivos pequeños */
+@media (max-width: 768px) {
+    .filtros {
+        flex-direction: column; /* Elementos en una columna */
+        align-items: flex-start;
+        gap: 15px; /* Más espacio entre elementos */
+    }
+
+    .filtros select,
+    #aplicar-filtros,
+    #reset-filtros {
+        width: 100%; /* Ocupa todo el ancho del contenedor */
+    }
+}
+
+/* Ajustes para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .filtros {
+        flex-wrap: wrap;
+        justify-content: center; /* Centra los elementos */
+    }
+
+    .filtros select,
+    #aplicar-filtros,
+    #reset-filtros {
+        width: 45%; /* Ocupa menos espacio en pantallas medianas */
+    }
+}
+
+/* Ajustes para pantallas grandes */
+@media (min-width: 1025px) {
+    .filtros {
+        justify-content: flex-start;
+        padding: 15px 3cm; /* Más espacio en pantallas grandes */
+    }
+
+    .filtros select,
+    #aplicar-filtros,
+    #reset-filtros {
+        width: auto; /* Usa el ancho predeterminado */
+        margin: 0 10px; /* Espaciado horizontal entre elementos */
+    }
+}
+
+/* Estilo de los elementos de producto */
 .producto-item {
-    position: relative; /* Para que la etiqueta de descuento se posicione dentro del contenedor */
+    position: relative;
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 10px;
     text-align: center;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-family: 'Comfortaa', sans-serif;
 }
 
 .producto-item img {
@@ -184,3 +197,4 @@ select:active {
 .producto-item a:hover {
     background-color: #d65404;
 }
+

@@ -4,7 +4,8 @@
     justify-content: center;
     align-items: center;
     padding: 40px 0;
-    background-color: #f9f9f9;
+   background-color: rgba(247, 243, 239, 0.9); /* Color #F7F3EF con opacidad de 50% */
+    border-radius: 10px; /* Bordes redondeados opcionales */
 }
 
 /* Contenedor de la lista de deseos */
@@ -118,7 +119,7 @@ h2 {
     color: #ff6600;
     padding: 5px 15px;
     border-radius: 25px;
-    font-size: 0.9em;
+    font-size: 0.6em;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
