@@ -20,7 +20,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
 import base64
-import secrets
+from django.core.mail import send_mail
 from django.views.decorators.http import require_http_methods
 
 # Vista principal
@@ -850,3 +850,87 @@ def historial_transacciones_view(request):
         'ventas' : ventas
     }
     return render(request, 'Historial.html', context)
+
+
+from django.contrib import messages
+
+def solicitar_cotizacion(request, producto_id=None):
+    # Obtener o inicializar el carrito
+    carrito = request.session.get('carrito', [])
+
+    # Si se proporciona un producto_id, agregar al carrito solo si no está presente
+    if producto_id and not any(item['id'] == producto_id for item in carrito):
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        carrito.append({
+            'id': producto.id,
+            'nombre': producto.nombre,
+            'cantidad': 1,
+        })
+        request.session['carrito'] = carrito
+        # Redirigir sin argumento producto_id para evitar bucles
+        return redirect('solicitar_cotizacion', producto_id=0)
+
+    if request.method == 'POST':
+        form = CotizacionForm(request.POST)
+        if form.is_valid():
+            # Procesar datos del formulario
+            nombre = form.cleaned_data['nombre_completo']
+            correo = form.cleaned_data['correo_electronico']
+            telefono = form.cleaned_data['numero_telefono']
+            comentarios = form.cleaned_data.get('comentarios', 'N/A')
+
+            # Detalles de los productos
+            productos = request.POST.getlist('producto')
+            cantidades = request.POST.getlist('cantidad')
+
+            # Generar mensaje para el correo
+            detalles_productos = "\n".join(
+                f"- {prod} (Cantidad: {cant})"
+                for prod, cant in zip(productos, cantidades)
+            )
+            mensaje = f"""
+            Nueva solicitud de cotización:
+            Nombre: {nombre}
+            Correo: {correo}
+            Teléfono: {telefono}
+            Productos:\n{detalles_productos}
+            Comentarios: {comentarios}
+            """
+
+            # Enviar correo
+            send_mail(
+                subject="Solicitud de Cotización",
+                message=mensaje,
+                from_email='tienda@ejemplo.com',
+                recipient_list=[correo],
+            )
+
+            # Limpiar el carrito
+            request.session['carrito'] = []
+
+            # Agregar mensaje de confirmación al contexto
+            messages.success(request, 'Gracias por su solicitud. Le enviaremos la cotización a su correo.')
+
+            # Renderizar de nuevo `cotizacion.html` con el formulario limpio
+            return render(request, 'cotizacion.html', {'form': CotizacionForm(), 'carrito': []})
+
+    else:
+        form = CotizacionForm()
+
+    # Renderizar la página inicial con el formulario y el carrito
+    return render(request, 'cotizacion.html', {'form': form, 'carrito': carrito})
+
+
+def eliminar_todo_el_carrito(request, product_index=None):
+    carrito = request.session.get('carrito', [])
+    
+    # Eliminar producto específico
+    if product_index is not None:
+        carrito.pop(product_index, None)
+
+    # Limpiar carrito si no hay índice
+    else:
+        carrito = []
+
+    request.session['carrito'] = carrito
+    return JsonResponse({'mensaje': 'Carrito actualizado', 'carrito': carrito})

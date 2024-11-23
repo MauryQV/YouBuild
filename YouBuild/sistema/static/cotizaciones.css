@@ -1,0 +1,147 @@
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+}
+
+button {
+    transition: all 0.2s ease-in-out;
+}
+/* Botones con fondo naranja y texto blanco */
+/* Botones con fondo naranja y texto blanco */
+/* Botón principal - Naranja */
+
+
+.btn.btn-primary {
+    background-color: #ef6605 !important; /* Naranja principal */
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn.btn-primary:disabled {
+    background-color: #d3d3d3 !important; /* Gris claro */
+    color: #a0a0a0 !important; /* Texto gris */
+    cursor: not-allowed; /* Indicador de que no es clickeable */
+}
+.btn.btn-primary:hover {
+    background-color: #d95604 !important; /* Naranja oscuro */
+}
+
+/* Botón con fondo blanco y borde naranja */
+.btn.btn-white-orange {
+    background-color: #ef6605 !important; /* Naranja principal */
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.btn-white-orange:hover {
+    background-color: #ef6605 !important;
+    color: white !important;
+}
+
+/* Botón de cancelar con texto naranja y fondo blanco */
+.btn.btn-cancel {
+    background-color: white !important;
+    color: #ef6605 !important;
+    border: 2px solid #ef6605 !important;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn.btn-orange-view {
+    background-color: #ef6605 !important; /* Naranja principal */
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.btn-cancel:hover {
+    background-color: #ef6605 !important;
+    color: white !important;
+}
+.btn:active {
+    background-color: #d95604 !important; /* Naranja oscuro */
+    color: white !important;
+}
+
+/* Estado enfocado */
+.btn:focus {
+    outline: 2px solid #ef6605 !important;
+    outline-offset: 2px;
+}
+
+.btn.btn-orange-remove {
+    background-color: white !important; /* Fondo blanco */
+    color: #ef6605 !important; /* Texto naranja */
+    border: 2px solid #ef6605 !important; /* Borde naranja */
+    padding: 8px 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex; /* Alinear texto e ícono */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    gap: 5px; /* Espacio entre el texto y el ícono */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover: Fondo naranja y texto blanco */
+.btn.btn-orange-remove:hover {
+    background-color: #ef6605 !important; /* Fondo naranja */
+    color: white !important; /* Texto blanco */
+    border-color: #ef6605 !important; /* Mantener el borde naranja */
+}
+
+/* Ícono dentro del botón */
+.btn-orange-remove i {
+    color: #ef6605; /* Ícono naranja */
+    transition: color 0.3s ease; /* Transición suave */
+}
+
+/* Hover en el ícono */
+.btn-orange-remove:hover i {
+    color: white; /* Ícono blanco al pasar el mouse */
+}
+
+/* Centrar el título "Solicitar Cotización" */
+h2 {
+    text-align: center; /* Centra horizontalmente */
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Cambiar color de "Productos" y "Comentarios adicionales" */
+h3 {
+    color: #ef6605; /* Cambia el color a naranja */
+    font-family: Arial, sans-serif; /* Mantén consistencia de fuente */
+    font-size: 24px; /* Tamaño del texto */
+    margin-top: 20px; /* Espacio superior */
+}
+
+/* Estilo del label "Comentarios adicionales" */
+label[for="id_comentarios"] {
+    color: #ef6605; /* Cambia el color a naranja */
+    font-weight: bold; /* Hace el texto más destacado */
+    font-size: 18px; /* Tamaño ajustado */
+}
