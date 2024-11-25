@@ -49,6 +49,8 @@ urlpatterns = [
     path('solicitar-cotizacion/<int:producto_id>/', solicitar_cotizacion, name='solicitar_cotizacion'),
     path('eliminar-todo-el-carrito/', views.eliminar_todo_el_carrito, name='eliminar_todo_el_carrito'),
     path('eliminar-producto-carrito/<int:product_index>/', views.eliminar_producto_carrito, name='eliminar_producto_carrito'),
+     # Nueva ruta para actualizar estados de promociones de manera manual
+    path('actualizar-estados-promociones/', actualizar_estados_promociones, name='actualizar_estados_promociones'),
 
 ]
 
