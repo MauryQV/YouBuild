@@ -96,11 +96,7 @@
                     const csrfToken = document.getElementById('csrf_token').value;
 
                     // Make fetch request to delete the product
-<<<<<<< HEAD
                     fetch(`/eliminar-publicacion/${productoSeleccionadoId}/`, {
-=======
-                    fetch(`/eliminar-productos/${productoSeleccionadoId}/`, {
->>>>>>> develop
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': csrfToken
