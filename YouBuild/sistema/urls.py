@@ -10,7 +10,7 @@ urlpatterns = [
     path('producto/<int:id>/', producto_view, name='detalle_producto'),
     path('buscar/', buscar_view, name='buscar'),
     path('carrito/', carrito_view, name='Carrito'),
-    path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
+    path('carrito/eliminar/<int:producto_id>/', eliminar_producto, name='eliminar_producto_carrito'),
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
@@ -44,6 +44,10 @@ urlpatterns = [
     path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
     path('historial/', historial_transacciones_view, name='historial_transacciones'),
     path('eliminar-publicacion/<int:producto_id>/', views.eliminar_publicacion, name='eliminar_publicacion'),
+    #historia de cotizaciones
+    path('solicitar-cotizacion/<int:producto_id>/', solicitar_cotizacion, name='solicitar_cotizacion'),
+    path('eliminar-todo-el-carrito/', views.eliminar_todo_el_carrito, name='eliminar_todo_el_carrito'),
+    path('eliminar-producto-carrito/<int:product_index>/', views.eliminar_producto_carrito, name='eliminar_producto_carrito'),
 
 ]
 

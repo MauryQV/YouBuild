@@ -292,7 +292,6 @@ def save(self, commit=True):
 
 
 
-
 class EditarProductoForm(forms.ModelForm):
     nombre = forms.CharField(
         max_length=50,
@@ -424,3 +423,41 @@ class OfertaForm(forms.ModelForm):
                 raise forms.ValidationError("El producto seleccionado no existe.")
         
         return cleaned_data
+
+
+class CotizacionForm(forms.Form):
+    nombre_completo = forms.CharField(
+        label="Nombre completo",
+        max_length=51,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese su nombre completo',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    correo_electronico = forms.EmailField(
+        label="Correo electrónico",
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Ingrese su correo electrónico',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    numero_telefono = forms.CharField(
+        label="Número de teléfono",
+        max_length=10,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese su número de celular',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )
+    comentarios = forms.CharField(
+        label="Comentarios adicionales",
+        required=False,
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Escribe aquí tus comentarios adicionales…',
+            'class': 'form-control',
+            'style': 'font-family: Arial, sans-serif; font-size: 14px;'
+        })
+    )

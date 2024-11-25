@@ -19,7 +19,9 @@ from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
-import secrets
+import base64
+from django.core.mail import send_mail
+from django.views.decorators.http import require_http_methods
 
 # Vista principal
 @login_required
@@ -28,7 +30,7 @@ def home_view(request):
 
     # Todos los productos y los que están en promoción
     productos, productos_oferta = obtener_productos_oferta()
-    productos = ProductoDb.objects.all().order_by('-visitas')
+    productos = ProductoDb.objects.filter(cantidad__gt=0).order_by('-visitas')
 
     # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
@@ -49,6 +51,14 @@ def home_view(request):
         "favoritos_ids": favoritos_ids,
     })
 
+def obtener_productos_oferta():
+    # Filtra los productos generales
+    productos = ProductoDb.objects.filter(cantidad__gt=0).order_by('-visitas')
+
+    # Filtra los productos en oferta (ajusta el filtro según cómo determines qué es una oferta)
+    productos_oferta = ProductoDb.objects.filter(cantidad__gt=0, en_oferta=True).order_by('-visitas')
+
+    return productos, productos_oferta
 
 def perfil_view(request):
     usuario = request.user.usuariodb
@@ -103,7 +113,8 @@ def index_view(request):
 
     # Todos los productos y los que están en promoción
     productos, productos_oferta = obtener_productos_oferta()
-    productos = ProductoDb.objects.all().order_by('-visitas')
+    productos = ProductoDb.objects.filter(cantidad__gt=0).order_by('-visitas')
+
 
     # Carruseles y categorías
     carruseles = CarruselDB.objects.all().order_by("id")
@@ -178,7 +189,7 @@ def producto_view(request, id):
 
 def buscar_view(request):
     q = request.GET.get('q', '')
-    productos = ProductoDb.objects.filter(nombre__icontains=q)
+    productos = ProductoDb.objects.filter(cantidad__gt=0, nombre__icontains=q)
     categorias = CategoriaDb.objects.all()
     favoritos_ids = []
     
@@ -207,9 +218,10 @@ def filtro_productos_view(request):
     
     # Obtener la lista inicial de productos con base en la búsqueda o todos si no hubo búsqueda
     if productos_busqueda_ids:
-        productos = ProductoDb.objects.filter(id__in=productos_busqueda_ids)
+
+        productos = ProductoDb.objects.filter(cantidad__gt=0, id__in=productos_busqueda_ids)
     else:
-        productos = ProductoDb.objects.all().order_by('-visitas')
+        productos = ProductoDb.objects.filter(cantidad__gt=0).order_by('-visitas')
     
     categorias = CategoriaDb.objects.all()
 
@@ -342,6 +354,11 @@ def update_cart_quantity(request):
 @login_required
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id)
+
+    if producto.usuario_fk == request.user.usuariodb:
+        messages.error(request, "No puedes agregar tus propios productos al carrito.")
+        return redirect('home', producto_id=producto_id)
+    
     carrito, _ = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
     cantidad = int(request.POST.get('cantidad', 1))
     carrito.agregar_producto(producto, cantidad)
@@ -589,7 +606,10 @@ def actualizar_descuento_view(request):
 
         # Actualizar el producto con descuento y fechas
         producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=usuario)
+        print("Todo llego de manera correcta")
+        print("Descuento es: "+ str(descuento))
         producto.descuento = descuento
+        producto.estado = 'promocion'
         producto.fecha_inicio_promocion = fecha_inicio
         producto.fecha_fin_promocion = fecha_fin
         producto.save()
@@ -604,22 +624,23 @@ def actualizar_descuento_view(request):
 @transaction.atomic
 def procesar_transaccion(request):
     if request.method == "POST":
-        tipo = request.POST.get('tipo')  # Compra o Venta
-        producto_id = request.POST.get('producto_id')
-        cantidad = int(request.POST.get('cantidad'))
-        detalles = request.POST.get('detalles', '')
-
-        # Obtener el producto
-        producto = get_object_or_404(ProductoDb, id=producto_id)
-
         try:
-            # Ajustar el stock utilizando el método del modelo
+            data = json.loads(request.body)
+            tipo = data.get('tipo')  # Compra o Venta
+            producto_id = data.get('producto_id')
+            cantidad = int(data.get('cantidad'))
+            detalles = data.get('detalles', '')
+
+            producto = get_object_or_404(ProductoDb, id=producto_id)
+
+            if tipo == 'Compra' and producto.usuario_fk == request.user.usuariodb:
+                return JsonResponse({'error': 'No puedes comprar tus propios productos.'}, status=400)
+
             if tipo == 'Compra':
                 producto.ajustar_stock(cantidad, operacion='restar')
             elif tipo == 'Venta':
                 producto.ajustar_stock(cantidad, operacion='sumar')
 
-            # Crear la transacción
             nueva_transaccion = Transaccion.objects.create(
                 tipo=tipo,
                 usuario=request.user,
@@ -634,10 +655,74 @@ def procesar_transaccion(request):
             })
 
         except ValueError as e:
-            # Manejo de errores si el stock es insuficiente u ocurre algo en ajustar_stock
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@transaction.atomic
+def procesar_carrito(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "Debes iniciar sesión para realizar una compra.")
+        return redirect('Carrito')  # Redirige al carrito si no está autenticado
+
+    try:
+        # Obtiene el carrito del usuario
+        carrito = CarritoDB.objects.get(usuario_fk=request.user.usuariodb)
+
+        # Verifica que el carrito no esté vacío
+        productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
+        if not productos_carrito.exists():
+            messages.error(request, "El carrito está vacío.")
+            return redirect('Carrito')  # Redirige al carrito si está vacío
+
+        total = 0  # Acumulador para el costo total
+
+        # Procesa cada producto en el carrito
+        for item in productos_carrito:
+            producto = item.producto_fk
+
+            # Verifica stock
+            if producto.cantidad < item.cantidad:
+                raise ValueError(f"Stock insuficiente para el producto {producto.nombre}")
+
+            # Ajusta stock
+            producto.ajustar_stock(item.cantidad, operacion='restar')
+
+            # Registra la transacción
+            Transaccion.objects.create(
+                tipo='Compra',
+                usuario=request.user.usuariodb,
+                producto=producto,
+                cantidad=item.cantidad,
+                detalles=f"Compra desde carrito: {producto.nombre}",
+            )
+
+            vendedor = producto.usuario_fk  # Usuario vendedor
+            Transaccion.objects.create(
+                tipo='Venta',
+                usuario=vendedor,
+                producto=producto,
+                cantidad=item.cantidad,
+                detalles=f"Venta del producto: {producto.nombre} a {request.user.username}",
+            )
+
+            total += item.calcular_subtotal()  # Acumula el subtotal
+
+        # Vacía el carrito
+        productos_carrito.delete()
+
+        # Mensaje de éxito
+        messages.success(request, f"Compra realizada con éxito. Total: Bs {total}")
+        return redirect('Carrito')  # Redirige al carrito tras una compra exitosa
+
+    except CarritoDB.DoesNotExist:
+        messages.error(request, "No se encontró un carrito activo.")
+    except ValueError as e:
+        messages.error(request, str(e))
+    except Exception as e:
+        messages.error(request, f"Error procesando el carrito: {str(e)}")
+
+    return redirect('Carrito')
 
 import qrcode 
 from io import BytesIO
@@ -671,23 +756,32 @@ def confirmar_compra(request, producto_id):
     })
 
 def proceder_pago_carrito(request):
-    productos_carrito = obtener_productos_carrito(request)  # Tu lógica de carrito
-    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Puedes hacerla dinámica
-    qr_image_url = generar_codigo_qr_para_carrito(productos_carrito)  # Lógica del QR
+    productos_carrito = obtener_productos_carrito(request)
+    if not productos_carrito:
+        return render(request, 'proceder_pago_carrito.html', {
+            'error': 'El carrito está vacío',
+        })
+
+    direccion_envio = "Cochabamba/Cercado/Av. Villazón Km 6"  # Ejemplo de dirección
+    qr_image_url = generar_codigo_qr_para_carrito(productos_carrito)
+
+    total = sum(item.calcular_subtotal() for item in productos_carrito)
 
     return render(request, 'proceder_pago_carrito.html', {
         'productos_carrito': productos_carrito,
         'direccion_envio': direccion_envio,
         'qr_image_url': qr_image_url,
+        'total': total,
     })
 
+
 def ajustar_stock(self, cantidad, operacion='restar'):
-    if operacion == 'restar' and self.stock < cantidad:
+    if operacion == 'restar' and self.cantidad < cantidad:
         raise ValueError("Stock insuficiente para realizar esta operación")
     elif operacion == 'sumar':
-        self.stock += cantidad
+        self.cantidad += cantidad
     else:
-        self.stock -= cantidad
+        self.cantidad -= cantidad
     self.save()
 
 def obtener_productos_carrito(request):
@@ -696,7 +790,7 @@ def obtener_productos_carrito(request):
         return None  # O maneja carritos anónimos si lo prefieres
 
     # Obtén el carrito activo del usuario
-    carrito, creado = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb, activo=True)
+    carrito, creado = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
 
     # Obtén los productos en el carrito
     productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
@@ -721,7 +815,9 @@ def generar_codigo_qr_para_carrito(productos_carrito):
     buffer = BytesIO()
     img.save(buffer, format="PNG")
     buffer.seek(0)
-    return ContentFile(buffer.getvalue(), name="carrito_qr.png")
+    qr_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+
+    return qr_base64
 
 def historial_transacciones_view(request):
     usuario = request.user  # Usuario autenticado
@@ -729,24 +825,92 @@ def historial_transacciones_view(request):
     compras = transacciones.filter(tipo='Compra')  # Solo compras
     ventas = transacciones.filter(tipo='Venta')  # Solo ventas
 
-    # Preparar datos enriquecidos para el contexto
-    transacciones_enriquecidas = []
-    for transaccion in transacciones:
-        producto = transaccion.producto
-        # Determinar la URL de la imagen
-        if producto.imagenes.exists():
-            imagen_url = producto.imagenes.first().imagen.url
-        else:
-            imagen_url = 'path/to/default-image.jpg'  # Ruta de la imagen por defecto
-        # Añadir la transacción con datos extra
-        transacciones_enriquecidas.append({
-            'transaccion': transaccion,
-            'compras': compras,
-            'ventas': ventas,
-            'imagen_url': imagen_url,
-        })
-
     context = {
-        'transacciones': transacciones_enriquecidas,
+        'transacciones': transacciones,
+        'compras': compras,
+        'ventas' : ventas
     }
     return render(request, 'Historial.html', context)
+
+
+from django.contrib import messages
+
+def solicitar_cotizacion(request, producto_id=None):
+    # Obtener o inicializar el carrito
+    carrito = request.session.get('carrito', [])
+
+    # Si se proporciona un producto_id, agregar al carrito solo si no está presente
+    if producto_id and not any(item['id'] == producto_id for item in carrito):
+        producto = get_object_or_404(ProductoDb, id=producto_id)
+        carrito.append({
+            'id': producto.id,
+            'nombre': producto.nombre,
+            'cantidad': 1,
+        })
+        request.session['carrito'] = carrito
+        # Redirigir sin argumento producto_id para evitar bucles
+        return redirect('solicitar_cotizacion', producto_id=0)
+
+    if request.method == 'POST':
+        form = CotizacionForm(request.POST)
+        if form.is_valid():
+            # Procesar datos del formulario
+            nombre = form.cleaned_data['nombre_completo']
+            correo = form.cleaned_data['correo_electronico']
+            telefono = form.cleaned_data['numero_telefono']
+            comentarios = form.cleaned_data.get('comentarios', 'N/A')
+
+            # Detalles de los productos
+            productos = request.POST.getlist('producto')
+            cantidades = request.POST.getlist('cantidad')
+
+            # Generar mensaje para el correo
+            detalles_productos = "\n".join(
+                f"- {prod} (Cantidad: {cant})"
+                for prod, cant in zip(productos, cantidades)
+            )
+            mensaje = f"""
+            Nueva solicitud de cotización:
+            Nombre: {nombre}
+            Correo: {correo}
+            Teléfono: {telefono}
+            Productos:\n{detalles_productos}
+            Comentarios: {comentarios}
+            """
+
+            # Enviar correo
+            send_mail(
+                subject="Solicitud de Cotización",
+                message=mensaje,
+                from_email='tienda@ejemplo.com',
+                recipient_list=[correo],
+            )
+
+            # Limpiar el carrito
+            
+
+            # Agregar mensaje de confirmación al contexto
+            messages.success(request, 'Gracias por su solicitud. Le enviaremos la cotización a su correo.')
+            request.session['carrito'] = []
+            #return redirect('solicitar_cotizacion')  # Redirigir para limpiar formulario y mostrar mensaje
+
+    else:
+        form = CotizacionForm()
+
+    # Renderizar la página inicial con el formulario y el carrito
+    return render(request, 'cotizacion.html', {'form': form, 'carrito': carrito})
+
+
+def eliminar_todo_el_carrito(request, product_index=None):
+    carrito = request.session.get('carrito', [])
+    
+    # Eliminar producto específico
+    if product_index is not None:
+        carrito.pop(product_index, None)
+
+    # Limpiar carrito si no hay índice
+    else:
+        carrito = []
+
+    request.session['carrito'] = carrito
+    return JsonResponse({'mensaje': 'Carrito actualizado', 'carrito': carrito})

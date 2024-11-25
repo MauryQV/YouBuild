@@ -1,0 +1,255 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}YouBuild | Cotizar {% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'cotizaciones.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 form-container">
+    {% if messages %}
+        <div id="success-message">
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- Resto del formulario -->
+</div>
+<div class="container mt-5 form-container">
+    <h2 style="font-family: Arial, sans-serif; font-size: 32px;">Solicitar Cotización</h2>
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <h3>Datos del usuario</h3>
+        <div class="mb-3">
+            {{ form.nombre_completo.label_tag }}
+            {{ form.nombre_completo }}
+            {% if form.nombre_completo.errors %}
+                <div class="text-danger">
+                    {% for error in form.nombre_completo.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.correo_electronico.label_tag }}
+            {{ form.correo_electronico }}
+            {% if form.correo_electronico.errors %}
+                <div class="text-danger">
+                    {% for error in form.correo_electronico.errors %}
+                        
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.numero_telefono.label_tag }}
+            {{ form.numero_telefono }}
+            {% if form.numero_telefono.errors %}
+                <div class="text-danger">
+                    {% for error in form.numero_telefono.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+       
+
+        <h3 class="mt-4" style="font-family: Arial, sans-serif;">Productos</h3>
+        <div id="productos-container">
+            {% for producto in carrito %}
+            <div class="producto-item row mb-3">
+                <div class="col-md-6">
+                    <label>Producto</label>
+                    <input type="text" name="producto" value="{{ producto.nombre }}" readonly class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label>Cantidad</label>
+                    <input type="number" name="cantidad" value="{{ producto.cantidad }}" min="1" class="form-control">
+                    <button type="button" class="btn btn-orange-remove">Eliminar</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-product" class="btn btn-primary mt-3">+ Agregar otro producto</button>
+        <div class="mb-3">
+            {{ form.comentarios.label_tag }}
+            {{ form.comentarios }}
+        </div>
+       
+        <div id="success-message" class="success-message" style="display: none;">
+            ¡Gracias por su solicitud! Le enviaremos la cotización a su correo.
+        </div>
+        <div class="mt-4">
+            
+            <button type="submit" class="btn btn-primary" id="submit-btn" disabled> Enviar Cotización</button>
+            <button type="reset" class="btn btn-white-orange" id="reset-form">Limpiar formulario</button>
+            <button type="button" onclick="window.location.href='/'" class="btn btn-orange-view" id="view-products" onclick="redirectToProducts()"> Ver Productos</button>
+            <button type="button" onclick="window.location.href='/'" class="btn btn-cancel">Cancelar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submit-btn');
+        const resetFormBtn = document.getElementById('reset-form');
+        const productosContainer = document.getElementById('productos-container');
+        const addProductBtn = document.getElementById('add-product');
+        const successMessage = document.getElementById('success-message'); // Contenedor del mensaje
+    
+        // Validaciones: Nombre Completo
+        const nombreInput = document.querySelector('input[name="nombre_completo"]');
+        const nombreError = document.createElement('div');
+        nombreError.style.color = 'red';
+        nombreError.style.fontSize = '12px';
+        nombreInput.parentNode.appendChild(nombreError);
+    
+        const validateNombreCompleto = () => {
+            const nombre = nombreInput.value.trim();
+            let errorMessage = '';
+    
+            if (nombre === '') {
+                errorMessage = 'Campo obligatorio';
+            } else if (nombre.length < 4) {
+                errorMessage = 'Debe contener al menos 4 caracteres';
+            } else if (nombre.length > 50) {
+                errorMessage = 'Límite de caracteres excedido (50)';
+            } else if (!/^[a-zA-Z\s]+$/.test(nombre)) {
+                errorMessage = 'El nombre solo puede contener letras';
+            } else if ((nombre.match(/\s/g) || []).length > 7) {
+                errorMessage = 'Número máximo de espacios 7';
+            } else if (/ {2,}/.test(nombre)) {
+                errorMessage = 'No se permiten más de 2 espacios seguidos';
+            }
+    
+            nombreError.textContent = errorMessage;
+            nombreInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
+        };
+    
+        // Validaciones: Número de Teléfono
+        const telefonoInput = document.querySelector('input[name="numero_telefono"]');
+        const telefonoError = document.createElement('div');
+        telefonoError.style.color = 'red';
+        telefonoError.style.fontSize = '12px';
+        telefonoInput.parentNode.appendChild(telefonoError);
+    
+        const validateTelefono = () => {
+            const telefono = telefonoInput.value.trim();
+            let errorMessage = '';
+    
+            if (telefono === '') {
+                errorMessage = 'Campo obligatorio';
+            } else if (!/^\d+$/.test(telefono)) {
+                errorMessage = 'Solo se permiten caracteres numéricos';
+            } else if (!telefono.startsWith('6') && !telefono.startsWith('7')) {
+                errorMessage = 'El número de celular debe empezar por 6 o 7';
+            } else if (telefono.length !== 8) {
+                errorMessage = 'Debe tener solo 8 dígitos';
+            }
+    
+            telefonoError.textContent = errorMessage;
+            telefonoInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
+        };
+    
+        // Validaciones: Correo Electrónico
+        const emailInput = document.querySelector('input[name="correo_electronico"]');
+        const emailError = document.createElement('div');
+        emailError.style.color = 'red';
+        emailError.style.fontSize = '12px';
+        emailInput.parentNode.appendChild(emailError);
+    
+        const validateEmail = () => {
+            const email = emailInput.value.trim();
+            let errorMessage = '';
+    
+            if (email === '') {
+                errorMessage = 'Campo obligatorio';
+            } else if (!email.includes('@')) {
+                errorMessage = 'Correo electronico invalido: falta el símbolo "@"';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errorMessage = 'Correo electronico invalido: formato incorrecto';
+            } else if (email.includes(' ')) {
+                errorMessage = 'Correo electronico invalido: contiene espacios';
+            }
+    
+            emailError.textContent = errorMessage;
+            emailInput.classList.toggle('is-invalid', errorMessage !== '');
+            return errorMessage === '';
+        };
+    
+        // Validación manual de campos específicos
+        const validateFormFields = () => {
+            const isNombreValid = validateNombreCompleto();
+            const isTelefonoValid = validateTelefono();
+            const isEmailValid = validateEmail();
+            return isNombreValid && isTelefonoValid && isEmailValid;
+        };
+    
+        // Actualizar el botón de envío
+        const updateSubmitButton = () => {
+            submitButton.disabled = !validateFormFields();
+        };
+    
+        // Escuchadores de eventos para validaciones individuales
+        nombreInput.addEventListener('input', updateSubmitButton);
+        telefonoInput.addEventListener('input', updateSubmitButton);
+        emailInput.addEventListener('input', updateSubmitButton);
+    
+        // Mostrar mensaje de éxito con animación
+        const showSuccessMessage = () => {
+            successMessage.classList.add('show'); // Agregar clase para hacer visible el mensaje
+            setTimeout(() => {
+                successMessage.classList.remove('show'); // Ocultar después de 3 segundos
+            }, 3000);
+        };
+    
+        // Enviar el formulario
+        form.addEventListener('submit', (event) => {
+            if (!validateFormFields()) {
+                event.preventDefault();
+                alert("Por favor, corrige los errores antes de enviar.");
+            } else {
+                event.preventDefault(); // Simulamos el envío para mostrar el mensaje
+                showSuccessMessage(); // Mostrar el mensaje de éxito
+                setTimeout(() => form.submit(), 3100); // Enviar el formulario después de la animación
+            }
+        });
+    
+        // Limpiar el formulario
+        resetFormBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            fetch('/eliminar-todo-el-carrito/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    productosContainer.innerHTML = '';
+                    document.querySelectorAll('form input, form textarea').forEach(input => {
+                        input.value = '';
+                    });
+                    updateSubmitButton();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+    
+</script>
+
+{% endblock %}
