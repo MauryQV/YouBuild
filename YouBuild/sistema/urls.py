@@ -45,6 +45,10 @@ urlpatterns = [
     path('historial/', historial_transacciones_view, name='historial_transacciones'),
     path('eliminar-producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
     path('procesar-carrito/', procesar_carrito, name='procesar_carrito'),
+#historia de cotizaciones
+    path('solicitar-cotizacion/<int:producto_id>/', solicitar_cotizacion, name='solicitar_cotizacion'),
+    path('eliminar-todo-el-carrito/', views.eliminar_todo_el_carrito, name='eliminar_todo_el_carrito'),
+    path('eliminar-producto-carrito/<int:product_index>/', views.eliminar_producto_carrito, name='eliminar_producto_carrito'),
 
 ]
 
