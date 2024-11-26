@@ -223,6 +223,17 @@ class ProductoDb(models.Model):
            return int(delta.total_seconds())
         return 0
     
+    def actualizar_estado(self):
+        """
+        Actualiza el estado del producto según las fechas de promoción.
+        """
+        ahora = timezone.now()
+        if self.estado == 'promocion' and self.fecha_fin_promocion and ahora > self.fecha_fin_promocion:
+            self.estado = 'disponible'
+            self.fecha_inicio_promocion = None
+            self.fecha_fin_promocion = None
+            self.save()
+    
     def ajustar_stock(self, cantidad, operacion='restar'):
         if operacion == 'restar':
             if self.cantidad < cantidad:
@@ -331,7 +342,7 @@ class Transaccion(models.Model):
     ]
 
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
     producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="transacciones")
     cantidad = models.PositiveIntegerField()
     detalles = models.TextField(blank=True, null=True)
