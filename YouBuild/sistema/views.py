@@ -28,6 +28,8 @@ from django.views.decorators.http import require_http_methods
 def home_view(request):
     request.session['productos_busqueda'] = None
 
+    # Actualizar estados de promociones antes de cargar los productos
+    actualizar_estados_promociones(request)
     # Todos los productos y los que están en promoción
     productos, productos_oferta = obtener_productos_oferta()
     productos = ProductoDb.objects.filter(cantidad__gt=0).order_by('-visitas')
@@ -182,6 +184,28 @@ def producto_view(request, id):
         "template": template,
         "favoritos_ids": favoritos_ids,
         "productos_relacionados": productos_relacionados,  # Pasar productos relacionados al template
+    })
+
+from django.http import JsonResponse
+
+@login_required
+def actualizar_estados_promociones(request):
+    """
+    Actualiza el estado de todos los productos en promoción que hayan expirado.
+    """
+    productos = ProductoDb.objects.filter(estado='promocion')  # Filtra productos en promoción
+    total_actualizados = 0
+
+    for producto in productos:
+        if producto.fecha_fin_promocion and timezone.now() > producto.fecha_fin_promocion:
+            producto.actualizar_estado()
+            total_actualizados += 1
+
+    # Retorna el resultado en formato JSON para mayor flexibilidad
+    return JsonResponse({
+        'success': True,
+        'productos_actualizados': total_actualizados,
+        'mensaje': f"Se actualizaron {total_actualizados} productos."
     })
 
 def buscar_view(request):
@@ -539,12 +563,19 @@ def confirmacion_producto(request):
 @login_required
 def publicaciones_usuario_view(request):
     usuario = request.user.usuariodb  # Obtiene el perfil de usuario
+
+    # Actualizar estados de los productos en promoción del usuario
+    productos = ProductoDb.objects.filter(usuario_fk=usuario, estado='promocion')
+    for producto in productos:
+        producto.actualizar_estado()
+
+    # Mostrar todos los productos del usuario
     productos = ProductoDb.objects.filter(usuario_fk=usuario)
-    
     return render(request, "Mis_publiccaciones.html", {
         'mis_productos': productos,
         'usuario': usuario  
     })
+
 
 @login_required
 def editar_producto(request, producto_id):

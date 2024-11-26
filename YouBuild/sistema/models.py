@@ -223,6 +223,17 @@ class ProductoDb(models.Model):
            return int(delta.total_seconds())
         return 0
     
+    def actualizar_estado(self):
+        """
+        Actualiza el estado del producto según las fechas de promoción.
+        """
+        ahora = timezone.now()
+        if self.estado == 'promocion' and self.fecha_fin_promocion and ahora > self.fecha_fin_promocion:
+            self.estado = 'disponible'
+            self.fecha_inicio_promocion = None
+            self.fecha_fin_promocion = None
+            self.save()
+    
     def ajustar_stock(self, cantidad, operacion='restar'):
         if operacion == 'restar':
             if self.cantidad < cantidad:
