@@ -154,12 +154,12 @@
       </div>
     {% for productod in productos_relacionados %}
     <div class="product">
-        {% if productod.estado == "promocion" %}
+        {% if productod.esta_en_promocion %}
         <div class="discount-badge">{{ productod.descuento }}% OFF</div>
         {% endif %}
         <img src="{{ productod.imagenes.first.imagen.url }}" alt="{{ productod.nombre }}" />
         <h3>{{ productod.nombre }}</h3>
-        {% if productod.estado == "promocion" %}
+        {% if productod.esta_en_promocion %}
         <p class="discounted-price">Bs {{ productod.precio_final }}</p>
         <p class="original-price">Bs {{ productod.precio }}</p>
         {% else %}

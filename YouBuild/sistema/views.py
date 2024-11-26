@@ -334,32 +334,14 @@ def carrito_view(request):
     })
 
 @login_required
-def eliminar_producto_carrito(request, producto_id):
-    """
-    Elimina un producto específico del carrito del usuario autenticado.
-    """
-    try:
-        carrito = CarritoDB.objects.get(usuario_fk=request.user.usuariodb)  # Obtiene el carrito del usuario
-        producto_en_carrito = CarritoProductoDB.objects.get(carrito_fk=carrito, producto_fk__id=producto_id)
-
-        if request.method == 'POST':  # Verifica que sea una solicitud POST
-            producto_en_carrito.delete()  # Elimina el producto del carrito
-            messages.success(request, "Producto eliminado del carrito correctamente.")  # Mensaje exitoso
-        else:
-            messages.error(request, "Método no permitido.")
-
-    except CarritoDB.DoesNotExist:
-        messages.error(request, "No se encontró el carrito del usuario.")
-    except CarritoProductoDB.DoesNotExist:
-        messages.error(request, "El producto no está en el carrito.")
-    except Exception as e:
-        messages.error(request, f"Error al eliminar el producto: {str(e)}")
-
+def eliminar_producto(request, item_id):
+    carrito_producto = get_object_or_404(CarritoProductoDB, id=item_id)
+    carrito_producto.delete()
     return redirect('Carrito')
 
 
 @login_required
-def eliminar_producto(request, producto_id):
+def eliminar_publicacion(request, producto_id):
     print(f"Received request to delete product ID: {producto_id}")  # Debugging
     if request.method == 'POST':  # Ensure it's a POST request
         producto = get_object_or_404(ProductoDb, id=producto_id, usuario_fk=request.user.usuariodb)
@@ -693,10 +675,17 @@ def procesar_transaccion(request):
 
             nueva_transaccion = Transaccion.objects.create(
                 tipo=tipo,
-                usuario=request.user,
+                usuario=request.user.usuariodb,
                 producto=producto,
                 cantidad=cantidad,
                 detalles=detalles
+            )
+            Transaccion.objects.create(
+                tipo='Venta',
+                usuario=producto.usuario_fk,
+                producto=producto,
+                cantidad=cantidad,
+                detalles=f"Venta del producto: {producto.nombre} a {request.user.usuariodb}",
             )
 
             return JsonResponse({
@@ -870,7 +859,7 @@ def generar_codigo_qr_para_carrito(productos_carrito):
     return qr_base64
 
 def historial_transacciones_view(request):
-    usuario = request.user  # Usuario autenticado
+    usuario = request.user.usuariodb  # Usuario autenticado
     transacciones = Transaccion.objects.filter(usuario=usuario)  # Todas las transacciones del usuario
     compras = transacciones.filter(tipo='Compra')  # Solo compras
     ventas = transacciones.filter(tipo='Venta')  # Solo ventas

@@ -35,7 +35,7 @@
                 <td>{{ item.cantidad }}</td>
                 <td>Bs {{ item.calcular_subtotal }}</td>
                 <td>
-                    <a href="{% url 'eliminar_producto' producto_id=item.producto_fk.id %}" class="btn btn-danger">Eliminar</a>
+                    <a href="{% url 'eliminar_producto' item.id  %}" class="btn btn-danger">Eliminar</a>
                 </td>
                 </tr>
             {% endfor %}
