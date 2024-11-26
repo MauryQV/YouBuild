@@ -85,6 +85,11 @@ function verDetalles(productId) {
     window.location.href = `/producto/${productId}/`;
 }
 
+function cotizacion(productId) {
+    window.location.href = `/solicitar-cotizacion/${productId}/`;
+}
+
+
 function volverALista() {
     window.location.href = "/";
 }

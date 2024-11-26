@@ -31,7 +31,7 @@
         </div>
         <div class="topbar-center">
           <!-- Aquí está el formulario con las restricciones necesarias -->
-          <form action="{% url 'buscar' %}" method="GET" onsubmit="return validateSearch()">
+          <form action="{% url 'buscar' %}" method="GET" onsubmit="return validateSearch()" novalidate>
             <div class="search-box">
               <input type="text" placeholder="Buscar" name="q" maxlength="20" pattern="[A-Za-z0-9\s]+" required>
               <button type="submit"><i class="fa fa-search"></i></button>
