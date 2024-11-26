@@ -186,7 +186,7 @@ class ProductoDb(models.Model):
     def clean(self):
         # Validación para asegurar que la fecha de fin sea posterior a la fecha de inicio
         if self.fecha_inicio_promocion and self.fecha_fin_promocion:
-            if self.fecha_fin_promocion <= self.fecha_inicio_promocion:
+            if  self.fecha_fin_promocion <= self.fecha_inicio_promocion:
                 raise ValidationError("La fecha de fin de promoción debe ser posterior a la fecha de inicio.")
 
     def precio_final(self):
@@ -205,7 +205,7 @@ class ProductoDb(models.Model):
             # Comprueba si la fecha actual está dentro del rango de promoción
             ahora = timezone.now()
             if self.fecha_inicio_promocion and self.fecha_fin_promocion:
-                return ahora <= self.fecha_fin_promocion
+                return self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion
         return False
 
     def dias_restantes_promocion(self):
