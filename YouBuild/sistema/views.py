@@ -693,10 +693,17 @@ def procesar_transaccion(request):
 
             nueva_transaccion = Transaccion.objects.create(
                 tipo=tipo,
-                usuario=request.user,
+                usuario=request.user.usuariodb,
                 producto=producto,
                 cantidad=cantidad,
                 detalles=detalles
+            )
+            Transaccion.objects.create(
+                tipo='Venta',
+                usuario=producto.usuario_fk,
+                producto=producto,
+                cantidad=cantidad,
+                detalles=f"Venta del producto: {producto.nombre} a {request.user.usuariodb}",
             )
 
             return JsonResponse({
@@ -753,7 +760,7 @@ def procesar_carrito(request):
                 usuario=vendedor,
                 producto=producto,
                 cantidad=item.cantidad,
-                detalles=f"Venta del producto: {producto.nombre} a {request.user.username}",
+                detalles=f"Venta del producto: {producto.nombre} a {request.user.usuariodb}",
             )
 
             total += item.calcular_subtotal()  # Acumula el subtotal
