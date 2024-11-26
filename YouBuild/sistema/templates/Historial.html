@@ -27,6 +27,7 @@
                     <th>Tipo</th>
                     <th>Fecha</th>
                     <th>Producto</th>
+                    <th></th>
                     <th>Monto</th>
                     <th>Detalles Adicionales</th>
                 </tr>
@@ -46,6 +47,7 @@
                             <span>{{ transaccion.producto.nombre }}</span>
                         </div>
                     </td>
+                    <td><button class="btn-detalle" onclick="verDetalles({{ transaccion.producto.id }})">Ver Detalles</button></td>
                     <td>{{ transaccion.precio_total|floatformat:2 }} Bs</td>
                     <td>{{ transaccion.detalles|default:"Sin detalles" }}</td>
                 </tr>
@@ -66,6 +68,7 @@
                     <th>Tipo</th>
                     <th>Fecha</th>
                     <th>Producto</th>
+                    <th></th>
                     <th>Monto</th>
                     <th>Detalles Adicionales</th>
                 </tr>
@@ -85,6 +88,7 @@
                             <span>{{ compra.producto.nombre }}</span>
                         </div>
                     </td>
+                    <td><button class="btn-detalle" onclick="verDetalles({{ compra.producto.id }})">Ver Detalles</button></td>
                     <td>{{ compra.precio_total|floatformat:2 }} Bs</td>
                     <td>{{ compra.detalles|default:"Sin detalles" }}</td>
                 </tr>
@@ -105,6 +109,7 @@
                     <th>Tipo</th>
                     <th>Fecha</th>
                     <th>Producto</th>
+                    <th></th>
                     <th>Monto</th>
                     <th>Detalles Adicionales</th>
                 </tr>
@@ -124,6 +129,7 @@
                             <span>{{ venta.producto.nombre }}</span>
                         </div>
                     </td>
+                    <td><button class="btn-detalle" onclick="verDetalles({{ venta.producto.id }})">Ver Detalles</button></td>
                     <td>{{ venta.precio_total|floatformat:2 }} Bs</td>
                     <td>{{ venta.detalles|default:"Sin detalles" }}</td>
                 </tr>
