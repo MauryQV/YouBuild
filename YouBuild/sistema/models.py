@@ -342,7 +342,7 @@ class Transaccion(models.Model):
     ]
 
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
     producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="transacciones")
     cantidad = models.PositiveIntegerField()
     detalles = models.TextField(blank=True, null=True)

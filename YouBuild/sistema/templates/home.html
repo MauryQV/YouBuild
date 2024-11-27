@@ -123,12 +123,12 @@
   <div class="products-container">
     {% for producto in producto %}
     <div class="product">
-      {% if producto.estado == "promocion" %}
+      {% if producto.esta_en_promocion %}
       <div class="discount-badge">{{ producto.descuento }}% OFF</div>
       {% endif %}
       <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />
       <h3>{{ producto.nombre }}</h3>
-      {% if producto.estado == "promocion" %}
+      {% if producto.esta_en_promocion %}
         <p class="discounted-price">Bs {{ producto.precio_final }}</p>
         <p class="original-price">Bs {{ producto.precio }}</p>
       {% else %}
