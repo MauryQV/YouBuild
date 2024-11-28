@@ -418,7 +418,7 @@ def update_profile_photo(request):
         extension = imagen.name.split('.')[-1].lower()
         allowed_extensions = ['png', 'jpg', 'jpeg']
         if extension not in allowed_extensions:
-            messages.error(request, "Formato no permitido")
+            #messages.error(request, "Formato no permitido")
             return redirect('profile')  # Redirigir a la página de perfil sin guardar la imagen
         usuario_db = request.user.usuariodb
         usuario_db.imagen_perfil = imagen
@@ -535,7 +535,7 @@ def eliminar_de_lista_favoritos(request, producto_id):
         # Intenta obtener el objeto ListaFavoritosDB que coincida con usuario y producto_id
         favorito = ListaFavoritosDB.objects.get(usuario=usuario, producto_id=producto_id)
         favorito.delete()  # Elimina el objeto si existe
-        messages.success(request, "Producto eliminado de tu lista de favoritos.")
+        #messages.success(request, "Producto eliminado de tu lista de favoritos.")
     except ListaFavoritosDB.DoesNotExist:
         # Si no se encuentra el favorito, muestra un mensaje de error
         messages.error(request, "El producto no está en tu lista de favoritos.")
@@ -646,7 +646,7 @@ def actualizar_descuento_view(request):
         producto.fecha_fin_promocion = fecha_fin
         producto.save()
 
-        messages.success(request, 'Descuento y fechas de promoción actualizados con éxito.')
+        #messages.success(request, 'Descuento y fechas de promoción actualizados con éxito.')
 
         # Redirigir a "mis publicaciones"
         return redirect('mis_publicaciones')
@@ -701,7 +701,7 @@ def procesar_transaccion(request):
 @transaction.atomic
 def procesar_carrito(request):
     if not request.user.is_authenticated:
-        messages.error(request, "Debes iniciar sesión para realizar una compra.")
+        #messages.error(request, "Debes iniciar sesión para realizar una compra.")
         return redirect('Carrito')  # Redirige al carrito si no está autenticado
 
     try:
@@ -711,7 +711,7 @@ def procesar_carrito(request):
         # Verifica que el carrito no esté vacío
         productos_carrito = CarritoProductoDB.objects.filter(carrito_fk=carrito)
         if not productos_carrito.exists():
-            messages.error(request, "El carrito está vacío.")
+            #messages.error(request, "El carrito está vacío.")
             return redirect('Carrito')  # Redirige al carrito si está vacío
 
         total = 0  # Acumulador para el costo total
