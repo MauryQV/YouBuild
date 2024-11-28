@@ -6,7 +6,10 @@ body {
     margin: 0;
     padding: 0;
 }
+.products-titulo {
 
+    font-size: 30px;
+}
 .titulo h1 {
     text-align: center;
     font-size: 2rem;

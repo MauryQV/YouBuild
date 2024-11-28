@@ -220,18 +220,27 @@
             },
             body: JSON.stringify({})
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message || 'Producto agregado correctamente al carrito');
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+                
             } else {
-                alert(data.message || 'Error al agregar al carrito');
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data && data.success) {
+                alert(data.message || 'Producto agregado correctamente al carrito');
+            } else if (data && data.message) {
+                alert(data.message || 'Error al agregar el producto al carrito');
             }
         })
         .catch(error => {
             console.error('Error:', error);
+            alert('Error al agregar al carrito, no puedes comprar tus propios productos');
         });
-    }
+      }
+    
 
     function comprar(productId) {
         fetch(`/comprar-directo/${productId}/`, {

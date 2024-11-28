@@ -381,7 +381,7 @@ def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(ProductoDb, id=producto_id)
 
     if producto.usuario_fk == request.user.usuariodb:
-        messages.error(request, "No puedes agregar tus propios productos al carrito.")
+        #messages.error(request, "No puedes agregar tus propios productos al carrito.")
         return redirect('home', producto_id=producto_id)
     
     carrito, _ = CarritoDB.objects.get_or_create(usuario_fk=request.user.usuariodb)
