@@ -21,6 +21,8 @@
 
 {% block content %}
 <main>
+  
+  
   <form id="filtro-form" method="POST" action="{% url 'filtro_productos' %}">
     {% csrf_token %}
     <div class="filtros">
@@ -49,44 +51,33 @@
             <option value="menor">Menor Precio</option>
             <option value="mayor">Mayor Precio</option>
         </select>
-    
-        <button id ="aplicar-filtros" type="submit">Aplicar</button>
-        <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
-    </div>
-  </form>
+        <!-- Filtro de ofertas como combo box -->
+      <select id="oferta" name="oferta">
+        <option value="" style="display: none;">¿Mostrar solo ofertas?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼</option>
+        <option value="si">Solo ofertas</option>
+        <option value="no">Mostrar todos</option>
+    </select>
 
-  <div class="carousel-container">
-    <div class="carousel">
-      {% for carrusel_item in carrusel %}
-      <div class="carousel-item">
-        <img src="{{ carrusel_item.imagen.url }}" alt="Imagen del carrusel" />
-      </div>
+    <button id="aplicar-filtros" type="submit">Aplicar</button>
+    <button id="reset-filtros" type="button" onclick="reestablecerFiltros()">Restablecer Filtros</button>
+  </div>
+</form>
+
+<!-- Sección de categorías con botones redondos -->
+<div class="categories-section">
+  <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
+    {% csrf_token %}
+    <div class="categories-container">
+      {% for categoria in categorias %}
+        <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
+          <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
+          <p class="category-name">{{ categoria.nombre }}</p>
+        </button>
       {% endfor %}
     </div>
-    <button class="carousel-button prev">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-button next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+  </form>
+</div>
 
-  <div class="carousel-dots"></div>
-
-  <!-- Sección de categorías con botones redondos -->
-<div class="categories-section">
-    <form id="categoria-filtro-form" method="POST" action="{% url 'filtro_productos' %}">
-      {% csrf_token %}
-      <div class="categories-container">
-        {% for categoria in categorias %}
-          <button type="button" class="category-item" name="categoria" value="{{ categoria.id }}" onclick="filtrarPorCategoria('{{ categoria.id }}')">
-            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}">
-            <p class="category-name">{{ categoria.nombre }}</p>
-          </button>
-        {% endfor %}
-      </div>
-    </form>
-  </div>
   
   <div class="super-offers-carousel">
     <div class="super-offers-header">
@@ -111,7 +102,7 @@
                             <p class="super-offers-original-price">Bs {{ producto.precio }}</p>
                             <p class="super-offers-discounted-price">Bs {{ producto.precio_final }}</p>
                             <p class="super-offers-discount-rate">{{ producto.descuento }} % OFF</p>
-                            <button class="super-offers-details-btn">Ver Detalles</button>
+                            <button class="super-offers-details-btn"onclick="verDetalles({{ producto.id }})">Ver Detalles</button>
                         </div>
                     </div>
                 {% endif %}
@@ -129,47 +120,57 @@
 
 
   <!-- Lista de productos disponibles -->
-  <h2 class="products-title">Productos Disponibles</h2>
   <div class="products-container">
     {% for producto in producto %}
-      <div class="product">
-          <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />
-          <h3>{{ producto.nombre }}</h3>
-          <p>Bs {{ producto.precio }}</p>
-          <div class="buttons-container">
-              <div class="button-row">
-                  <button class="btn buy-now">Comprar Ahora</button>
-                  <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
-                      <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                  </button>
-              </div>
-              <div class="button-row">
-                  <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">
-                      <i class="fas fa-eye"></i> Ver Detalles
-                  </button>
-                  <button 
-                        class="btn add-to-list" 
-                        onclick="agregarAFavoritos({{ producto.id }})"
-                        id="favorito-btn-{{ producto.id }}">
-                        <i class="fas fa-heart"></i>
-                        {% if producto.id in favoritos_ids %}
-                            En Favoritos
-                        {% else %}
-                            Agregar a Lista
-                        {% endif %}
-                    </button>
-              </div>
-          </div>
-      </div>
-    {% empty %}
-        <div class="mi-no-results">
-            <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
-            <p>No se encontraron productos relacionados con tu búsqueda.</p>
-            <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p> <!-- Mensaje adicional -->
-            <div class="mi-button-row">
-                <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
-            </div>
+    <div class="product">
+      {% if producto.esta_en_promocion %}
+      <div class="discount-badge">{{ producto.descuento }}% OFF</div>
+      {% endif %}
+      <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" />
+      <h3>{{ producto.nombre }}</h3>
+      {% if producto.esta_en_promocion %}
+        <p class="discounted-price">Bs {{ producto.precio_final }}</p>
+        <p class="original-price">Bs {{ producto.precio }}</p>
+      {% else %}
+        <p>Bs {{ producto.precio }}</p>
+      {% endif %}
+      <div class="buttons-container">
+        <div class="button-row">
+          <button 
+              class="btn buy-now" 
+              onclick="location.href='{% url 'confirmar_compra' producto.id %}'">
+              Comprar Ahora
+          </button>
+          <button class="btn add-to-cart" onclick="agregarAlCarrito({{ producto.id }})">
+            <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+          </button>
         </div>
+        <div class="button-row">
+          <button class="btn add-to-view" onclick="verDetalles({{ producto.id }})">
+            <i class="fas fa-eye"></i> Ver Detalles
+          </button>
+          <button 
+            class="btn add-to-list" 
+            onclick="agregarAFavoritos({{ producto.id }})"
+            id="favorito-btn-{{ producto.id }}">
+            <i class="fas fa-heart"></i>
+            {% if producto.id in favoritos_ids %}
+              En Favoritos
+            {% else %}
+              Agregar a Lista
+            {% endif %}
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="mi-no-results">
+      <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+      <p>No se encontraron productos relacionados con tu búsqueda.</p>
+      <div class="mi-button-row">
+        <a href="{% url 'index' %}" class="mi-btn">Volver a la Página de Inicio</a>
+      </div>
+    </div>
     {% endfor %}
   </div>
 </main>
@@ -179,38 +180,36 @@
 <script src="{% static 'script.js' %}"></script>
 <script>
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const leftButton = document.querySelector('.super-offers-left-btn');
-        const rightButton = document.querySelector('.super-offers-right-btn');
+    document.addEventListener("DOMContentLoaded", () => {
         const carouselContent = document.querySelector('.super-offers-content');
         const items = document.querySelectorAll('.super-offers-item');
-        const itemsPerPage = 4;  // Número de productos visibles por página (ajusta según lo que necesites)
+        const btnLeft = document.querySelector('.super-offers-left-btn');
+        const btnRight = document.querySelector('.super-offers-right-btn');
     
-        let currentIndex = 0; // Índice de la primera imagen visible
+        // Ancho de un elemento del carrusel (incluye el margen)
+        const itemWidth = items[0]?.offsetWidth || 600; 
+        let scrollPosition = 0;
     
-        // Mover el carrusel a la izquierda
-        leftButton.addEventListener('click', function() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
+        // Función para manejar el clic en el botón izquierdo
+        btnLeft.addEventListener('click', () => {
+            scrollPosition = Math.max(scrollPosition - itemWidth, 0); // Evita desplazarse más allá del inicio
+            carouselContent.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth' // Movimiento suave
+            });
         });
     
-        // Mover el carrusel a la derecha
-        rightButton.addEventListener('click', function() {
-            if (currentIndex < items.length - itemsPerPage) {
-                currentIndex++;
-                updateCarousel();
-            }
+        // Función para manejar el clic en el botón derecho
+        btnRight.addEventListener('click', () => {
+            const maxScroll = carouselContent.scrollWidth - carouselContent.clientWidth; // Límite derecho
+            scrollPosition = Math.min(scrollPosition + itemWidth, maxScroll); // Evita desplazarse más allá del final
+            carouselContent.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth' // Movimiento suave
+            });
         });
-    
-        // Actualizar la posición del carrusel
-        function updateCarousel() {
-            // Calcular el desplazamiento total del carrusel
-            const offset = -(currentIndex * (items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight)));
-            carouselContent.style.transform = `translateX(${offset}px)`;
-        }
     });
+    
     
     function filtrarPorCategoria(categoriaId) {
         // Establece el valor de la categoría en el primer formulario
@@ -308,42 +307,54 @@
     .then(data => {
         productsContainer.innerHTML = ''; // Limpiar contenedor antes de agregar productos
 
+        // Verificar que la respuesta contenga productos
         if (data.products && data.products.length > 0) {
-            data.products.forEach(producto => {
-                productsContainer.innerHTML += `
-                    <div class="product">
-                        <img src="${producto.imagen}" alt="${producto.nombre}" />
-                        <h3>${producto.nombre}</h3>
-                        <p>Bs ${producto.precio}</p>
-                        <div class="buttons-container">
-                            <div class="button-row">
-                                <button class="btn buy-now">Comprar Ahora</button>
-                                <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
-                                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
-                                </button>
-                            </div>
-                            <div class="button-row">
-                                <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                                <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
-                                    <i class="fas fa-heart"></i> Agregar a Lista
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-            });
+          data.products.forEach(producto => {
+              // Añadir el HTML del producto al contenedor
+              productsContainer.innerHTML += `
+                  <div class="product">
+                      ${producto.estado === "promocion" ? `<div class="discount-badge">${producto.descuento}% OFF</div>` : ''}
+                      <img src="${producto.imagen || 'default-image.jpg'}" alt="${producto.nombre}" />
+                      <h3>${producto.nombre}</h3>
+                      
+                      ${producto.precio_final !== producto.precio ? `
+                          <p class="discounted-price">Bs ${producto.precio_final}</p>
+                          <p class="original-price"><s>Bs ${producto.precio}</s></p>
+                      ` : `
+                          <p>Bs ${producto.precio}</p>
+                      `}
+                      
+                      <div class="buttons-container">
+                          <div class="button-row">
+                              <button class="btn buy-now">Comprar Ahora</button>
+                              <button class="btn add-to-cart" onclick="agregarAlCarrito(${producto.id})">
+                                  <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                              </button>
+                          </div>
+                          <div class="button-row">
+                              <button class="btn add-to-view" onclick="verDetalles(${producto.id})">
+                                  <i class="fas fa-eye"></i> Ver Detalles
+                              </button>
+                              <button class="btn add-to-list" onclick="agregarAFavoritos(${producto.id})">
+                                  <i class="fas fa-heart"></i> Agregar a Lista
+                              </button>
+                          </div>
+                      </div>
+                  </div>`;
+          });
         } else {
-            productsContainer.innerHTML = `
-                <div class="mi-no-results">
-                    <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
-                    <p>No se encontraron productos relacionados con tu búsqueda.</p>
-                    <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
-                    <div class="mi-button-row">
-                        <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
-                    </div>
-                </div>`;
+          // Si no hay productos, mostrar mensaje
+          productsContainer.innerHTML = `
+              <div class="mi-no-results">
+                  <img src="{% static 'notFounded.png' %}" alt="LogoNotFounded" width="125">
+                  <p>No se encontraron productos relacionados con tu búsqueda.</p>
+                  <p>Asegúrate de que los filtros seleccionados sean correctos o prueba con otros criterios.</p>
+                  <div class="mi-button-row">
+                      <a href="{% url 'home' %}" class="mi-btn">Volver a la Página de Inicio</a>
+                  </div>
+              </div>`;
         }
+
     })
     .catch(error => {
         console.error('Error:', error);

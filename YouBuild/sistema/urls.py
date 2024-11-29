@@ -10,7 +10,8 @@ urlpatterns = [
     path('producto/<int:id>/', producto_view, name='detalle_producto'),
     path('buscar/', buscar_view, name='buscar'),
     path('carrito/', carrito_view, name='Carrito'),
-    path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
+    #path('carrito/eliminar/<int:producto_id>/', eliminar_producto_carrito, name='eliminar_producto_carrito'),
+     path('carrito/eliminar/<int:item_id>/', eliminar_producto, name='eliminar_producto'),
     path('update_cart_quantity/', update_cart_quantity, name='update_cart_quantity'),
     path('agregar-al-carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_a_carrito'),
     path('get_cart_count/', get_cart_count, name='get_cart_count'),
@@ -25,22 +26,32 @@ urlpatterns = [
     path('test/', test, name='testeo'),
     path('home/', home_view, name='home'),
     path('perfil/', perfil_view, name='profile'),
-    
     path('registro-producto/', registro_producto, name='registro_producto'),
     path('vender/', vender_view, name='vender'),
-    
-   path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),
+    path('lista-favoritos/', ver_lista_favoritos, name='listaFavoritos'),
     path('lista-favoritos/agregar/<int:producto_id>/', agregar_a_lista_favoritos, name='agregarFavorito'),
     path('lista-favoritos/eliminar/<int:producto_id>/', eliminar_de_lista_favoritos, name='eliminarFavorito'),
     path('filtro-productos/', filtro_productos_view, name='filtro_productos'),
     path('profile/photo-update/', update_profile_photo, name='profile_photo_update'),
-
     path('confirmacion-producto/', views.confirmacion_producto, name='confirmacion_producto'),
-    path('api/publicaciones/', PublicacionesUsuarioAPIView.as_view(), name='publicaciones_usuario'),
-    path('api/publicaciones/<int:id>/', ActualizarPublicacionAPIView.as_view(), name='actualizar_publicacion'),
-     path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
-     path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
-     path('publicaciones/', publicaciones, name='publicaciones'),
+    path('productos/', views.producto_view, name='product_list'),
+    path('productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+    path('home/productosOfertados/', lista_productosOfert, name='Productos_Oferta'),
+    path("mis-publicaciones/", publicaciones_usuario_view, name="mis_publicaciones"),
+    path('producto/editar/<int:producto_id>/', editar_producto, name='editar_producto'),
+    path('crear_oferta/', actualizar_descuento_view, name='crear_oferta'),
+    path('confirmar-compra/<int:producto_id>/', views.confirmar_compra, name='confirmar_compra'),
+    path('proceder-pago-carrito/', views.proceder_pago_carrito, name='proceder_pago_carrito'),
+    path('procesar-transaccion/', procesar_transaccion, name='procesar_transaccion'),
+    path('historial/', historial_transacciones_view, name='historial_transacciones'),
+    path('eliminar-publicacion/<int:producto_id>/', views.eliminar_publicacion, name='eliminar_publicacion'),
+    path('procesar-carrito/', procesar_carrito, name='procesar_carrito'),
+#historia de cotizaciones
+    path('solicitar-cotizacion/<int:producto_id>/', solicitar_cotizacion, name='solicitar_cotizacion'),
+    path('eliminar-todo-el-carrito/', views.eliminar_todo_el_carrito, name='eliminar_todo_el_carrito'),
+    #path('eliminar-producto-carrito/<int:product_index>/', views.eliminar_producto_carrito, name='eliminar_producto_carrito'),
+     # Nueva ruta para actualizar estados de promociones de manera manual
+    path('actualizar-estados-promociones/', actualizar_estados_promociones, name='actualizar_estados_promociones'),
 
 ]
 

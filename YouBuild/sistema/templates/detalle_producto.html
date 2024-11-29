@@ -5,6 +5,9 @@
 {% block extra_styles %}
 <!-- Colocar sus dependencias personalizadas/STATIC -->
 <link rel="stylesheet" href="{% static 'detalleProd.css' %}" />
+<!-- CSS para promociones -->
+<link rel="stylesheet" href="{% static 'promocion.css' %}">
+<link rel="stylesheet" href="{% static 'prodRelacionados.css' %}">
 <!-- Incluir Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMF0sS1PeRCXGFsWobgfJj7C0vNhT5W+VY0tZ4" crossorigin="anonymous" />
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
@@ -15,9 +18,7 @@
   </style>
 {% endblock %}
 {% block content %}
-<div class="titulo">
-    <h1> {{ producto.nombre }} </h1>
-</div>
+
 <div class="flex-container">
     <div class="column column-left flex-column">
         <h3>Vendedor</h3>
@@ -41,7 +42,11 @@
             {% endfor %}
         </div>
         <div class="botones button-row">
-            <button class="btn" id="btn-comprar" onclick="comprar({{ producto.id }})">Comprar</button>
+            <button 
+                class="btn" id="btn-comprar" 
+                onclick="location.href='{% url 'confirmar_compra' producto.id %}'">
+                Comprar
+            </button>
             <button class="btn add-to-view" id="btn-agregar-carrito" onclick="agregarAlCarrito({{ producto.id }})">
                 <i class="fas fa-shopping-cart"></i> Agregar al Carrito
             </button>
@@ -127,17 +132,80 @@
         <p class="precio-sin-promocion">Bs {{ producto.precio }}</p>
     {% endif %}
         
-        <h3>Ubicación</h3>
+        <h3>Ubicación:</h3>
         <p>
             {{ producto.usuario_fk.municipio_fk.provincia_fk.departamento_fk }},
             {{ producto.usuario_fk.municipio_fk.provincia_fk.nombre }},
             {{ producto.usuario_fk.municipio_fk }}
         </p>
+        <h4>Direccion Precisa:</h4>
+        <p>
+            {{producto.direccion_1}}
+        </p>
     </div>
     
 </div>
+
+<!-- Sección de productos relacionados -->
+
+<div class="products-container">
+    <div class="products-title">
+        Productos Relacionados
+      </div>
+    {% for productod in productos_relacionados %}
+    <div class="product">
+        {% if productod.esta_en_promocion %}
+        <div class="discount-badge">{{ productod.descuento }}% OFF</div>
+        {% endif %}
+        <img src="{{ productod.imagenes.first.imagen.url }}" alt="{{ productod.nombre }}" />
+        <h3>{{ productod.nombre }}</h3>
+        {% if productod.esta_en_promocion %}
+        <p class="discounted-price">Bs {{ productod.precio_final }}</p>
+        <p class="original-price">Bs {{ productod.precio }}</p>
+        {% else %}
+        <p>Bs {{ productod.precio }}</p>
+        {% endif %}
+        <div class="buttons-container">
+            <div class="button-row">
+                <button 
+                    class="btn buy-now" 
+                    onclick="location.href='{% url 'confirmar_compra' productod.id %}'">
+                    Comprar Ahora
+                </button>
+                <button class="btn add-to-cart" onclick="agregarAlCarrito({{ productod.id }})">
+                    <i class="fas fa-shopping-cart"></i> Agregar a Carrito
+                </button>
+            </div>
+            <div class="button-row">
+                <button class="btn add-to-view" onclick="verDetalles({{ productod.id }})">
+                    <i class="fas fa-eye"></i> Ver Detalles
+                </button>
+                <button 
+                    class="btn add-to-list" 
+                    onclick="agregarAFavoritos({{ productod.id }})"
+                    id="favorito-btn-{{ productod.id }}">
+                    <i class="fas fa-heart"></i>
+                    {% if productod.id in favoritos_ids %}
+                    En Favoritos
+                    {% else %}
+                    Agregar a Lista
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="mi-no-results">
+        <img src="{% static 'notFounded.png' %}" alt="No hay productos relacionados" width="125">
+        <p>No se encontraron productos relacionados.</p>
+    </div>
+    {% endfor %}
+</div>
 <button class="btn volver-a-lista" style="max-width: fit-content;" onclick="volverALista()">Volver a la lista de
     productos</button>
+
+ 
+</div>
 <!-- COLOCAR SU CONTENIDO -->
 {% endblock %}
 {% block extra_scripts %}
@@ -152,18 +220,27 @@
             },
             body: JSON.stringify({})
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message || 'Producto agregado correctamente al carrito');
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+                
             } else {
-                alert(data.message || 'Error al agregar al carrito');
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data && data.success) {
+                alert(data.message || 'Producto agregado correctamente al carrito');
+            } else if (data && data.message) {
+                alert(data.message || 'Error al agregar el producto al carrito');
             }
         })
         .catch(error => {
             console.error('Error:', error);
+            alert('Error al agregar al carrito, no puedes comprar tus propios productos');
         });
-    }
+      }
+    
 
     function comprar(productId) {
         fetch(`/comprar-directo/${productId}/`, {
@@ -210,7 +287,9 @@
             alert("Hubo un error al intentar actualizar la lista de deseos.");
         });
     }
-
+    function verDetalles(productId) {
+        window.location.href = `/producto/${productId}/`;
+    }
 
 </script>
 {% endblock %}

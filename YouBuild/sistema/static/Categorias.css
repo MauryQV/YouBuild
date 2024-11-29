@@ -4,7 +4,7 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 90px;
     font-family: 'Comfortaa', sans-serif; /* Aplicando Comfortaa */
   }
   
@@ -24,7 +24,7 @@
     font-size: 14px;
     font-weight: 500;
     color: #333;
-    font-family: 'Comfortaa', sans-serif; /* Aquí se aplica Comfortaa solo a los nombres */
+    font-family: 'Comfortaa', sans-serif;/* Aquí se aplica Comfortaa solo a los nombres */
 }
   
   .category-item img {
@@ -38,10 +38,11 @@
   
   .category-item p {
     margin-top: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-  }
+    font-size: 15px; /* Aumenta el tamaño de la letra */
+    font-weight: 2000; /* Aumenta el grosor de la letra */
+    color: #ffffff; /* Mantén el color blanco */
+}
+
   
   .category-item:hover img {
     transform: scale(1.05);

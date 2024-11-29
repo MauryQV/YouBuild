@@ -9,18 +9,21 @@
 
 .profile-container {
     display: flex;
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px 0px;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    
+    margin: 0; /* Elimina márgenes automáticos */
+    padding: 20px;
     gap: 20px;
     background-color: #f4f6f9;
     border-radius: 10px;
+    box-sizing: border-box; /* Asegura que padding no afecte las dimensiones totales */
 }
 /* Sidebar (izquierda) */
 .profile-sidebar {
    /* flex: 1; */
     background: #ffffff;
     padding: 25px;
+    min-height: auto; /* Asegura que se adapte al contenido */
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     text-align: center;
@@ -105,7 +108,7 @@
 
 /* Estilos de la sección principal derecha */
 .profile-main {
-    /* flex: 3; Más ancho que el sidebar */
+    flex: 2; /* Permite que ocupe más espacio si es necesario */
     background: #ffffff;
     padding: 30px;
     border: 1px solid #e0e0e0;
@@ -131,7 +134,7 @@
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -190,7 +193,7 @@
 .profile-sidebar, .profile-main {
     background: #ffffff;
     padding: 25px;
-    border: 2px solid black; /* Borde negro */
+    /*border: 2px solid black; /* Borde negro */
     border-radius: 15px; /* Esquinas redondeadas */
     
 }
@@ -276,4 +279,22 @@
 
 .profile-actions {
     margin-top: 20px; /* Separación del contenido superior */
+}
+
+.password-change-section {
+    margin-top: 20px; /* Separación del contenido superior */
+    width: 100%; /* Asegura que ocupe el ancho del contenedor */
+}
+
+.password-change-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaciado entre los elementos del formulario */
+}
+
+.password-change-section h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
 }

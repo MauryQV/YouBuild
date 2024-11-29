@@ -173,6 +173,7 @@ class ProductoDb(models.Model):
     direccion_1 = models.CharField(max_length=255, verbose_name="Dirección 1", null=True, blank=True)
     visitas = models.PositiveIntegerField(default=0, verbose_name="Visitas")
     cantidad = models.IntegerField(default=1)
+    activo = models.BooleanField(default=True, verbose_name="Activo")  # Campo para soft delete.
 
     class Meta:
         db_table = "productos"
@@ -197,13 +198,15 @@ class ProductoDb(models.Model):
         return self.precio
 
     def esta_en_promocion(self):
-        ahora = timezone.now()
-        return (
-            self.estado == 'promocion' and
-            self.fecha_inicio_promocion and
-            self.fecha_fin_promocion and
-            self.fecha_inicio_promocion <= ahora <= self.fecha_fin_promocion
-        )
+        """
+        Verifica si el producto está actualmente en promoción.
+        """
+        if self.estado == 'promocion':
+            # Comprueba si la fecha actual está dentro del rango de promoción
+            ahora = timezone.now()
+            if self.fecha_inicio_promocion and self.fecha_fin_promocion:
+                return ahora <= self.fecha_fin_promocion
+        return False
 
     def dias_restantes_promocion(self):
        
@@ -219,6 +222,26 @@ class ProductoDb(models.Model):
            delta = self.fecha_fin_promocion - ahora
            return int(delta.total_seconds())
         return 0
+    
+    def actualizar_estado(self):
+        """
+        Actualiza el estado del producto según las fechas de promoción.
+        """
+        ahora = timezone.now()
+        if self.estado == 'promocion' and self.fecha_fin_promocion and ahora > self.fecha_fin_promocion:
+            self.estado = 'disponible'
+            self.fecha_inicio_promocion = None
+            self.fecha_fin_promocion = None
+            self.save()
+    
+    def ajustar_stock(self, cantidad, operacion='restar'):
+        if operacion == 'restar':
+            if self.cantidad < cantidad:
+                raise ValueError("Stock insuficiente para realizar esta operación.")
+            self.cantidad -= cantidad
+        elif operacion == 'sumar':
+            self.cantidad += cantidad
+        self.save()
 
 
 # ImagenProducto
@@ -232,7 +255,6 @@ class ImagenProductoDB(models.Model):
 
     def __str__(self):
         return self.producto_fk.nombre
-
 
 # TipoPago
 class TipoPagoDB(models.Model):
@@ -273,7 +295,7 @@ class CarritoProductoDB(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     def calcular_subtotal(self):
-        return self.cantidad * self.producto_fk.precio
+        return self.cantidad * self.producto_fk.precio_final()
 
     def __str__(self):
         return f"{self.producto_fk.nombre} (x{self.cantidad}) en el carrito"
@@ -310,3 +332,32 @@ class ListaFavoritosDB(models.Model):
 
     def contar_productos(self):
         return ListaFavoritosDB.objects.filter(usuario=self.usuario).count()
+    
+class Transaccion(models.Model):
+    COMPRA = 'Compra'
+    VENTA = 'Venta'
+    TIPO_CHOICES = [
+        (COMPRA, 'Compra'),
+        (VENTA, 'Venta'),
+    ]
+
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    usuario = models.ForeignKey(UsuarioDB, on_delete=models.CASCADE)
+    producto = models.ForeignKey(ProductoDb, on_delete=models.CASCADE, related_name="transacciones")
+    cantidad = models.PositiveIntegerField()
+    detalles = models.TextField(blank=True, null=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def calcular_precio_total(self):
+        return self.cantidad * self.producto.precio_final()
+
+    @property
+    def precio_total(self):
+        return self.calcular_precio_total()
+
+    def clean(self):
+        if self.tipo == self.COMPRA and self.producto.cantidad < self.cantidad:
+            raise ValidationError("El producto no tiene suficiente stock disponible.")
+
+    def __str__(self):
+        return f"{self.tipo} - {self.producto.nombre} ({self.cantidad})"

@@ -1,8 +1,16 @@
 {% for producto in productos %}
     <div class="producto-item">
+        {% if producto.estado == "promocion" %}
+        <div class="discount-badge">{{ producto.descuento }}% OFF</div>
+        {% endif %}
         <img src="{{ producto.imagenes.first.imagen.url if producto.imagenes.exists else 'default-image.jpg' }}" alt="{{ producto.nombre }}">
         <h3>{{ producto.nombre }}</h3>
-        <p>Precio: {{ producto.precio }} $</p>
+        {% if producto.estado == "promocion" %}
+            <p class="discounted-price">Bs {{ producto.precio_final }}</p>
+            <p class="original-price">Bs <s>{{ producto.precio }}</s></p>
+        {% else %}
+            <p>Bs {{ producto.precio }}</p>
+        {% endif %}
         <a href="{% url 'detalle_producto' producto.id %}">Ver Detalle</a>
     </div>
 {% empty %}

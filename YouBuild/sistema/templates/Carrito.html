@@ -2,6 +2,7 @@
 {% extends 'layoutReg.html' %}
 {% load static %}
 
+
 {% block title %}Carrito de Compras{% endblock %}
 
 {% block extra_styles %}
@@ -19,6 +20,9 @@
 {% block content %}
 <div class="container">
     <h1>Carrito de Compras</h1>
+
+ 
+
     <div class="cart-container">
         <!-- Tabla con productos seleccionados -->
         <div class="cart-products">
@@ -48,7 +52,7 @@
                                 <span>{{ item.producto_fk.nombre }}</span>
                             </div>
                         </td>
-                        <td>Bs {{ item.producto_fk.precio }}</td>
+                        <td>Bs {{ item.producto_fk.precio_final }}</td>
                         <td>
                             <div class="quantity-selector">
                                 <button class="quantity-btn decrement">-</button>
@@ -87,7 +91,11 @@
                 <span>Total</span>
                 <span>Bs {{carrito_total}}</span>  <!-- Mostrar correctamente el total -->
             </div>
-            <a href="#" class="btn-Proceder-pago">Proceder al Pago</a>
+            <button 
+                class="btn-Proceder-pago" 
+                onclick="location.href='{% url 'proceder_pago_carrito' %}'">
+                Proceder al Pago
+            </button>
         </div>
     </div>
 </div>

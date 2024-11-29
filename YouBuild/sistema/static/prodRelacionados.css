@@ -1,0 +1,164 @@
+/* Estilos generales */
+.titulo {
+    text-align: center;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+body {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.products-title {
+    
+    text-align: left;
+    margin: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-left: 20px;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    
+}
+
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centrar los productos */
+    gap: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(247, 243, 239, 0.9);
+    border-radius: 10px;
+}
+
+
+.product {
+    position: relative; /* Posición relativa para manejar elementos absolutos como el badge */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    height: 350px; /* Ajustar altura para incluir precios en oferta */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product:hover {
+    transform: scale(1.05);
+}
+
+.product img {
+    width: 100%; /* Ajustar la imagen al ancho del producto */
+    height: 150px; /* Ajustar la altura de la imagen */
+    border-radius: 8px;
+    object-fit: cover; /* Mantener la relación de aspecto y cubrir el área */
+}
+
+/* Estilo para la etiqueta de descuento */
+.discount-badge {
+    position: absolute; /* Posición absoluta dentro del contenedor del producto */
+    top: 10px; /* Separación desde la parte superior */
+    left: 10px; /* Separación desde la parte izquierda */
+    background-color: #ffeb3b; /* Fondo llamativo */
+    color: #333333; /* Texto blanco */
+    font-size: 0.9em; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+    padding: 5px 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    z-index: 10; /* Asegura que esté por encima de la imagen */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+}
+
+.product h3 {
+    font-size: 0.9em; /* Tamaño del nombre del producto */
+    margin: 5px 0; /* Reducir el margen para acercar al precio */
+    color: #100f0f;
+}
+
+.product p {
+    font-size: 1em; /* Aumentar el tamaño de fuente del precio */
+    margin: 3px 0; /* Reducir el margen entre precio y botones */
+    color: rgb(78, 78, 76);
+}
+
+/* Estilos para precios en oferta */
+.original-price {
+    text-decoration: line-through;
+    text-decoration-color: #F2690D;
+    color: #b0b0b0;
+    font-size: 0.8em;
+    margin-bottom: 2px
+}
+
+.discounted-price {
+    color: #b0b0b0; /* Color llamativo para el precio con descuento */
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 2px
+}
+
+
+/* Estilos de botones */
+.buttons-container {
+    display: flex; /* Usar Flexbox para la disposición de los botones */
+    flex-direction: column; /* Organiza los botones en columnas */
+    gap: 8px; /* Espacio entre filas de botones */
+    margin-top: 4px; /* Alinea los botones al final del contenedor del producto */
+}
+
+.button-row {
+    display: flex; /* Usar Flexbox para cada fila de botones */
+    justify-content: space-between; /* Espacio entre los botones */
+    gap: 10px; /* Espacio entre los botones */
+}
+
+/* Asegurarse de que los botones ocupen el mismo espacio */
+.btn {
+    background-color: #ef6605; /* Color de fondo para el botón Comprar */
+    color: white; /* Color de texto para el botón Comprar */
+    border: none;
+    padding: 10px 0; /* Ajustar el padding para el botón */
+    margin: 0; /* Sin margen entre botones */
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Hace que los botones ocupen el mismo espacio */
+    min-width: 0; /* Permite que el botón se ajuste a su contenedor */
+    text-align: center; /* Centrar el texto en el botón */
+    
+}
+
+.btn:hover {
+    background-color: #ba7730; /* Color al pasar el ratón por encima del botón Comprar */
+}
+
+/* Botones gris */
+.btn.add-to-list,
+.btn.add-to-view,
+.btn.add-to-cart {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
+    background-color: #faf7f6; /* Color de fondo gris */
+    color: rgb(243, 174, 37); /* Color de texto gris */
+    border: 1px solid rgb(243, 174, 37); /* Borde gris */
+}
+
+.btn.add-to-list:hover,
+.btn.add-to-view:hover,
+.btn.add-to-cart:hover {
+    font-size: 12px; /* Tamaño de letra específico para estos botones */
+    background-color: #595450; /* Color al pasar el ratón por encima de los botones gris */
+    color: rgb(243, 174, 37); /* Color de texto al pasar el ratón por encima */
+}
+
+/* Ajustes de íconos en botones */
+.btn i {
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+}

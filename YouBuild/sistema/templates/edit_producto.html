@@ -1,0 +1,32 @@
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h2>{% if producto %}Editar{% else %}Registrar{% endif %} Producto</h2>
+
+        <form id="formulario-producto" method="POST" enctype="multipart/form-data" class="product-form">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Muestra el formulario con los campos pre-poblados -->
+
+            <div>
+                <label>Imágenes existentes:</label>
+                <ul>
+                    {% for imagen in producto.imagenproducto_set.all %}
+                        <li>
+                            <img src="{{ imagen.imagen.url }}" alt="Imagen {{ forloop.counter }}" width="100">
+                        </li>
+                    {% empty %}
+                        <li>No hay imágenes existentes.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {% if producto %}Guardar Cambios{% else %}Registrar Producto{% endif %}
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+

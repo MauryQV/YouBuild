@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+{% extends 'layoutReg.html' %}
+{% load static %}
+
+{% block title %}Lista de Mis Publicaciones{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'publicaciones.css' %}" />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="publicaciones-container">
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+    <h2>Mis publicaciones</h2>
+
+    <table class="tabla-publicaciones">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody id="publicaciones-tbody">
+            <!-- Aquí se cargarán las publicaciones dinámicamente -->
+            {% for producto in mis_productos %}
+            <tr class="fila-publicacion" data-id="{{ producto.id }}">
+                <!-- Foto -->
+                <td>
+                    <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" class="imagen-producto" />
+                </td>
+                <!-- Nombre -->
+                <td>{{ producto.nombre }}</td>
+                <!-- Descripción -->
+                <td>{{ producto.detalle }}</td>
+                <!-- Precio -->
+                <td>{{ producto.precio }} Bs.</td>
+                <!-- Estado -->
+                <td>
+                    <span class="estado {{ producto.estado|lower }}">{{ producto.estado }}</span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No tienes publicaciones aún.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="botones-acciones">
+        <button class="btn-eliminar" id="btnEliminar">Eliminar</button>
+        <button class="btn-editar" id="btnEditar">Editar</button>
+        <button class="btn-oferta" onclick="location.href='{% url 'crear_oferta' %}'">Crear una oferta</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variable para almacenar el ID de la fila seleccionada
+        let productoSeleccionadoId = null;
+    
+        // Seleccionar fila y cambiar color para resaltar
+        document.querySelectorAll('.fila-publicacion').forEach(fila => {
+            fila.addEventListener('click', function() {
+                // Mostrar el id de la fila seleccionada en la consola
+                console.log('Fila seleccionada:', this);
+                // Remover la selección de otras filas
+                document.querySelectorAll('.fila-publicacion').forEach(f => f.classList.remove('seleccionado'));
+                // Agregar clase 'seleccionado' a la fila actual
+                this.classList.add('seleccionado');
+                // Guardar el ID del producto seleccionado
+                productoSeleccionadoId = this.getAttribute('data-id');
+            });
+        });
+    
+        // Función para redirigir al hacer clic en el botón "Editar"
+        document.getElementById('btnEditar').addEventListener('click', function() {
+            if (productoSeleccionadoId) {
+                // Redirige a la URL de edición con el producto_id seleccionado
+                window.location.href = `{% url 'editar_producto' 0 %}`.replace('0', productoSeleccionadoId);
+            } else {
+                alert('Selecciona un producto para editar.');
+            }
+        });
+
+        document.getElementById('btnEliminar').addEventListener('click', function () {
+            if (productoSeleccionadoId) {
+                if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+                    // Get CSRF token from hidden input
+                    const csrfToken = document.getElementById('csrf_token').value;
+
+                    // Make fetch request to delete the product
+                    fetch(`/eliminar-publicacion/${productoSeleccionadoId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Response data:', data);
+                        if (data.success) {
+                            alert('Producto eliminado exitosamente.');
+                            // Remove the deleted row from the DOM
+                            const fila = document.querySelector(`tr[data-id="${productoSeleccionadoId}"]`);
+                            if (fila) fila.remove();
+                            productoSeleccionadoId = null; // Reset selection
+                        } else {
+                            alert('Error al eliminar el producto.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        alert('Ocurrió un error al intentar eliminar el producto.');
+                    });
+                }
+            } else {
+                alert('Selecciona un producto para eliminar.');
+            }
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+{% endblock %}
